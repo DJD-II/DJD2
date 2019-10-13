@@ -16,6 +16,9 @@ public class HUD : MonoBehaviour
     public LockController lockPickController;
     [Header("Conversaton")]
     public TalkUIController talkController;
+    [Header("Menu")]
+    [SerializeField]
+    private HUDMenuController menu;
 
     public void Initialize()
     {
@@ -86,5 +89,13 @@ public class HUD : MonoBehaviour
         talkController.Interactable = interactable;
         talkController.Initialize();
         talkController.gameObject.SetActive(enable);
+    }
+
+    public void EnableMenu (PlayerController controller)
+    {
+        GameInstance.GameState.Paused = true;
+
+        menu.Initialize(controller);
+        menu.gameObject.SetActive(true);
     }
 }

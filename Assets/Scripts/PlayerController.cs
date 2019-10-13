@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerController : Controller
+public class PlayerController : Controller, ISavable
 {
     #region --- Structs ---
     internal struct CameraShakeSettings
@@ -18,6 +18,24 @@ public class PlayerController : Controller
     }
 
     #endregion
+
+    sealed public class PlayerSavable : Savable
+    {
+        public float   hpScalar;
+        public float     max;
+        public List<ItemID> items;
+
+        public PlayerSavable(string id, ScaledValue hp, List<Item> items)
+            : base(id, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name)
+        {
+            hpScalar = hp.Scalar;
+            max = hp.Max;
+            this.id = id;
+            this.items = new List<ItemID>();
+            foreach (Item i in items)
+                this.items.Add(new ItemID(i));
+        }
+    }
 
     #region --- Fields ---
 
@@ -85,11 +103,15 @@ public class PlayerController : Controller
     public GameObject           huds;
     public Image                batteryImage;
     private Damage.Point        reducer;
+    private UniqueID            uniqueID;
+    [SerializeField]
+    private Quest               mainQuest = null;
 
     #endregion
 
     #region --- Properties ---
 
+    Savable ISavable.IO { get { return new PlayerSavable(GetUniqueID(), Hp, Inventory.Items); } }
     public bool CanControl { get { return canControl; } set { canControl = value; } }
     public Inventory Inventory { get { return inventory; } }
     private float WobbleSpeed { get { return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ? runWobbleSpeed : walkWobbleSpeed; } }
@@ -102,13 +124,15 @@ public class PlayerController : Controller
 
     private void Awake()
     {
+        GameInstance.OnSave += OnSceneChange;
+
         controller = GetComponent<CharacterController>();
         reducer = new Damage.Point(this, true, 1);
     }
 
-
     private void OnDestroy()
     {
+        GameInstance.OnSave -= OnSceneChange;
         GameInstance.GameState.OnPausedChanged -= OnPause;
     }
 
@@ -120,6 +144,17 @@ public class PlayerController : Controller
 
     private void Start()
     {
+        uniqueID = GetComponent<UniqueID>();
+
+        PlayerSavable savable = GameInstance.Singleton.GetSavable(GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, GetUniqueIDPersistent()) as PlayerSavable;
+        if (savable != null)
+        {
+            hp = new ScaledValue(savable.hpScalar, savable.max);
+
+            foreach (ItemID i in savable.items)
+                inventory.Add(ItemUtility.GetItem(i.name));
+        }
+
         GameInstance.GameState.OnPausedChanged += OnPause;
 
         cameraShakeSettings = new CameraShakeSettings
@@ -149,6 +184,9 @@ public class PlayerController : Controller
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Q))
+            GameInstance.GameState.QuestController.Add(mainQuest);
+
         float vertical = Input.GetAxis("Vertical");
         float horizontal = Input.GetAxis("Horizontal");
 
@@ -156,6 +194,12 @@ public class PlayerController : Controller
 
         if (!canControl)
             return;
+
+        if (vertical != 0 || horizontal != 0)
+            GameInstance.GameState.QuestController.CompleteQuest("Learn Quick!");
+
+        if (!GameInstance.GameState.Paused && Input.GetKeyDown(KeyCode.Escape))
+            GameInstance.HUD.EnableMenu(this);
 
         Interact();
 
@@ -170,6 +214,11 @@ public class PlayerController : Controller
     }
 
     #endregion
+
+    private void OnSceneChange()
+    {
+        GameInstance.Singleton.FeedSavable(this, GetUniqueIDPersistent());
+    }
 
     #region --- HUD ---
 
@@ -441,4 +490,20 @@ public class PlayerController : Controller
     }
 
     #endregion
+
+    protected string GetUniqueID()
+    {
+        if (uniqueID != null)
+            return uniqueID.uniqueId;
+
+        return "";
+    }
+
+    protected bool GetUniqueIDPersistent()
+    {
+        if (uniqueID != null)
+            return uniqueID.persistentAcrossLevels;
+
+        return false;
+    }
 }

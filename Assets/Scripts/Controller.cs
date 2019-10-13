@@ -8,12 +8,12 @@ abstract public class Controller : Actor
                                 OnRevive;
 
     [SerializeField]
-    private ScaledValue hp = new ScaledValue(1, 100);
+    protected ScaledValue hp = new ScaledValue(1, 100);
     [SerializeField]
-    private ScaledValue armour = new ScaledValue(1, 0);
+    protected ScaledValue armour = new ScaledValue(1, 0);
 
-    public ScaledValue Hp { get { return hp; } }
-    public ScaledValue Armour { get { return armour; } }
+    public ref ScaledValue Hp { get { return ref hp; } }
+    public ref ScaledValue Armour { get { return ref armour; } }
 
     protected override bool OnApplyDamage (Damage damage)
     {

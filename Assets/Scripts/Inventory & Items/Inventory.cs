@@ -14,6 +14,11 @@ sealed public class Inventory
         Items.Add(item);
     }
 
+    public void Clear ()
+    {
+        items.Clear();
+    }
+
     public bool Contains (string name)
     {
         string auxName = name.ToLower();

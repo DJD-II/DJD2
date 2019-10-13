@@ -10,6 +10,7 @@ sealed public class LoadSceneInteractable : Interactable
 
     protected override void OnInteract(PlayerController controller)
     {
+        GameInstance.Save();
         GameInstance.Singleton.ToID = toId;
         SceneManager.LoadScene(sceneName);
     }

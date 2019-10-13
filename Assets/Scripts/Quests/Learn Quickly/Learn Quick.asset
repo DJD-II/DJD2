@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: Learn Quick
   m_EditorClassIdentifier: 
   name: Learn Quick!
-  description: 
-  subQuests:
-  - {fileID: 11400000, guid: cf6cbdead7d09d942a13f733366e3537, type: 2}
-  - {fileID: 11400000, guid: f6028c917dc302d4f916a56297ef9b40, type: 2}
-  completed: 0
+  description: Press W,A,S,D to move around!
   hide: 0
   position: []

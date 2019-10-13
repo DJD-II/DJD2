@@ -11,6 +11,7 @@ abstract public class Interactable : MonoBehaviour
     private bool locked = false;
     [SerializeField]
     private string message = "Interact";
+    private UniqueID uniqueID;
 
     public bool Locked
     {
@@ -24,8 +25,12 @@ abstract public class Interactable : MonoBehaviour
                 OnUnlocked?.Invoke(this);
         }
     }
-
     public string Message { get { return message; } }
+
+    protected virtual void Awake()
+    {
+        uniqueID = GetComponent<UniqueID>();
+    }
 
     public void Interact (PlayerController controller)
     {
@@ -33,6 +38,22 @@ abstract public class Interactable : MonoBehaviour
             return;
 
         OnInteract(controller);
+    }
+
+    protected string GetUniqueID()
+    {
+        if (uniqueID != null)
+            return uniqueID.uniqueId;
+
+        return "";
+    }
+
+    protected bool GetUniqueIDPersistent()
+    {
+        if (uniqueID != null)
+            return uniqueID.persistentAcrossLevels;
+
+        return false;
     }
 
     protected abstract void OnInteract(PlayerController controller);
