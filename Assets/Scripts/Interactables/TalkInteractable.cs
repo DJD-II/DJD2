@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class TalkInteractable : Interactable
 {
+    public CONVERSATION currentConvo;
+
     protected override void OnInteract(PlayerController controller)
     {
-        GameInstance.HUD.EnableConversation(true, this);
+        if (currentConvo != null)
+            GameInstance.HUD.EnableConversation(true, this, controller);
     }
 }

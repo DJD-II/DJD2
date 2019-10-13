@@ -15,7 +15,7 @@ public class HUD : MonoBehaviour
     [Header("Lock Pick")]
     public LockController lockPickController;
     [Header("Conversaton")]
-    public TalkUIController talkController;
+    public TalkUIController talkUIController;
 
     public void Initialize()
     {
@@ -76,15 +76,16 @@ public class HUD : MonoBehaviour
         lockPickController.PlayEnterSound();
     }
 
-    public void EnableConversation(bool enable, TalkInteractable interactable)
+    public void EnableConversation(bool enable, TalkInteractable interactable, PlayerController controller)
     {
-        if (talkController == null)
+        if (talkUIController == null)
             return;
 
         GameInstance.GameState.Paused = true;
 
-        talkController.Interactable = interactable;
-        talkController.Initialize();
-        talkController.gameObject.SetActive(enable);
+        talkUIController.Interactable = interactable;
+        talkUIController.PlayerController = controller;
+        talkUIController.Initialize();
+        talkUIController.gameObject.SetActive(enable);
     }
 }
