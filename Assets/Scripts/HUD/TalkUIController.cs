@@ -2,88 +2,133 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Data;
-using Mono.Data.Sqlite;
 using System.IO;
+using UnityEngine.UI;
 
 public class TalkUIController : MonoBehaviour
 {
-    private struct Answer
-    {
-        private string text;
-        private int toId;
-
-        public string Text { get { return text; } }
-        public int ToID { get { return toId; } }
-
-        public Answer (string text, int toId)
-        {
-            this.text = text;
-            this.toId = toId;
-        }
-    }
-
     public GameObject conversationPanel;
     public GameObject answersPanel;
-    private IDbConnection connection;
+    public Text toTalkPanel;
+    public Text toAnswerPanel;
 
+    public GameObject answerButton;
+
+    private int CurrentDialogue { get; set; }
     public TalkInteractable Interactable { get; set; }
+    public PlayerController PlayerController { get; set; }
 
+    private Coroutine slowLettersCoroutine;
     public void Initialize()
     {
-        string connectionPath = "URI=file:" + Application.persistentDataPath + "/Talk.db";
-        connection = new SqliteConnection(connectionPath);
-        connection.Open();
+        CurrentDialogue = 0;
+        SwitchToConversation();
+        toTalkPanel.text = Interactable.currentConvo.managerContents[0].nPCdialogue.text;
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (slowLettersCoroutine != null)
+                StopCoroutine(slowLettersCoroutine);
+            SwitchToAnswers();
+            InstanciateAnswers();
+        }
     }
 
-    private string SearchConversation (int id)
+    // Creates a button and puts the contents inside
+    private void InstanciateAnswers()
     {
-        IDbCommand cmnd_read = connection.CreateCommand();
-        IDataReader reader;
-        string query = "SELECT * FROM Conversations";
-        cmnd_read.CommandText = query;
-        reader = cmnd_read.ExecuteReader();
-        while (reader.Read())
+        while (answersPanel.transform.childCount > 0)
         {
-            Debug.Log("id: " + reader[0].ToString());
-            Debug.Log("val: " + reader[1].ToString());
+            DestroyImmediate(answersPanel.transform.GetChild(0).gameObject);
         }
 
-        return reader[3] as string;
-    }
-
-    private List<Answer> SearchAnswers (int id)
-    {
-        IDbCommand cmnd_read = connection.CreateCommand();
-        IDataReader reader;
-        string query = "SELECT * FROM Conversations";
-        cmnd_read.CommandText = query;
-        reader = cmnd_read.ExecuteReader();
-
-        List<Answer> answers = new List<Answer>();
-
-        while (reader.Read())
+        foreach (PLAYERanswer i in Interactable.currentConvo.managerContents[CurrentDialogue].answers)
         {
-            answers.Add(new Answer(reader[0].ToString(), id));
+            GameObject go = Instantiate(answerButton, answersPanel.transform);
+            AnswersButton button = go.GetComponent<AnswersButton>();
+            button.Initialize(i);
+            button.OnClick += OnAnswer;
         }
-
-        return answers;
     }
 
-    public void Close ()
+    // Checks the contents on the button clicked
+    private void OnAnswer(AnswersButton sender)
     {
-        connection.Close();
-    }
+        ActiveAnswerCheck(sender.pAnswer);
 
-    public void SwitchToAnswers ()
+        DialogueManager i = Interactable.currentConvo.managerContents.Find(x => x.nPCdialogue.id == sender.pAnswer.toID);
+
+
+        if (i.nPCdialogue == null)
+            Close();
+
+        else
+        {
+            toTalkPanel.text = "";
+            CurrentDialogue = Interactable.currentConvo.managerContents.IndexOf(i);
+            slowLettersCoroutine = StartCoroutine(SlowLetters(i.nPCdialogue.text));
+        }
+    }
+    private void ActiveAnswerCheck(PLAYERanswer other)
+    {
+        foreach (PLAYERanswer.Command c in other.command)
+            switch (c)
+            {
+                case PLAYERanswer.Command.Quit:
+                    Close();
+                    break;
+
+                case PLAYERanswer.Command.GiveItem:
+                    foreach (Item i in other.itemsToGive)
+                    {
+                        PlayerController.Inventory.Add(i);
+                    };
+                    break;
+
+                case PLAYERanswer.Command.GiveQuest:
+                    foreach (Quest q in other.questsToGive)
+                    {
+                        GameInstance.GameState.QuestController.Add(other.questsToGive[0]);
+                    }
+                    break;
+                case PLAYERanswer.Command.AddMoney:
+                    Debug.Log("IMPLEMENT_MONEY");
+                    break;
+                case PLAYERanswer.Command.SubtractMoney:
+                    Debug.Log("IMPLEMENT_MONEY");
+                    break;
+            }
+
+    }
+    private IEnumerator SlowLetters(string other)
+    {
+
+        SwitchToConversation();
+
+        for (int i = 0; i < other.Length; i++)
+        {
+            toTalkPanel.text += (other[i]);
+            yield return new WaitForSecondsRealtime(0.15f);
+        }
+    }
+    private void Close()
+    {
+        StopCoroutine(slowLettersCoroutine);
+        GameInstance.GameState.Paused = false;
+        gameObject.SetActive(false);
+    }
+    public void SwitchToAnswers()
     {
         if (conversationPanel != null)
             conversationPanel.SetActive(false);
 
-        if(answersPanel != null)
+        if (answersPanel != null)
             answersPanel.SetActive(true);
     }
 
-    public void SwitchToConversation ()
+    public void SwitchToConversation()
     {
         if (conversationPanel != null)
             conversationPanel.SetActive(true);
