@@ -4864,7 +4864,7 @@ MonoBehaviour:
   loot: {fileID: 3965641375928397747}
   digitalNewsPaper: {fileID: 1928086272}
   lockPickController: {fileID: 403244844119889785}
-  talkUIController: {fileID: 0}
+  talkUIController: {fileID: 2896518670003330723}
 --- !u!1 &5463681159192112283
 GameObject:
   m_ObjectHideFlags: 0
@@ -5040,9 +5040,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9ff9ca9bda76b4e92a3695a918f32b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  answerButton: {fileID: 313292498859413745, guid: d750880c011b30e4faa5efc5ff1a537f,
+    type: 3}
   conversationPanel: {fileID: 8422001987725535335}
   answersPanel: {fileID: 1151044184051915625}
-  toTalkPanel: {fileID: 0}
+  toTalkPanel: {fileID: 5370934444413097008}
   toAnswerPanel: {fileID: 0}
 --- !u!1 &5567302976883128664
 GameObject:
