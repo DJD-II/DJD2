@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "New Quest", menuName = "Quests/New Quest")]
 public class Quest : ScriptableObject
 {
-    public new string       name;
-    public string           description;
-    public bool             hide;
-    public Vector3[]        position;
+    public new string name;
+    public string description;
+    public bool hide;
+    public Vector3[] position;
 }

@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 [System.Serializable]
-sealed public class OptionsSaveGameObject : SaveGame.Object
+sealed public class OptionsSaveGameObject : IO.Object
 {
-    public float                        _musicVolume,
+    public float _musicVolume,
                                         _effectsVolume,
                                         _announcerVolume;
-    public int                          _qualitySettings;
+    public int _qualitySettings;
 
     public OptionsSaveGameObject()
     {
@@ -15,6 +14,6 @@ sealed public class OptionsSaveGameObject : SaveGame.Object
 
     public void Add(string key, KeyCode keyCode)
     {
-        
+
     }
 }

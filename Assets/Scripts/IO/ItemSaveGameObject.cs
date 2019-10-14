@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 [System.Serializable]
 public abstract class Savable : object
@@ -8,7 +6,7 @@ public abstract class Savable : object
     public string sceneName;
     public string id;
 
-    public Savable (string id, string sceneName)
+    public Savable(string id, string sceneName)
     {
         this.id = id;
         this.sceneName = sceneName;
@@ -21,7 +19,7 @@ public interface ISavable
 }
 
 [System.Serializable]
-public class PlaySaveGameObject : SaveGame.Object
+public class PlaySaveGameObject : IO.Object
 {
     public List<Savable> objects;
 

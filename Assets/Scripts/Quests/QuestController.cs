@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -33,7 +32,7 @@ sealed public class QuestController : object
     public delegate void EventHandler(QuestController sender);
     public delegate void QuestEventHandler(QuestController sender, QuestID quest);
 
-    public event QuestEventHandler  OnQuestAdded,
+    public event QuestEventHandler OnQuestAdded,
                                     OnQuestRemoved,
                                     OnQuestCompleted;
 
@@ -42,7 +41,7 @@ sealed public class QuestController : object
 
     public List<QuestID> Quest { get { return quests; } }
 
-    public void Add (Quest quest)
+    public void Add(Quest quest)
     {
         if (Get(quest.name) != null)
             return;
@@ -71,12 +70,12 @@ sealed public class QuestController : object
             }
     }
 
-    public QuestID Get (string name)
+    public QuestID Get(string name)
     {
         return quests.Find(x => x.quest.name.Equals(name));
     }
 
-    public void CompleteQuest (string name)
+    public void CompleteQuest(string name)
     {
         string auxName = name.ToLower();
 

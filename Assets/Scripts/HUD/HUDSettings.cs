@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System.Collections.Generic;
 
 
 /// <summary>
@@ -190,7 +188,7 @@ namespace CurvedHUD
             if (rectSize.x == 0 || rectSize.y == 0)
                 Debug.LogError("CurvedUI: Your Canvas size must be bigger than 0!");
         }
-       
+
         #endregion
 
         #region --- Methods ---
@@ -276,7 +274,7 @@ namespace CurvedHUD
             float ret = canvasSize.x;
             float ret2 = canvasSize.y;
 
-            if (Angle != 0 )
+            if (Angle != 0)
             {
                 ret = Mathf.Min(canvasSize.x / 4, canvasSize.x / (Mathf.Abs(angle).Remap(0.0f, 360.0f, 0, 1) * baseCircleSegments * 0.5f));
                 ret2 = ret * canvasSize.y / canvasSize.x;

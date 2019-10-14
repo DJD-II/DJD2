@@ -8,21 +8,22 @@ public class PlayerController : Controller, ISavable
     #region --- Structs ---
     internal struct CameraShakeSettings
     {
-        public Vector3      pos,
+        public Vector3 pos,
                             initialPosition;
-        public Vector3      rot,
+        public Vector3 rot,
                             initialRotation;
-        public float        fov,
+        public float fov,
                             initialFieldOfView;
-        public Coroutine    shakeCoroutine;
+        public Coroutine shakeCoroutine;
     }
 
     #endregion
 
+    [System.Serializable]
     sealed public class PlayerSavable : Savable
     {
-        public float   hpScalar;
-        public float     max;
+        public float hpScalar;
+        public float max;
         public List<ItemID> items;
 
         public PlayerSavable(string id, ScaledValue hp, List<Item> items)
@@ -40,72 +41,72 @@ public class PlayerController : Controller, ISavable
     #region --- Fields ---
 
     [Header("Character")]
-    public GameObject           graphics;
+    public GameObject graphics;
     [Header("Weight")]
-    public float                mass = 12f;
-    float                       yRotation = 0f;
-    CharacterController         controller;
-    Vector3                     gravityForce = Vector3.zero;
-    private bool                grounded = false;
+    public float mass = 12f;
+    float yRotation = 0f;
+    CharacterController controller;
+    Vector3 gravityForce = Vector3.zero;
+    private bool grounded = false;
     [Header("Movement")]
     [SerializeField]
-    private bool                canControl = true;
+    private bool canControl = true;
     [SerializeField]
-    private float               speed = 4f;
-    private float               currentSpeed = 0f;
+    private float speed = 4f;
+    private float currentSpeed = 0f;
     [SerializeField]
-    private float               runSpeed = 8f;
+    private float runSpeed = 8f;
     [SerializeField]
-    private float               jumpSpeed = 20;
-    private Vector3             force = Vector3.zero;
-    private Vector3             jumpForce = Vector3.zero;
+    private float jumpSpeed = 20;
+    private Vector3 force = Vector3.zero;
+    private Vector3 jumpForce = Vector3.zero;
     [Header("Camera")]
-    public Camera               cam;
-    public Animation            fallPivot;
-    public Transform            cameraPivot;
-    public Vector2              minMaxY;
-    public float                lookSpeed = 20f;
+    public Camera cam;
+    public Animation fallPivot;
+    public Transform cameraPivot;
+    public Vector2 minMaxY;
+    public float lookSpeed = 20f;
     [Header("Wobble")]
-    public Transform            wobblePivot;
+    public Transform wobblePivot;
     [Range(0f, 5f)]
     [SerializeField]
-    private float               walkWoobleAmount = 1.2f;
+    private float walkWoobleAmount = 1.2f;
     [Range(0f, 5f)]
     [SerializeField]
-    private float               runWoobleAmount = 1.2f;
+    private float runWoobleAmount = 1.2f;
     [Range(0f, 90f)]
     [SerializeField]
-    private float               walkZRotation = 20f;
+    private float walkZRotation = 20f;
     [Range(0f, 90f)]
     [SerializeField]
-    private float               runZRotation = 20f;
+    private float runZRotation = 20f;
     [Range(0f, 100f)]
     [SerializeField]
-    private float               walkWobbleSpeed = 20f;
+    private float walkWobbleSpeed = 20f;
     [Range(0f, 100f)]
     [SerializeField]
-    private float               runWobbleSpeed = 20f;
+    private float runWobbleSpeed = 20f;
     [HideInInspector]
-    CameraShakeSettings         cameraShakeSettings;
-    public static CameraShake   explosionShake;
-    private float               fallTimer = 0;
+    CameraShakeSettings cameraShakeSettings;
+    public static CameraShake explosionShake;
+    private float fallTimer = 0;
     [Header("Interaction")]
     [SerializeField]
     [Range(1f, 500f)]
-    private float               interactDistance = 100f;
-    private Interactable        interactable;
+    private float interactDistance = 100f;
+    private Interactable interactable;
     [SerializeField]
-    private LayerMask           ignoreLayers = 0;
+    private LayerMask ignoreLayers = 0;
     [Header("Inventory")]
     [SerializeField]
-    private Inventory           inventory = new Inventory();
+    private Inventory inventory = new Inventory();
     [Header("HUDs")]
-    public GameObject           huds;
-    public Image                batteryImage;
-    private Damage.Point        reducer;
-    private UniqueID            uniqueID;
+    public GameObject huds;
+    public Image batteryImage;
+    private Damage.Point reducer;
+    private UniqueID uniqueID;
     [SerializeField]
-    private Quest               mainQuest = null;
+    private Quest mainQuest = null;
 
     #endregion
 
@@ -124,15 +125,18 @@ public class PlayerController : Controller, ISavable
 
     private void Awake()
     {
-        GameInstance.OnSave += OnSceneChange;
+        
+        GameInstance.OnLoad += OnLoaded;
 
         controller = GetComponent<CharacterController>();
+        uniqueID = GetComponent<UniqueID>();
         reducer = new Damage.Point(this, true, 1);
     }
 
     private void OnDestroy()
     {
         GameInstance.OnSave -= OnSceneChange;
+        GameInstance.OnLoad -= OnLoaded;
         GameInstance.GameState.OnPausedChanged -= OnPause;
     }
 
@@ -144,17 +148,7 @@ public class PlayerController : Controller, ISavable
 
     private void Start()
     {
-        uniqueID = GetComponent<UniqueID>();
-
-        PlayerSavable savable = GameInstance.Singleton.GetSavable(GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, GetUniqueIDPersistent()) as PlayerSavable;
-        if (savable != null)
-        {
-            hp = new ScaledValue(savable.hpScalar, savable.max);
-
-            foreach (ItemID i in savable.items)
-                inventory.Add(ItemUtility.GetItem(i.name));
-        }
-
+        GameInstance.OnSave += OnSceneChange;
         GameInstance.GameState.OnPausedChanged += OnPause;
 
         cameraShakeSettings = new CameraShakeSettings
@@ -214,6 +208,19 @@ public class PlayerController : Controller, ISavable
     }
 
     #endregion
+
+    private void OnLoaded()
+    {
+        Debug.Log("Loading Player");
+        PlayerSavable savable = GameInstance.Singleton.GetSavable(GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, GetUniqueIDPersistent()) as PlayerSavable;
+        if (savable != null)
+        {
+            hp = new ScaledValue(savable.hpScalar, savable.max);
+
+            foreach (ItemID i in savable.items)
+                inventory.Add(ItemUtility.GetItem(i.name));
+        }
+    }
 
     private void OnSceneChange()
     {
@@ -291,7 +298,7 @@ public class PlayerController : Controller, ISavable
 
     #region --- Pick ---
 
-    private void Interact ()
+    private void Interact()
     {
         if (interactable == null)
             return;
@@ -425,7 +432,7 @@ public class PlayerController : Controller, ISavable
             multiplier *= Mathf.Clamp01(controller.velocity.magnitude);
             float time = Time.time;
 
-            wobblePivot.transform.localPosition = Vector3.Lerp(wobblePivot.transform.localPosition, new Vector3(0f, Mathf.Sin(time * WobbleSpeed) * WobleAmount * multiplier, 0f) , Time.deltaTime * 2f);
+            wobblePivot.transform.localPosition = Vector3.Lerp(wobblePivot.transform.localPosition, new Vector3(0f, Mathf.Sin(time * WobbleSpeed) * WobleAmount * multiplier, 0f), Time.deltaTime * 2f);
             wobblePivot.transform.localRotation = Quaternion.Slerp(wobblePivot.transform.localRotation, Quaternion.Euler(0f, 0f, Mathf.Sin(time * WobbleSpeed / 2) * ZRotation * multiplier), Time.deltaTime * 2f);
         }
         else

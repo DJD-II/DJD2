@@ -1,12 +1,12 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class HUD : MonoBehaviour
 {
     [Header("CrossHair")]
     public Text crossHair;
-    [Header ("Interaction")]
+    [Header("Interaction")]
     public TextMeshProUGUI interactMessage;
     [Header("Loot")]
     public LootInventory loot;
@@ -20,9 +20,7 @@ public class HUD : MonoBehaviour
     [Header("Menu")]
     [SerializeField]
     private HUDMenuController menu;
-=======
     public TalkUIController talkUIController;
->>>>>>> origin/Freeze
 
     public void Initialize()
     {
@@ -36,7 +34,7 @@ public class HUD : MonoBehaviour
         };
     }
 
-    public void EnableInteractMessage (bool visible, Interactable interactable)
+    public void EnableInteractMessage(bool visible, Interactable interactable)
     {
         if (interactMessage == null)
             return;
@@ -45,7 +43,7 @@ public class HUD : MonoBehaviour
         interactMessage.text = interactable == null ? "" : "[E] " + interactable.Message + (interactable.Locked ? " [LOCKED]" : "");
     }
 
-    public void EnableObjectInventory (LootInteractable interactable, PlayerController controller)
+    public void EnableObjectInventory(LootInteractable interactable, PlayerController controller)
     {
         if (loot == null)
             return;
@@ -69,11 +67,11 @@ public class HUD : MonoBehaviour
         digitalNewsPaper.gameObject.SetActive(enable);
     }
 
-    public void EnableLockPick (bool enable, Interactable interactable, PlayerController controller)
+    public void EnableLockPick(bool enable, Interactable interactable, PlayerController controller)
     {
         if (lockPickController == null)
             return;
-        
+
         GameInstance.GameState.Paused = true;
 
         lockPickController.Interactable = interactable;
@@ -93,10 +91,10 @@ public class HUD : MonoBehaviour
         talkUIController.Interactable = interactable;
         talkUIController.PlayerController = controller;
         talkUIController.Initialize();
-        talkUIController.gameObject.SetActive(enable);
+        talkUIController.gameObject.SetActive(true);
     }
 
-    public void EnableMenu (PlayerController controller)
+    public void EnableMenu(PlayerController controller)
     {
         GameInstance.GameState.Paused = true;
 

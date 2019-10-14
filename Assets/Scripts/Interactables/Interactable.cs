@@ -32,7 +32,7 @@ abstract public class Interactable : MonoBehaviour
         uniqueID = GetComponent<UniqueID>();
     }
 
-    public void Interact (PlayerController controller)
+    public void Interact(PlayerController controller)
     {
         if (!canInteract)
             return;

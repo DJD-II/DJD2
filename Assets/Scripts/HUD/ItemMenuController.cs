@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ItemMenuController : MonoBehaviour
@@ -22,7 +20,7 @@ public class ItemMenuController : MonoBehaviour
         button.Item.Use(controller);
     }
 
-    public void Close ()
+    public void Close()
     {
         gameObject.SetActive(false);
     }

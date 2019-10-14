@@ -1,6 +1,5 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,7 +30,7 @@ public class HUDMenuController : MonoBehaviour
         this.controller = controller;
     }
 
-    private void Close ()
+    private void Close()
     {
         inventoryMenu.SetActive(false);
 
@@ -67,7 +66,7 @@ public class HUDMenuController : MonoBehaviour
         itemMenuController.gameObject.SetActive(false);
         inventoryMenu.SetActive(id == 0);
 
-        switch(id)
+        switch (id)
         {
             case 0:
                 InitializeInventoryList();

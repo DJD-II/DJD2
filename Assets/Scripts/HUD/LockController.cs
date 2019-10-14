@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LockController : MonoBehaviour
@@ -22,7 +21,7 @@ public class LockController : MonoBehaviour
     public AudioSource lockpickMovement;
     public AudioSource unlockSFX;
     public AudioSource bobbyPinBreak;
-  
+
     private Animator bobbyPinAnimator;
     private bool picking = false;
     private bool active = false;
@@ -81,13 +80,13 @@ public class LockController : MonoBehaviour
             bobbyPin.transform.localRotation = Quaternion.identity;
     }
 
-    public void PlayEnterSound ()
+    public void PlayEnterSound()
     {
         if (enterSFX != null)
             enterSFX.Play();
     }
 
-    public void Close ()
+    public void Close()
     {
         active = false;
 
@@ -107,13 +106,13 @@ public class LockController : MonoBehaviour
         return Mathf.Clamp(angle - 180, maxMinRotation.x, maxMinRotation.y) + 360;
     }
 
-    private void UpdateBobbyPin ()
+    private void UpdateBobbyPin()
     {
         if (picking)
             return;
 
         Vector3 lookAt = Input.mousePosition;
-        float lastBobbyPinAngle = BobbyPinAngle; 
+        float lastBobbyPinAngle = BobbyPinAngle;
         BobbyPinAngle = ClampAngle(Mathf.Atan2(lookAt.y - bobbyPin.transform.position.y, lookAt.x - bobbyPin.transform.position.x) * Mathf.Rad2Deg - 90f);
         bobbyPin.transform.localRotation = Quaternion.Euler(0f, 0f, BobbyPinAngle);
 
@@ -126,7 +125,7 @@ public class LockController : MonoBehaviour
         }
     }
 
-    private void UpdateLock ()
+    private void UpdateLock()
     {
         float angle;
 
@@ -138,9 +137,9 @@ public class LockController : MonoBehaviour
             return;
         }
 
-        float distance = Mathf.Abs (Angle - (BobbyPinAngle - 360));
-        float maxDistance = Mathf.Max(Mathf.Abs (90 + Angle), Mathf.Abs(90 - Angle));
-        float influence = Mathf.Abs (3f + 90f * (1 - distance / maxDistance));
+        float distance = Mathf.Abs(Angle - (BobbyPinAngle - 360));
+        float maxDistance = Mathf.Max(Mathf.Abs(90 + Angle), Mathf.Abs(90 - Angle));
+        float influence = Mathf.Abs(3f + 90f * (1 - distance / maxDistance));
         angle = Mathf.LerpAngle(lockPick.transform.localEulerAngles.z, influence, Time.unscaledDeltaTime * 4f);
         lockPick.transform.localRotation = Quaternion.Euler(0f, 0f, angle);
 
@@ -161,7 +160,7 @@ public class LockController : MonoBehaviour
         }
     }
 
-    private IEnumerator Reset ()
+    private IEnumerator Reset()
     {
         yield return new WaitForSecondsRealtime(1f);
 

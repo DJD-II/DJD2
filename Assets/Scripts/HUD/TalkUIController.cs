@@ -1,8 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.Data;
-using System.IO;
 using UnityEngine.UI;
 
 public class TalkUIController : MonoBehaviour
@@ -10,7 +7,6 @@ public class TalkUIController : MonoBehaviour
     public GameObject conversationPanel;
     public GameObject answersPanel;
     public Text toTalkPanel;
-    public Text toAnswerPanel;
 
     public GameObject answerButton;
 
@@ -44,7 +40,7 @@ public class TalkUIController : MonoBehaviour
             DestroyImmediate(answersPanel.transform.GetChild(0).gameObject);
         }
 
-        foreach (PLAYERanswer i in Interactable.currentConvo.managerContents[CurrentDialogue].answers)
+        foreach (PlayerAnswer i in Interactable.currentConvo.managerContents[CurrentDialogue].answers)
         {
             GameObject go = Instantiate(answerButton, answersPanel.transform);
             AnswersButton button = go.GetComponent<AnswersButton>();
@@ -61,7 +57,7 @@ public class TalkUIController : MonoBehaviour
         DialogueManager i = Interactable.currentConvo.managerContents.Find(x => x.nPCdialogue.id == sender.pAnswer.toID);
 
 
-        if (i.nPCdialogue == null)
+        if (i == null)
             Close();
 
         else
@@ -71,32 +67,32 @@ public class TalkUIController : MonoBehaviour
             slowLettersCoroutine = StartCoroutine(SlowLetters(i.nPCdialogue.text));
         }
     }
-    private void ActiveAnswerCheck(PLAYERanswer other)
+    private void ActiveAnswerCheck(PlayerAnswer other)
     {
-        foreach (PLAYERanswer.Command c in other.command)
+        foreach (PlayerAnswer.Command c in other.command)
             switch (c)
             {
-                case PLAYERanswer.Command.Quit:
+                case PlayerAnswer.Command.Quit:
                     Close();
                     break;
 
-                case PLAYERanswer.Command.GiveItem:
+                case PlayerAnswer.Command.GiveItem:
                     foreach (Item i in other.itemsToGive)
                     {
                         PlayerController.Inventory.Add(i);
                     };
                     break;
 
-                case PLAYERanswer.Command.GiveQuest:
+                case PlayerAnswer.Command.GiveQuest:
                     foreach (Quest q in other.questsToGive)
                     {
                         GameInstance.GameState.QuestController.Add(other.questsToGive[0]);
                     }
                     break;
-                case PLAYERanswer.Command.AddMoney:
+                case PlayerAnswer.Command.AddMoney:
                     Debug.Log("IMPLEMENT_MONEY");
                     break;
-                case PLAYERanswer.Command.SubtractMoney:
+                case PlayerAnswer.Command.SubtractMoney:
                     Debug.Log("IMPLEMENT_MONEY");
                     break;
             }
@@ -115,7 +111,8 @@ public class TalkUIController : MonoBehaviour
     }
     private void Close()
     {
-        StopCoroutine(slowLettersCoroutine);
+        if (slowLettersCoroutine != null)
+            StopCoroutine(slowLettersCoroutine);
         GameInstance.GameState.Paused = false;
         gameObject.SetActive(false);
     }

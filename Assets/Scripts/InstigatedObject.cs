@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-public class InstigatedObject : object
+﻿public class InstigatedObject : object
 {
     public Actor Instigator { get; }
 

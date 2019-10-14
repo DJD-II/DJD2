@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 [System.Serializable]
-public struct DialogueManager
+public class DialogueManager
 {
     public string name;
-    public NPCdialogue nPCdialogue;
-    public List<PLAYERanswer> answers;
+    public NpcDialogue nPCdialogue;
+    public List<PlayerAnswer> answers;
 }

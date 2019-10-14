@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,7 +17,7 @@ public class QuestMessageController : MonoBehaviour
         quests.Add(quest);
     }
 
-    private void OnQuestCompleted (QuestController sender, QuestController.QuestID quest)
+    private void OnQuestCompleted(QuestController sender, QuestController.QuestID quest)
     {
         timer = 0;
         transform.localPosition = initPos - new Vector3(300, 0, 0);

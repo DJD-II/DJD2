@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
-using TMPro;
 
 public class QuestUIController : MonoBehaviour
 {
     public GameObject panel;
     public TextMeshProUGUI titleLabel;
-    public TextMeshProUGUI descriptionLabel; 
+    public TextMeshProUGUI descriptionLabel;
     private float timer = 0f;
 
     private void Awake()

@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using TMPro;
+﻿using TMPro;
+using UnityEngine;
 
 public class LootButton : MonoBehaviour
 {
@@ -14,7 +14,7 @@ public class LootButton : MonoBehaviour
 
     public Item Item { get; private set; }
 
-    public void Initialize (Item item, int quantity)
+    public void Initialize(Item item, int quantity)
     {
         Item = item;
 
@@ -25,17 +25,17 @@ public class LootButton : MonoBehaviour
             quantityLabel.text = "x" + quantity.ToString();
     }
 
-    public void HoverEnter ()
+    public void HoverEnter()
     {
         OnHoverEnter?.Invoke(this);
     }
 
-    public void HoverExit ()
+    public void HoverExit()
     {
         OnHoverExit?.Invoke(this);
     }
 
-    public void Click ()
+    public void Click()
     {
         OnClicked?.Invoke(this);
     }

@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 sealed public class LootInteractable : Interactable, ISavable
 {
@@ -30,14 +30,17 @@ sealed public class LootInteractable : Interactable, ISavable
     {
         base.Awake();
 
-        GameInstance.OnSave += OnSceneChange;
+        GameInstance.OnLoad += OnLoaded;
 
         inventory = new Inventory();
-
-       
     }
 
     private void Start()
+    {
+        GameInstance.OnSave += OnSceneChange;
+    }
+
+    private void OnLoaded()
     {
         LootSavable savable = GameInstance.Singleton.GetSavable(GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, GetUniqueIDPersistent()) as LootSavable;
         if (savable != null)
@@ -59,7 +62,7 @@ sealed public class LootInteractable : Interactable, ISavable
         GameInstance.Singleton.FeedSavable(this, GetUniqueIDPersistent());
     }
 
-    protected override void OnInteract (PlayerController controller)
+    protected override void OnInteract(PlayerController controller)
     {
         if (Locked && controller.Inventory.Contains("Bobby Pin"))
             GameInstance.HUD.EnableLockPick(true, this, controller);

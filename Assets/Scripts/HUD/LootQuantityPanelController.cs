@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class LootQuantityPanelController : MonoBehaviour
 {
@@ -8,14 +8,14 @@ public class LootQuantityPanelController : MonoBehaviour
 
     public event EventHandler OnClose;
 
-    public TextMeshProUGUI  minLabel;
-    public TextMeshProUGUI  maxLabel;
-    public Slider           quantitySlider;
-    private Inventory       fromInventory,
+    public TextMeshProUGUI minLabel;
+    public TextMeshProUGUI maxLabel;
+    public Slider quantitySlider;
+    private Inventory fromInventory,
                             toInventory;
-    private LootButton      lootButton;
+    private LootButton lootButton;
     [Header("Audio")]
-    public AudioSource      takeAll;
+    public AudioSource takeAll;
 
     public void Initialize(LootButton lootButton, Inventory from, Inventory to)
     {
@@ -35,30 +35,30 @@ public class LootQuantityPanelController : MonoBehaviour
         toInventory = to;
     }
 
-    public void OnSliderChanged ()
+    public void OnSliderChanged()
     {
         if (minLabel != null)
             minLabel.text = quantitySlider.value.ToString("f0");
     }
 
-    private void Close ()
+    private void Close()
     {
         OnClose?.Invoke(this);
         gameObject.SetActive(false);
     }
 
-    public void Accept ()
+    public void Accept()
     {
         Take(uint.Parse(minLabel.text));
     }
 
-    public void TakeAll ()
+    public void TakeAll()
     {
         if (Take(uint.Parse(maxLabel.text)))
             takeAll.Play();
     }
 
-    public bool Take (uint count)
+    public bool Take(uint count)
     {
         string itemName = lootButton.Item.name;
         bool taken = false;

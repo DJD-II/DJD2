@@ -14,15 +14,15 @@ public class Item : ScriptableObject
         Scrap_Metal,
     }
 
-    public Sprite       icon;
-    public Tag          tag;
-    public string       description;
-    public float        weight;
-    public float        cost;
+    public Sprite icon;
+    public Tag tag;
+    public string description;
+    public float weight;
+    public float cost;
 
-    public void Use (PlayerController controller)
+    public void Use(PlayerController controller)
     {
-        switch(tag)
+        switch (tag)
         {
             case Tag.Battery:
                 controller.Hp.Add(50);
@@ -32,7 +32,7 @@ public class Item : ScriptableObject
                 controller.Hp.Add(20);
                 break;
             case Tag.Oil:
-                
+
                 break;
             case Tag.Bubble_Gum:
 

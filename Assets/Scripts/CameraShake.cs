@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class CameraShake
+﻿public class CameraShake
 {
     public struct ElementShake
     {

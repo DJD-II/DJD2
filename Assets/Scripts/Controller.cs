@@ -2,7 +2,7 @@
 
 abstract public class Controller : Actor
 {
-    public event EventHandler   OnDeath,
+    public event EventHandler OnDeath,
                                 OnHealed,
                                 OnDamaged,
                                 OnRevive;
@@ -15,7 +15,7 @@ abstract public class Controller : Actor
     public ref ScaledValue Hp { get { return ref hp; } }
     public ref ScaledValue Armour { get { return ref armour; } }
 
-    protected override bool OnApplyDamage (Damage damage)
+    protected override bool OnApplyDamage(Damage damage)
     {
         bool isAlive = !Hp.IsEmpty;
 

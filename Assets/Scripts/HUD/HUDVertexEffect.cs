@@ -1,8 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 
 namespace CurvedHUD
 {
@@ -13,7 +11,7 @@ namespace CurvedHUD
         VertexHelper vertexHelper; //used int 5.2 and later
         List<UIVertex> vertices;
 
-       
+
         //public settings
         [Tooltip("Check to skip tesselation pass on this object. CurvedUI will not create additional vertices to make this object have a smoother curve. Checking this can solve some issues if you create your own procedural mesh for this object. Default false.")]
         public bool DoNotTesselate = false;
@@ -506,7 +504,7 @@ namespace CurvedHUD
 
             return ret;
         }
-        
+
         #endregion
     }
 
