@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 sealed public class LockController : MonoBehaviour
 {
@@ -7,9 +8,16 @@ sealed public class LockController : MonoBehaviour
 
     public event EventHandler OnUnlock;
 
+    [Header("Speed")]
+    [SerializeField]
+    private float pickSpeed = 60f;
+    [SerializeField]
+    private float pickPullback = 8f;
     [Header("Bobby Pin")]
     [SerializeField]
     private GameObject bobbyPin = null;
+    [SerializeField]
+    private Text bobbyPinsAmmount = null;
     [SerializeField]
     private Vector2 maxMinRotation = Vector2.zero;
     [Header("Lock")]
@@ -85,6 +93,9 @@ sealed public class LockController : MonoBehaviour
 
         if (bobbyPin != null)
             bobbyPin.transform.localRotation = Quaternion.identity;
+
+        PlayerController.Inventory.Remove("Bobby Pin");
+        bobbyPinsAmmount.text = "+" + PlayerController.Inventory.GetAmmount("Bobby Pin").ToString();
     }
 
     public void PlayEnterSound()
@@ -100,6 +111,13 @@ sealed public class LockController : MonoBehaviour
         GameInstance.GameState.Paused = false;
 
         gameObject.SetActive(false);
+    }
+
+    private IEnumerator Close(float time)
+    {
+        yield return new WaitForSecondsRealtime(time);
+
+        Close();
     }
 
     private float ClampAngle(float currentValue)
@@ -145,24 +163,35 @@ sealed public class LockController : MonoBehaviour
         }
 
         float distance = Mathf.Abs(Angle - (BobbyPinAngle - 360));
-        float maxDistance = Mathf.Max(Mathf.Abs(90 + Angle), Mathf.Abs(90 - Angle));
-        float influence = Mathf.Abs(3f + 90f * (1 - distance / maxDistance));
-        angle = Mathf.LerpAngle(lockPick.transform.localEulerAngles.z, influence, Time.unscaledDeltaTime * 4f);
+        float maxDistance = Mathf.Max(Mathf.Abs(100 + Angle), Mathf.Abs(100 - Angle));
+        float influence = Mathf.Abs( 90f * (1 - distance / maxDistance));
+        angle = Mathf.MoveTowardsAngle(lockPick.transform.localEulerAngles.z, influence, Time.unscaledDeltaTime * pickSpeed);
         lockPick.transform.localRotation = Quaternion.Euler(0f, 0f, angle);
 
         if (lockPick.transform.localEulerAngles.z > 90 - Tolerance)
             OnUnlock?.Invoke(this);
         else if (Mathf.Abs(angle - influence) < 2f)
         {
-            lockPick.transform.localRotation = Quaternion.Euler(0f, 0f, angle - 5f);
+            lockPick.transform.localRotation = Quaternion.Euler(0f, 0f, angle - pickPullback);
             Damage += 0.2f;
         }
 
         if (Damage > 3)
         {
+            int ammount = PlayerController.Inventory.GetAmmount("Bobby Pin");
+            PlayerController.Inventory.Remove("Bobby Pin");
+            bobbyPinsAmmount.text = "+" + (ammount - 1).ToString();
+
             active = false;
-            bobbyPin.SetActive(false);
             bobbyPinBreak.Play();
+
+            if (ammount == 0)
+            {
+                StartCoroutine(Close(3f));
+                return;
+            }
+
+            bobbyPin.SetActive(false);
             StartCoroutine(Reset());
         }
     }

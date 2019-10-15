@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [System.Serializable]
 sealed public class Inventory
@@ -14,9 +15,23 @@ sealed public class Inventory
         Items.Add(item);
     }
 
+    public bool Remove (string name)
+    {
+        Item i = items.Find(x => x.name.ToLower().Equals(name.ToLower()));
+        if (i == null)
+            return false;
+
+        return items.Remove(i);
+    }
+
     public void Clear()
     {
         items.Clear();
+    }
+
+    public int GetAmmount (string name)
+    {
+        return items.Where(x=> x.Name.ToLower().Equals(name.ToLower())).Count();
     }
 
     public bool Contains(string name)

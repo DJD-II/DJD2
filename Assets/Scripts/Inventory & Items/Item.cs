@@ -12,6 +12,7 @@ sealed public class Item : ScriptableObject
         Bobby_Pin,
         Bubble_Gum,
         Scrap_Metal,
+        Crow_Bar,
     }
 
     public Sprite icon;
