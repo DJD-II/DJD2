@@ -29,19 +29,19 @@ sealed public class LootInteractable : Interactable, ISavable
     {
         base.Awake();
 
-        GameInstance.OnLoad += OnLoaded;
+        GameInstance.OnLoad += OnLoad;
 
         Inventory = new Inventory();
     }
 
     private void Start()
     {
-        GameInstance.OnSave += OnSceneChange;
+        GameInstance.OnSave += OnSave;
     }
 
-    private void OnLoaded()
+    private void OnLoad(PlaySaveGameObject io)
     {
-        LootSavable savable = GameInstance.Singleton.GetSavable(GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, GetUniqueIDPersistent()) as LootSavable;
+        LootSavable savable = io.Get(GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, GetUniqueIDPersistent()) as LootSavable;
         if (savable != null)
         {
             Locked = savable.locked;
@@ -56,9 +56,9 @@ sealed public class LootInteractable : Interactable, ISavable
             Inventory.Add(item);
     }
 
-    private void OnSceneChange()
+    private void OnSave(PlaySaveGameObject io)
     {
-        GameInstance.Singleton.FeedSavable(this, GetUniqueIDPersistent());
+        io.Feed(this, GetUniqueIDPersistent());
     }
 
     protected override void OnInteract(PlayerController controller)
@@ -76,8 +76,8 @@ sealed public class LootInteractable : Interactable, ISavable
 
     void OnDestroy()
     {
-        GameInstance.OnSave -= OnSceneChange;
-        GameInstance.OnLoad -= OnLoaded;
+        GameInstance.OnSave -= OnSave;
+        GameInstance.OnLoad -= OnLoad;
     }
 
     Savable ISavable.IO { get { return new LootSavable(GetUniqueID(), Inventory.Items, Locked); } }

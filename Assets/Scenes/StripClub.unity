@@ -1294,7 +1294,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000013054727334, guid: 0bd829886aa0b724a8bba2a525fc638f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.091
+      value: 1.3658502
       objectReference: {fileID: 0}
     - target: {fileID: 4000013054727334, guid: 0bd829886aa0b724a8bba2a525fc638f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3614,7 +3614,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000013904924558, guid: 220daf4a002f345438f4c15ad94df001, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.2021497
+      value: 1.477
       objectReference: {fileID: 0}
     - target: {fileID: 4000013904924558, guid: 220daf4a002f345438f4c15ad94df001, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4310,8 +4310,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b64d17f46234aa84c8d5b1a347ad6461, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minAdvance: 0
-  maxAdvance: 1
+  minAdvance: 0.25
+  maxAdvance: 0.839
   autoPlay: 1
 --- !u!1001 &802261812
 PrefabInstance:
@@ -5038,6 +5038,7 @@ MonoBehaviour:
   message: Exit To City
   toId: 3
   sceneName: Showcase
+  itemsNeeded: []
 --- !u!65 &929375782
 BoxCollider:
   m_ObjectHideFlags: 0

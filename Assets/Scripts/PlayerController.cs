@@ -155,13 +155,13 @@ public class PlayerController : Controller, ISavable
         uniqueID = GetComponent<UniqueID>();
         reducer = new PointDamage(this, true, 1);
 
-        GameInstance.OnLoad += OnLoaded;
+        GameInstance.OnLoad += OnLoad;
     }
 
     private void OnDestroy()
     {
-        GameInstance.OnSave -= OnSceneChange;
-        GameInstance.OnLoad -= OnLoaded;
+        GameInstance.OnSave -= OnSave;
+        GameInstance.OnLoad -= OnLoad;
         GameInstance.GameState.OnPausedChanged -= OnPause;
     }
 
@@ -173,7 +173,7 @@ public class PlayerController : Controller, ISavable
 
     private void Start()
     {
-        GameInstance.OnSave += OnSceneChange;
+        GameInstance.OnSave += OnSave;
         GameInstance.GameState.OnPausedChanged += OnPause;
 
         cameraShakeSettings = new CameraShakeSettings
@@ -234,9 +234,9 @@ public class PlayerController : Controller, ISavable
 
     #endregion
 
-    private void OnLoaded()
+    private void OnLoad(PlaySaveGameObject io)
     {
-        PlayerSavable savable = GameInstance.Singleton.GetSavable(GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, GetUniqueIDPersistent()) as PlayerSavable;
+        PlayerSavable savable = io.Get(GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, GetUniqueIDPersistent()) as PlayerSavable;
         if (savable != null)
         {
             hp = new ScaledValue(savable.hpScalar, savable.max);
@@ -251,9 +251,9 @@ public class PlayerController : Controller, ISavable
         }
     }
 
-    private void OnSceneChange()
+    private void OnSave(PlaySaveGameObject io)
     {
-        GameInstance.Singleton.FeedSavable(this, GetUniqueIDPersistent());
+        io.Feed(this, GetUniqueIDPersistent());
     }
 
     #region --- HUD ---

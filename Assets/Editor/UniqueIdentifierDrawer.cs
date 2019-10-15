@@ -13,8 +13,27 @@ public class UniqueIdentifierDrawer : PropertyDrawer
         // Generate a unique ID, defaults to an empty string if nothing has been serialized yet
         if (prop.stringValue == "")
         {
-            Guid guid = Guid.NewGuid();
-            prop.stringValue = guid.ToString();
+            bool repeat = true;
+            while (repeat)
+            {
+                repeat = false;
+                Guid guid = Guid.NewGuid();
+
+                UniqueID[] ids = GameObject.FindObjectsOfType<UniqueID>();
+                foreach (UniqueID id in ids)
+                {
+                    if (id.uniqueId == null)
+                        continue;
+
+                    if (id.uniqueId.Equals(guid.ToString()))
+                    {
+                        repeat = true;
+                        break;
+                    }
+                }
+                if (!repeat)
+                    prop.stringValue = guid.ToString();
+            }
         }
 
         // Place a label so it can't be edited by accident

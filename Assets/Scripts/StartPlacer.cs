@@ -9,7 +9,7 @@ sealed public class StartPlacer : MonoBehaviour
         GameInstance.OnLoad += OnLoad;
     }
 
-    private void OnLoad()
+    private void OnLoad(PlaySaveGameObject io)
     {
         ignore = GameInstance.Singleton.IsLoadingSavedGame;
     }

@@ -34,29 +34,29 @@ sealed public class GameState : MonoBehaviour
         GameInstance.OnLoad -= OnLoad;
     }
 
-    private void OnSave ()
+    private void OnSave (PlaySaveGameObject io)
     {
-        Savable a = GameInstance.SaveGameObject.objects.Find(x => x is EventController.EventSaveGameObject);
+        Savable a = io.objects.Find(x => x is EventController.EventSaveGameObject);
         if (a != null)
-            GameInstance.SaveGameObject.objects.Remove(a);
-        GameInstance.SaveGameObject.objects.Add(((ISavable)EventController).IO);
+            io.objects.Remove(a);
+        io.objects.Add(((ISavable)EventController).IO);
 
-        Savable b = GameInstance.SaveGameObject.objects.Find(x => x is QuestController.QuestSavable);
+        Savable b = io.objects.Find(x => x is QuestController.QuestSavable);
         if (b != null)
-            GameInstance.SaveGameObject.objects.Remove(b);
-        GameInstance.SaveGameObject.objects.Add(((ISavable)QuestController).IO);
+            io.objects.Remove(b);
+        io.objects.Add(((ISavable)QuestController).IO);
     }
 
-    private void OnLoad()
+    private void OnLoad(PlaySaveGameObject io)
     {
         eventController.Clear();
-        Savable a = GameInstance.SaveGameObject.objects.Find(x => x is EventController.EventSaveGameObject);
+        Savable a = io.objects.Find(x => x is EventController.EventSaveGameObject);
         if (a != null)
             foreach (Event evnt in ((EventController.EventSaveGameObject)a).Events)
                 eventController.Add(evnt);
 
         QuestController.Clear();
-        Savable b = GameInstance.SaveGameObject.objects.Find(x => x is QuestController.QuestSavable);
+        Savable b = io.objects.Find(x => x is QuestController.QuestSavable);
         if (b != null)
             foreach (QuestController.QuestInfo info in ((QuestController.QuestSavable)b).QuestsInfo)
                 questController.Add(new QuestController.QuestID(info));

@@ -14,7 +14,7 @@ sealed public class GameInstance : MonoBehaviour, ISavable
         }
     }
 
-    public delegate void LoadEventHandler();
+    public delegate void IOEventHandler(PlaySaveGameObject io);
 
     public static GameInstance Singleton { get; private set; }
     public static HUD HUD { get; private set; }
@@ -23,10 +23,10 @@ sealed public class GameInstance : MonoBehaviour, ISavable
     private bool IsSingleton { get; set; }
     Savable ISavable.IO { get { return new GameInstanceSaveGameObject(); } }
     public bool IsLoadingSavedGame { get; private set; }
-    public static PlaySaveGameObject SaveGameObject { get; private set; }
+    private static PlaySaveGameObject SaveGameObject { get; set; }
 
-    public static event LoadEventHandler OnSave,
-                                         OnLoad;
+    public static event IOEventHandler      OnSave,
+                                            OnLoad;
 
     private void Awake()
     {
@@ -63,7 +63,7 @@ sealed public class GameInstance : MonoBehaviour, ISavable
         if (SaveGameObject == null)
             SaveGameObject = new PlaySaveGameObject();
 
-        OnLoad?.Invoke();
+        OnLoad?.Invoke(SaveGameObject);
         SaveGameObject = null;
         IsLoadingSavedGame = false;
         HUD.EnableLoadingScreen(false);
@@ -79,15 +79,17 @@ sealed public class GameInstance : MonoBehaviour, ISavable
 
     public static void Save(string filename = "")
     {
+        HUD.EnableLoadingScreen(true);
+
         SaveGameObject = IO.Load<PlaySaveGameObject>(IO.tempFilename);
 
         if (SaveGameObject == null)
         {
-            Debug.LogWarning("Temp Save Game does not exist! Creating one...");
+            Debug.Log("Temp Save Game does not exist! Creating one...");
             SaveGameObject = new PlaySaveGameObject();
         }
 
-        OnSave?.Invoke();
+        OnSave?.Invoke(SaveGameObject);
             
         Savable s = SaveGameObject.objects.Find(x => x is GameInstanceSaveGameObject);
         if (s != null)
@@ -120,29 +122,5 @@ sealed public class GameInstance : MonoBehaviour, ISavable
     {
         Cursor.visible = visible;
         Cursor.lockState = lockMode;
-    }
-
-    public void FeedSavable(ISavable savable, bool persistent)
-    {
-        Savable io = savable.IO,
-                io2;
-
-        if (persistent)
-            io2 = SaveGameObject.objects.Find(x => io.id.Equals(x.id));
-        else
-            io2 = SaveGameObject.objects.Find(x => io.id.Equals(x.id) && io.sceneName.Equals(x.sceneName));
-
-        if (io2 != null)
-            SaveGameObject.objects.Remove(io2);
-
-        SaveGameObject.objects.Add(io);
-    }
-
-    public Savable GetSavable(string id, string sceneName, bool persistent)
-    {
-        if (persistent)
-            return SaveGameObject.objects.Find(i => id == i.id);
-
-        return SaveGameObject.objects.Find(i => id == i.id && i.sceneName == sceneName);
     }
 }
