@@ -2,7 +2,7 @@
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "New Quest", menuName = "Quests/New Quest")]
-public class Quest : ScriptableObject
+sealed public class Quest : ScriptableObject
 {
     public new string name;
     public string description;

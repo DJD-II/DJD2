@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 
-public class TalkInteractable : Interactable
+sealed public class TalkInteractable : Interactable
 {
-    public Conversation currentConvo;
+    [SerializeField]
+    private Conversation currentConvo = null;
+
+    public Conversation Conversation { get { return currentConvo; } }
 
     protected override void OnInteract(PlayerController controller)
     {

@@ -2,25 +2,32 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HUD : MonoBehaviour
+sealed public class HUD : MonoBehaviour
 {
     [Header("CrossHair")]
-    public Text crossHair;
+    [SerializeField]
+    private Text crossHair = null;
     [Header("Interaction")]
-    public TextMeshProUGUI interactMessage;
+    [SerializeField]
+    private TextMeshProUGUI interactMessage = null;
     [Header("Loot")]
-    public LootInventory loot;
+    [SerializeField]
+    private LootInventory loot = null;
     [Header("News")]
-    public GameObject digitalNewsPaper;
+    [SerializeField]
+    private GameObject digitalNewsPaper = null;
     [Header("Lock Pick")]
-    public LockController lockPickController;
-    [Header("Conversaton")]
-
-
+    [SerializeField]
+    private LockController lockPickController = null;
     [Header("Menu")]
     [SerializeField]
-    private HUDMenuController menu;
-    public TalkUIController talkUIController;
+    private HUDMenuController menu = null;
+    [Header("Conversation")]
+    [SerializeField]
+    private TalkUIController talkUIController = null;
+    [Header("Loading Screen")]
+    [SerializeField]
+    private GameObject loadingScreenPanel = null;
 
     public void Initialize()
     {
@@ -94,11 +101,24 @@ public class HUD : MonoBehaviour
         talkUIController.gameObject.SetActive(true);
     }
 
-    public void EnableMenu(PlayerController controller)
+    public void EnableMenu(bool enable, PlayerController controller)
     {
-        GameInstance.GameState.Paused = true;
+        if (enable)
+        {
+            GameInstance.GameState.Paused = true;
 
-        menu.Initialize(controller);
-        menu.gameObject.SetActive(true);
+            menu.Initialize(controller);
+            menu.gameObject.SetActive(true);
+        }
+        else
+        {
+            GameInstance.GameState.Paused = false;
+            menu.gameObject.SetActive(false);
+        }
+    }
+
+    public void EnableLoadingScreen(bool enable)
+    {
+        loadingScreenPanel.SetActive(enable);
     }
 }

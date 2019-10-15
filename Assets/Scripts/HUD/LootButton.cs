@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-public class LootButton : MonoBehaviour
+sealed public class LootButton : MonoBehaviour
 {
     public delegate void EventHandler(LootButton sender);
 

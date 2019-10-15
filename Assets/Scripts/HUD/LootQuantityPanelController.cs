@@ -2,20 +2,24 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LootQuantityPanelController : MonoBehaviour
+sealed public class LootQuantityPanelController : MonoBehaviour
 {
     public delegate void EventHandler(LootQuantityPanelController sender);
 
     public event EventHandler OnClose;
 
-    public TextMeshProUGUI minLabel;
-    public TextMeshProUGUI maxLabel;
-    public Slider quantitySlider;
-    private Inventory fromInventory,
+    [SerializeField]
+    private TextMeshProUGUI minLabel = null;
+    [SerializeField]
+    private TextMeshProUGUI maxLabel = null;
+    [SerializeField]
+    private Slider quantitySlider = null;
+    private Inventory       fromInventory,
                             toInventory;
-    private LootButton lootButton;
+    private LootButton      lootButton;
     [Header("Audio")]
-    public AudioSource takeAll;
+    [SerializeField]
+    private AudioSource takeAll = null;
 
     public void Initialize(LootButton lootButton, Inventory from, Inventory to)
     {

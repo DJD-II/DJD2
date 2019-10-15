@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class EntryLevelInstance : LevelInstance
+sealed public class EntryLevelInstance : LevelInstance
 {
     [SerializeField]
     private string sceneToLoad = "Showcase";

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 sealed public class IO
 {
@@ -8,6 +10,8 @@ sealed public class IO
     abstract public class Object : object
     {
     }
+
+    public static readonly string tempFilename = "TempFile_3_3eedds_fjd329074_sdfjn_sdklfj_439057.ts";
 
     public static bool Exists(string slotName)
     {
@@ -66,16 +70,26 @@ sealed public class IO
             File.Delete(filePath);
     }
 
+    public static FileInfo[] GetFilenames (string pattern = "*.sv")
+    {
+        CheckSavePath();
+
+        return new DirectoryInfo(Application.dataPath + "/Save").GetFiles(pattern);
+    }
+
     static string GetFilePath(string slotName)
     {
-        return Application.dataPath + "/Save/" + slotName + ".sv"; ;
+        return Application.dataPath + "/Save/" + slotName; ;
     }
 
     static void CheckSavePath()
     {
         string directoryPath = Application.dataPath + "/Save";
-        Debug.Log("Creating Directory");
         if (!Directory.Exists(directoryPath))
             Directory.CreateDirectory(directoryPath);
+
+        string directoryPath2 = Application.dataPath + "/Save";
+        if (!Directory.Exists(directoryPath2))
+            Directory.CreateDirectory(directoryPath2);
     }
 }

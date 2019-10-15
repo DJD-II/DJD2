@@ -1,7 +1,19 @@
 ﻿using UnityEngine;
 
-public class GameInstance : MonoBehaviour
+sealed public class GameInstance : MonoBehaviour, ISavable
 {
+    [System.Serializable]
+    public class GameInstanceSaveGameObject : Savable
+    {
+        public string SceneName { get; private set; }
+
+        public GameInstanceSaveGameObject()
+            : base ("", "")
+        {
+            SceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        }
+    }
+
     public delegate void LoadEventHandler();
 
     public static GameInstance Singleton { get; private set; }
@@ -9,8 +21,9 @@ public class GameInstance : MonoBehaviour
     public static GameState GameState { get; private set; }
     public int ToID { get; set; }
     private bool IsSingleton { get; set; }
-
-    PlaySaveGameObject saveGameObject = new PlaySaveGameObject();
+    Savable ISavable.IO { get { return new GameInstanceSaveGameObject(); } }
+    public bool IsLoadingSavedGame { get; private set; }
+    public static PlaySaveGameObject SaveGameObject { get; private set; }
 
     public static event LoadEventHandler OnSave,
                                          OnLoad;
@@ -41,25 +54,19 @@ public class GameInstance : MonoBehaviour
                 SetMouseCursorState(false, CursorLockMode.Locked);
         };
 
-        OnSave += () =>
-        {
-            saveGameObject = IO.Load<PlaySaveGameObject>("Temp");
-            if (saveGameObject == null)
-                saveGameObject = new PlaySaveGameObject();
-        };
-
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
     {
-        saveGameObject = IO.Load<PlaySaveGameObject>("Temp");
-        if (saveGameObject == null)
-            saveGameObject = new PlaySaveGameObject();
+        SaveGameObject = IO.Load<PlaySaveGameObject>(IO.tempFilename);
+        if (SaveGameObject == null)
+            SaveGameObject = new PlaySaveGameObject();
 
-        Debug.Log("Loading... " + saveGameObject.objects.Count);
         OnLoad?.Invoke();
-        saveGameObject = null;
+        SaveGameObject = null;
+        IsLoadingSavedGame = false;
+        HUD.EnableLoadingScreen(false);
     }
 
     private void OnDestroy()
@@ -67,14 +74,46 @@ public class GameInstance : MonoBehaviour
         if (!IsSingleton)
             return;
 
-        IO.Delete("Temp");
+        IO.Delete(IO.tempFilename);
     }
 
-    public static void Save()
+    public static void Save(string filename = "")
     {
+        SaveGameObject = IO.Load<PlaySaveGameObject>(IO.tempFilename);
+
+        if (SaveGameObject == null)
+        {
+            Debug.LogWarning("Temp Save Game does not exist! Creating one...");
+            SaveGameObject = new PlaySaveGameObject();
+        }
+
         OnSave?.Invoke();
-        IO.Save("Temp", Singleton.saveGameObject);
-        Singleton.saveGameObject = null;
+            
+        Savable s = SaveGameObject.objects.Find(x => x is GameInstanceSaveGameObject);
+        if (s != null)
+            SaveGameObject.objects.Remove(s);
+        SaveGameObject.objects.Add(((ISavable)Singleton).IO);
+
+        IO.Save(string.IsNullOrEmpty(filename) ? IO.tempFilename : filename, SaveGameObject);
+        SaveGameObject = null;
+    }
+
+    public static void Load(string filename = "")
+    {
+        HUD.EnableLoadingScreen(true);
+
+        Singleton.IsLoadingSavedGame = !string.IsNullOrEmpty(filename);
+
+        SaveGameObject = IO.Load<PlaySaveGameObject>(string.IsNullOrEmpty(filename) ? IO.tempFilename : filename);
+
+        if (SaveGameObject == null)
+            SaveGameObject = new PlaySaveGameObject();
+
+        if (Singleton.IsLoadingSavedGame)
+            IO.Save(IO.tempFilename, SaveGameObject);
+
+        if (SaveGameObject.objects.Find(x => x is GameInstanceSaveGameObject) is GameInstanceSaveGameObject s)
+            UnityEngine.SceneManagement.SceneManager.LoadScene(s.SceneName);
     }
 
     public void SetMouseCursorState(bool visible, CursorLockMode lockMode)
@@ -85,26 +124,25 @@ public class GameInstance : MonoBehaviour
 
     public void FeedSavable(ISavable savable, bool persistent)
     {
-        Savable io = savable.IO;
-
-        Savable io2;
+        Savable io = savable.IO,
+                io2;
 
         if (persistent)
-            io2 = saveGameObject.objects.Find(x => io.id.Equals(x.id));
+            io2 = SaveGameObject.objects.Find(x => io.id.Equals(x.id));
         else
-            io2 = saveGameObject.objects.Find(x => io.id.Equals(x.id) && io.sceneName.Equals(x.sceneName));
+            io2 = SaveGameObject.objects.Find(x => io.id.Equals(x.id) && io.sceneName.Equals(x.sceneName));
 
         if (io2 != null)
-            saveGameObject.objects.Remove(io2);
+            SaveGameObject.objects.Remove(io2);
 
-        saveGameObject.objects.Add(io);
+        SaveGameObject.objects.Add(io);
     }
 
     public Savable GetSavable(string id, string sceneName, bool persistent)
     {
         if (persistent)
-            return saveGameObject.objects.Find(i => id == i.id);
+            return SaveGameObject.objects.Find(i => id == i.id);
 
-        return saveGameObject.objects.Find(i => id == i.id && i.sceneName == sceneName);
+        return SaveGameObject.objects.Find(i => id == i.id && i.sceneName == sceneName);
     }
 }

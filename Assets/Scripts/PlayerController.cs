@@ -25,10 +25,23 @@ public class PlayerController : Controller, ISavable
         public float hpScalar;
         public float max;
         public List<ItemID> items;
+        public float X { get; private set; }
+        public float Y { get; private set; }
+        public float Z { get; private set; }
+        public float Qx { get; private set; }
+        public float Qy { get; private set; }
+        public float Qz { get; private set; }
 
-        public PlayerSavable(string id, ScaledValue hp, List<Item> items)
+        public PlayerSavable(string id, ScaledValue hp, List<Item> items, Transform transform)
             : base(id, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name)
         {
+            X = transform.position.x;
+            Y = transform.position.y;
+            Z = transform.position.z;
+            Vector3 euler = transform.rotation.eulerAngles;
+            Qx = euler.x;
+            Qy = euler.y;
+            Qz = euler.z;
             hpScalar = hp.Scalar;
             max = hp.Max;
             this.id = id;
@@ -40,10 +53,12 @@ public class PlayerController : Controller, ISavable
 
     #region --- Fields ---
 
-    [Header("Character")]
-    public GameObject graphics;
+    /*[Header("Character")]
+    [SerializeField]
+    private GameObject graphics = null;*/
     [Header("Weight")]
-    public float mass = 12f;
+    [SerializeField]
+    private float mass = 12f;
     float yRotation = 0f;
     CharacterController controller;
     Vector3 gravityForce = Vector3.zero;
@@ -61,13 +76,19 @@ public class PlayerController : Controller, ISavable
     private Vector3 force = Vector3.zero;
     private Vector3 jumpForce = Vector3.zero;
     [Header("Camera")]
-    public Camera cam;
-    public Animation fallPivot;
-    public Transform cameraPivot;
-    public Vector2 minMaxY;
-    public float lookSpeed = 20f;
+    [SerializeField]
+    private Camera cam = null;
+    [SerializeField]
+    private Animation fallPivot = null;
+    [SerializeField]
+    private Transform cameraPivot = null;
+    [SerializeField]
+    private Vector2 minMaxY = Vector2.zero;
+    [SerializeField]
+    private float lookSpeed = 20f;
     [Header("Wobble")]
-    public Transform wobblePivot;
+    [SerializeField]
+    private Transform wobblePivot = null;
     [Range(0f, 5f)]
     [SerializeField]
     private float walkWoobleAmount = 1.2f;
@@ -86,7 +107,6 @@ public class PlayerController : Controller, ISavable
     [Range(0f, 100f)]
     [SerializeField]
     private float runWobbleSpeed = 20f;
-    [HideInInspector]
     CameraShakeSettings cameraShakeSettings;
     public static CameraShake explosionShake;
     private float fallTimer = 0;
@@ -101,18 +121,24 @@ public class PlayerController : Controller, ISavable
     [SerializeField]
     private Inventory inventory = new Inventory();
     [Header("HUDs")]
-    public GameObject huds;
-    public Image batteryImage;
-    private Damage.Point reducer;
+    [SerializeField]
+    private GameObject huds = null;
+    [SerializeField]
+    private Image batteryImage = null;
+    private PointDamage reducer;
     private UniqueID uniqueID;
     [SerializeField]
     private Quest mainQuest = null;
+    [SerializeField]
+    private Transform messageContents = null;
+    [SerializeField]
+    private GameObject messagePrefab = null;
 
     #endregion
 
     #region --- Properties ---
 
-    Savable ISavable.IO { get { return new PlayerSavable(GetUniqueID(), Hp, Inventory.Items); } }
+    Savable ISavable.IO { get { return new PlayerSavable(GetUniqueID(), Hp, Inventory.Items, transform); } }
     public bool CanControl { get { return canControl; } set { canControl = value; } }
     public Inventory Inventory { get { return inventory; } }
     private float WobbleSpeed { get { return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ? runWobbleSpeed : walkWobbleSpeed; } }
@@ -125,12 +151,11 @@ public class PlayerController : Controller, ISavable
 
     private void Awake()
     {
-        
-        GameInstance.OnLoad += OnLoaded;
-
         controller = GetComponent<CharacterController>();
         uniqueID = GetComponent<UniqueID>();
-        reducer = new Damage.Point(this, true, 1);
+        reducer = new PointDamage(this, true, 1);
+
+        GameInstance.OnLoad += OnLoaded;
     }
 
     private void OnDestroy()
@@ -162,15 +187,15 @@ public class PlayerController : Controller, ISavable
         {
             explosionShake = new CameraShake(1f, 0.1f, 0.4f);
 
-            explosionShake.fieldOfViewShake = new CameraShake.ElementShake(0.3f, 2f);
+            explosionShake.FieldOfViewShake = new CameraShake.ElementShake(0.3f, 2f);
 
-            explosionShake.positionShake[0] = new CameraShake.ElementShake(0.1f, 2f);
-            explosionShake.positionShake[1] = new CameraShake.ElementShake(0.1f, 2f);
-            explosionShake.positionShake[2] = new CameraShake.ElementShake(0.1f, 2f);
+            explosionShake.PositionShake[0] = new CameraShake.ElementShake(0.1f, 2f);
+            explosionShake.PositionShake[1] = new CameraShake.ElementShake(0.1f, 2f);
+            explosionShake.PositionShake[2] = new CameraShake.ElementShake(0.1f, 2f);
 
-            explosionShake.rotationShake[0] = new CameraShake.ElementShake(0.1f, 2f);
-            explosionShake.rotationShake[1] = new CameraShake.ElementShake(0.1f, 2f);
-            explosionShake.rotationShake[2] = new CameraShake.ElementShake(0.1f, 2f);
+            explosionShake.RotationShake[0] = new CameraShake.ElementShake(0.1f, 2f);
+            explosionShake.RotationShake[1] = new CameraShake.ElementShake(0.1f, 2f);
+            explosionShake.RotationShake[2] = new CameraShake.ElementShake(0.1f, 2f);
         }
 
         InvokeRepeating("UpdateInteraction", 0f, 0.15f);
@@ -193,7 +218,7 @@ public class PlayerController : Controller, ISavable
             GameInstance.GameState.QuestController.CompleteQuest("Learn Quick!");
 
         if (!GameInstance.GameState.Paused && Input.GetKeyDown(KeyCode.Escape))
-            GameInstance.HUD.EnableMenu(this);
+            GameInstance.HUD.EnableMenu(true, this);
 
         Interact();
 
@@ -211,7 +236,6 @@ public class PlayerController : Controller, ISavable
 
     private void OnLoaded()
     {
-        Debug.Log("Loading Player");
         PlayerSavable savable = GameInstance.Singleton.GetSavable(GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, GetUniqueIDPersistent()) as PlayerSavable;
         if (savable != null)
         {
@@ -219,6 +243,11 @@ public class PlayerController : Controller, ISavable
 
             foreach (ItemID i in savable.items)
                 inventory.Add(ItemUtility.GetItem(i.name));
+
+            controller.enabled = false;
+            transform.position = new Vector3(savable.X, savable.Y, savable.Z);
+            transform.rotation = Quaternion.Euler(savable.Qx, savable.Qy, savable.Qz);
+            controller.enabled = true;
         }
     }
 
@@ -267,21 +296,21 @@ public class PlayerController : Controller, ISavable
 
             float blendTime = timer / cameraShake.Duration;
 
-            cameraShakeSettings.rot.x = (Mathf.Cos(blendTime * cameraShake.rotationShake[0].frequency * Mathf.Rad2Deg) * cameraShake.rotationShake[0].amplitude) * blendScale;
-            cameraShakeSettings.rot.y = (Mathf.Cos(blendTime * cameraShake.rotationShake[1].frequency * Mathf.Rad2Deg) * cameraShake.rotationShake[1].amplitude) * blendScale;
-            cameraShakeSettings.rot.z = (Mathf.Cos(blendTime * cameraShake.rotationShake[2].frequency * Mathf.Rad2Deg) * cameraShake.rotationShake[2].amplitude) * blendScale;
+            cameraShakeSettings.rot.x = (Mathf.Cos(blendTime * cameraShake.RotationShake[0].frequency * Mathf.Rad2Deg) * cameraShake.RotationShake[0].amplitude) * blendScale;
+            cameraShakeSettings.rot.y = (Mathf.Cos(blendTime * cameraShake.RotationShake[1].frequency * Mathf.Rad2Deg) * cameraShake.RotationShake[1].amplitude) * blendScale;
+            cameraShakeSettings.rot.z = (Mathf.Cos(blendTime * cameraShake.RotationShake[2].frequency * Mathf.Rad2Deg) * cameraShake.RotationShake[2].amplitude) * blendScale;
 
             t.localRotation = Quaternion.Euler(cameraShakeSettings.initialRotation.x + cameraShakeSettings.rot.x,
                                                 cameraShakeSettings.initialRotation.y + cameraShakeSettings.rot.y,
                                                 cameraShakeSettings.initialRotation.z + cameraShakeSettings.rot.z);
 
-            cameraShakeSettings.pos.x = (Mathf.Cos(blendTime * cameraShake.positionShake[0].frequency * Mathf.Rad2Deg) * cameraShake.positionShake[0].amplitude) * blendScale;
-            cameraShakeSettings.pos.y = (Mathf.Cos(blendTime * cameraShake.positionShake[1].frequency * Mathf.Rad2Deg) * cameraShake.positionShake[1].amplitude) * blendScale;
-            cameraShakeSettings.pos.z = (Mathf.Cos(blendTime * cameraShake.positionShake[2].frequency * Mathf.Rad2Deg) * cameraShake.positionShake[2].amplitude) * blendScale;
+            cameraShakeSettings.pos.x = (Mathf.Cos(blendTime * cameraShake.PositionShake[0].frequency * Mathf.Rad2Deg) * cameraShake.PositionShake[0].amplitude) * blendScale;
+            cameraShakeSettings.pos.y = (Mathf.Cos(blendTime * cameraShake.PositionShake[1].frequency * Mathf.Rad2Deg) * cameraShake.PositionShake[1].amplitude) * blendScale;
+            cameraShakeSettings.pos.z = (Mathf.Cos(blendTime * cameraShake.PositionShake[2].frequency * Mathf.Rad2Deg) * cameraShake.PositionShake[2].amplitude) * blendScale;
 
             t.localPosition = cameraShakeSettings.initialPosition + cameraShakeSettings.pos;
 
-            cameraShakeSettings.fov = (Mathf.Cos(blendTime * cameraShake.fieldOfViewShake.frequency * Mathf.Deg2Rad) * cameraShake.fieldOfViewShake.amplitude) * blendScale;
+            cameraShakeSettings.fov = (Mathf.Cos(blendTime * cameraShake.FieldOfViewShake.frequency * Mathf.Deg2Rad) * cameraShake.FieldOfViewShake.amplitude) * blendScale;
 
             cam.fieldOfView = cameraShakeSettings.initialFieldOfView + cameraShakeSettings.fov;
 
@@ -315,10 +344,7 @@ public class PlayerController : Controller, ISavable
         GameInstance.HUD.EnableInteractMessage(false, null);
         interactable = null;
 
-        RaycastHit[] hits = Physics.RaycastAll(new Ray(cam.transform.position, cam.transform.forward), interactDistance, ~ignoreLayers);
-        List<RaycastHit> sortedHits = new List<RaycastHit>(hits);
-        sortedHits.Sort((x, y) => Vector3.Distance(x.point, cam.transform.position).CompareTo(Vector3.Distance(y.point, cam.transform.position)));
-        foreach (RaycastHit hit in sortedHits)
+        if (Physics.Raycast(new Ray(cam.transform.position, cam.transform.forward), out RaycastHit hit, interactDistance, ~ignoreLayers))
         {
             Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
             if (interactable != null)
@@ -326,7 +352,6 @@ public class PlayerController : Controller, ISavable
                 GameInstance.HUD.EnableInteractMessage(true, interactable);
                 this.interactable = interactable;
             }
-            break;
         }
     }
 
@@ -400,14 +425,14 @@ public class PlayerController : Controller, ISavable
 
             if (!tempGrounded)
             {
-                if (velocityOnY <= -8)
+                if (velocityOnY <= -2)
                     fallPivot.Play();
 
                 force = Vector3.zero;
 
                 if (fallTimer > 0.3f && velocityOnY <= -23)
                 {
-                    ApplyDamage(new Damage.Point(this, true, (uint)(10 * velocityOnY * 1.2f)));
+                    ApplyDamage(new PointDamage(this, true, (uint)(10 * velocityOnY * 1.2f)));
                 }
             }
         }
@@ -497,6 +522,13 @@ public class PlayerController : Controller, ISavable
     }
 
     #endregion
+
+    public void PopMessage(string message)
+    {
+        GameObject go = Instantiate(messagePrefab, messageContents);
+        HUDMessageController messageController = go.GetComponent<HUDMessageController>();
+        messageController.Initialize(message);
+    }
 
     protected string GetUniqueID()
     {

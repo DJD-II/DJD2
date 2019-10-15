@@ -1,11 +1,14 @@
 ﻿using TMPro;
 using UnityEngine;
 
-public class QuestUIController : MonoBehaviour
+sealed public class QuestUIController : MonoBehaviour
 {
-    public GameObject panel;
-    public TextMeshProUGUI titleLabel;
-    public TextMeshProUGUI descriptionLabel;
+    [SerializeField]
+    private GameObject panel = null;
+    [SerializeField]
+    private TextMeshProUGUI titleLabel = null;
+    [SerializeField]
+    private TextMeshProUGUI descriptionLabel = null;
     private float timer = 0f;
 
     private void Awake()

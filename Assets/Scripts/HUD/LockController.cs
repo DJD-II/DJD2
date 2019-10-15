@@ -1,28 +1,35 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class LockController : MonoBehaviour
+sealed public class LockController : MonoBehaviour
 {
     public delegate void EventHandler(LockController sender);
 
     public event EventHandler OnUnlock;
 
     [Header("Bobby Pin")]
-    public GameObject bobbyPin;
+    [SerializeField]
+    private GameObject bobbyPin = null;
     [SerializeField]
     private Vector2 maxMinRotation = Vector2.zero;
     [Header("Lock")]
-    public GameObject lockPick;
+    [SerializeField]
+    private GameObject lockPick = null;
     [Header("Buttons")]
-    public GameObject quitButton;
+    [SerializeField]
+    private GameObject quitButton = null;
     [Header("Sound FX")]
-    public AudioSource enterSFX;
-    public AudioClip[] lockpickMovements = new AudioClip[0];
-    public AudioSource lockpickMovement;
-    public AudioSource unlockSFX;
-    public AudioSource bobbyPinBreak;
-
-    private Animator bobbyPinAnimator;
+    [SerializeField]
+    private AudioSource enterSFX = null;
+    [SerializeField]
+    private AudioClip[] lockpickMovements = new AudioClip[0];
+    [SerializeField]
+    private AudioSource lockpickMovement = null;
+    [SerializeField]
+    private AudioSource unlockSFX = null;
+    [SerializeField]
+    private AudioSource bobbyPinBreak = null;
+    private Animator bobbyPinAnimator = null;
     private bool picking = false;
     private bool active = false;
 

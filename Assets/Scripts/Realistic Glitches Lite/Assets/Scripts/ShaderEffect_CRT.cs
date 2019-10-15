@@ -1,27 +1,29 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 [ExecuteInEditMode]
-public class ShaderEffect_CRT : MonoBehaviour
-{
+sealed public class ShaderEffect_CRT : MonoBehaviour {
+    [SerializeField]
+	private float scanlineIntensity = 100;
+    [SerializeField]
+    private int scanlineWidth = 1;
+	private Material material_Displacement;
+	private Material material_Scanlines;
 
-    public float scanlineIntensity = 100;
-    public int scanlineWidth = 1;
-    //	public Color scanlineColor = Color.black;
-    //	public bool tVBulge = true;
-    private Material material_Displacement;
-    private Material material_Scanlines;
+    public float ScanlineIntensity { get { return scanlineIntensity; } set { scanlineIntensity = value; } }
+    public int ScanlineWidth { get { return scanlineWidth; } set { scanlineWidth = value; } }
 
-    void Awake()
-    {
-        material_Scanlines = new Material(Shader.Find("Hidden/Scanlines"));
-    }
+    private void Awake ()
+	{
+		material_Scanlines = new Material( Shader.Find("Hidden/Scanlines") );
+	}
 
-    void OnRenderImage(RenderTexture source, RenderTexture destination)
-    {
-        material_Scanlines.SetFloat("_Intensity", scanlineIntensity * 0.01f);
-        material_Scanlines.SetFloat("_ValueX", scanlineWidth);
+	private void OnRenderImage (RenderTexture source, RenderTexture destination)
+	{
+		material_Scanlines.SetFloat("_Intensity", scanlineIntensity * 0.01f);
+		material_Scanlines.SetFloat("_ValueX", scanlineWidth);
 
-        Graphics.Blit(source, destination, material_Scanlines);
+		Graphics.Blit (source, destination, material_Scanlines);
 
-    }
+	}
 }

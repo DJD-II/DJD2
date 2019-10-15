@@ -22,9 +22,8 @@ sealed public class LootInteractable : Interactable, ISavable
 
     [SerializeField]
     private Item[] items = new Item[0];
-    private Inventory inventory;
 
-    public Inventory Inventory { get { return inventory; } }
+    public Inventory Inventory { get; private set; }
 
     protected override void Awake()
     {
@@ -32,7 +31,7 @@ sealed public class LootInteractable : Interactable, ISavable
 
         GameInstance.OnLoad += OnLoaded;
 
-        inventory = new Inventory();
+        Inventory = new Inventory();
     }
 
     private void Start()
@@ -48,13 +47,13 @@ sealed public class LootInteractable : Interactable, ISavable
             Locked = savable.locked;
 
             foreach (ItemID i in savable.items)
-                inventory.Add(ItemUtility.GetItem(i.name));
+                Inventory.Add(ItemUtility.GetItem(i.name));
 
             return;
         }
 
         foreach (Item item in items)
-            inventory.Add(item);
+            Inventory.Add(item);
     }
 
     private void OnSceneChange()
@@ -64,15 +63,21 @@ sealed public class LootInteractable : Interactable, ISavable
 
     protected override void OnInteract(PlayerController controller)
     {
-        if (Locked && controller.Inventory.Contains("Bobby Pin"))
-            GameInstance.HUD.EnableLockPick(true, this, controller);
-        else if (!Locked)
+        if (Locked)
+        {
+            if (controller.Inventory.Contains("Bobby Pin"))
+                GameInstance.HUD.EnableLockPick(true, this, controller);
+            else
+                controller.PopMessage("Not Enough Bobby Pins");
+        }
+        else
             GameInstance.HUD.EnableObjectInventory(this, controller);
     }
 
     void OnDestroy()
     {
         GameInstance.OnSave -= OnSceneChange;
+        GameInstance.OnLoad -= OnLoaded;
     }
 
     Savable ISavable.IO { get { return new LootSavable(GetUniqueID(), Inventory.Items, Locked); } }

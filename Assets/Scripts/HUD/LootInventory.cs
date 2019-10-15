@@ -4,21 +4,31 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LootInventory : MonoBehaviour
+sealed public class LootInventory : MonoBehaviour
 {
-    public Text objectLabel;
+    [SerializeField]
+    private Text objectLabel = null;
     private LootInteractable interactable;
     private Inventory playerInventory;
-    public Scrollbar playerInventoryListScrollBar;
-    public Scrollbar lootableInventoryListScrollBar;
-    public GameObject lootButton;
-    public GameObject lootContent;
-    public GameObject playerContent;
-    public GameObject lootQuantityPanel;
-    public Image itemIconImage;
-    public TextMeshProUGUI itemDescriptionLabel;
+    [SerializeField]
+    private Scrollbar playerInventoryListScrollBar = null;
+    [SerializeField]
+    private Scrollbar lootableInventoryListScrollBar = null;
+    [SerializeField]
+    private GameObject lootButton = null;
+    [SerializeField]
+    private GameObject lootContent = null;
+    [SerializeField]
+    private GameObject playerContent = null;
+    [SerializeField]
+    private GameObject lootQuantityPanel = null;
+    [SerializeField]
+    private Image itemIconImage = null;
+    [SerializeField]
+    private TextMeshProUGUI itemDescriptionLabel = null;
     [Header("Audio")]
-    public AudioSource takeAll;
+    [SerializeField]
+    private AudioSource takeAll = null;
 
     private bool active = true;
 

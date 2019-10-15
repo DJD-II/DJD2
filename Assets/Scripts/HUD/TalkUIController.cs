@@ -2,13 +2,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TalkUIController : MonoBehaviour
+sealed public class TalkUIController : MonoBehaviour
 {
-    public GameObject conversationPanel;
-    public GameObject answersPanel;
-    public Text toTalkPanel;
-
-    public GameObject answerButton;
+    [SerializeField]
+    private GameObject conversationPanel = null;
+    [SerializeField]
+    private GameObject answersPanel = null;
+    [SerializeField]
+    private Text toTalkPanel = null;
+    [SerializeField]
+    private GameObject answerButton = null;
 
     private int CurrentDialogue { get; set; }
     public TalkInteractable Interactable { get; set; }
@@ -19,7 +22,7 @@ public class TalkUIController : MonoBehaviour
     {
         CurrentDialogue = 0;
         SwitchToConversation();
-        toTalkPanel.text = Interactable.currentConvo.managerContents[0].nPCdialogue.text;
+        toTalkPanel.text = Interactable.Conversation.managerContents[0].nPCdialogue.text;
     }
     private void Update()
     {
@@ -40,7 +43,7 @@ public class TalkUIController : MonoBehaviour
             DestroyImmediate(answersPanel.transform.GetChild(0).gameObject);
         }
 
-        foreach (PlayerAnswer i in Interactable.currentConvo.managerContents[CurrentDialogue].answers)
+        foreach (PlayerAnswer i in Interactable.Conversation.managerContents[CurrentDialogue].answers)
         {
             GameObject go = Instantiate(answerButton, answersPanel.transform);
             AnswersButton button = go.GetComponent<AnswersButton>();
@@ -54,7 +57,7 @@ public class TalkUIController : MonoBehaviour
     {
         ActiveAnswerCheck(sender.pAnswer);
 
-        DialogueManager i = Interactable.currentConvo.managerContents.Find(x => x.nPCdialogue.id == sender.pAnswer.toID);
+        DialogueManager i = Interactable.Conversation.managerContents.Find(x => x.nPCdialogue.id == sender.pAnswer.toID);
 
 
         if (i == null)
@@ -63,7 +66,7 @@ public class TalkUIController : MonoBehaviour
         else
         {
             toTalkPanel.text = "";
-            CurrentDialogue = Interactable.currentConvo.managerContents.IndexOf(i);
+            CurrentDialogue = Interactable.Conversation.managerContents.IndexOf(i);
             slowLettersCoroutine = StartCoroutine(SlowLetters(i.nPCdialogue.text));
         }
     }

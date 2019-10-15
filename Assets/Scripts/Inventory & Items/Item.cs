@@ -2,7 +2,7 @@
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "New Item", menuName = "Item")]
-public class Item : ScriptableObject
+sealed public class Item : ScriptableObject
 {
     public enum Tag
     {
@@ -26,7 +26,6 @@ public class Item : ScriptableObject
         {
             case Tag.Battery:
                 controller.Hp.Add(50);
-                Debug.Log("Added HP to " + controller.gameObject.name);
                 break;
             case Tag.Used_Battery:
                 controller.Hp.Add(20);

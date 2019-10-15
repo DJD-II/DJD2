@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlayerStart : MonoBehaviour
+sealed public class PlayerStart : MonoBehaviour
 {
     [SerializeField]
     private uint id = 0;

@@ -1,5 +1,8 @@
-﻿public class CameraShake
+﻿using UnityEngine;
+
+sealed public class CameraShake
 {
+    [System.Serializable]
     public struct ElementShake
     {
         public float amplitude,
@@ -12,10 +15,16 @@
         }
     }
 
-    public ElementShake[] rotationShake = new ElementShake[3];
-    public ElementShake[] positionShake = new ElementShake[3];
-    public ElementShake fieldOfViewShake;
+    [SerializeField]
+    private ElementShake[] rotationShake = new ElementShake[3];
+    [SerializeField]
+    private ElementShake[] positionShake = new ElementShake[3];
+    [SerializeField]
+    private ElementShake fieldOfViewShake;
 
+    public ElementShake[] RotationShake { get { return rotationShake; } }
+    public ElementShake[] PositionShake { get { return positionShake; } }
+    public ElementShake FieldOfViewShake { get { return fieldOfViewShake; } set { fieldOfViewShake = value; } }
     public float Duration { get; }
     public float BlendInTime { get; }
     public float BlendOutTime { get; }

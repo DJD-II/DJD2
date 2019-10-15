@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   managerContents:
   - name: 
-    nPCdialogue: {fileID: 11400000, guid: fb25e77152e5ffe4caeb42efb9fdf7cb, type: 2}
+    nPCdialogue: {fileID: 11400000, guid: af86d9e286fc9204c8d878ac8e14985b, type: 2}
     answers:
     - {fileID: 11400000, guid: b54f57af5ff950f45bd59c7f3e290462, type: 2}

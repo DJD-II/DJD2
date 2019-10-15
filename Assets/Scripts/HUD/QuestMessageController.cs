@@ -2,15 +2,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class QuestMessageController : MonoBehaviour
+sealed public class QuestMessageController : MonoBehaviour
 {
     [SerializeField]
-    private Text title;
+    private Text title = null;
     [SerializeField]
-    private Text description;
+    private Text description = null;
     private float timer = 0;
-    private Vector3 initPos;
-    List<QuestController.QuestID> quests = new List<QuestController.QuestID>();
+    private Vector3 initPos = Vector3.zero;
+    private List<QuestController.QuestID> quests = new List<QuestController.QuestID>();
 
     private void OnQuestAdded(QuestController sender, QuestController.QuestID quest)
     {
@@ -47,6 +47,12 @@ public class QuestMessageController : MonoBehaviour
         GameInstance.GameState.QuestController.OnQuestAdded += OnQuestAdded;
         GameInstance.GameState.QuestController.OnQuestCompleted += OnQuestCompleted;
         transform.localPosition = initPos - new Vector3(300, 0, 0);
+    }
+
+    private void OnDestroy()
+    {
+        GameInstance.GameState.QuestController.OnQuestAdded -= OnQuestAdded;
+        GameInstance.GameState.QuestController.OnQuestCompleted -= OnQuestCompleted;
     }
 
     void Update()

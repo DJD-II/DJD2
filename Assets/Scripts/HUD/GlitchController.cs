@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class GlitchController : MonoBehaviour
+sealed public class GlitchController : MonoBehaviour
 {
     [SerializeField]
     private AnimationCurve glitchProgress = null;
@@ -48,14 +48,17 @@ public class GlitchController : MonoBehaviour
             float ramInt = vramIntensity.Evaluate(Time.time * vramSpeed * m) * vramMultiplier.Evaluate(Time.time * m);
             SFX.volume = ramInt;
             vRamController.enabled = crtController.enabled = ramInt > 0.5f;
-            vRamController.shift = ramInt * m;
+            vRamController.Shift = ramInt * m;
             //SFX.pitch = ramInt / vramMultiplier;
-            bleedController.intensity = bleedIntensity.Evaluate(Time.time * bleedSpeed * m) * bleedMultiplier.Evaluate(Time.time * m) * m;
+            bleedController.Intensity = bleedIntensity.Evaluate(Time.time * bleedSpeed * m) * bleedMultiplier.Evaluate(Time.time * m) * m;
             float scannerInt = scannerIntensity.Evaluate(Time.time * scannerSpeed * m) * scannerMultiplier;
             scannerController.enabled = scannerInt > 0.5f;
-            scannerController.area = scannerInt * m;
+            scannerController.Area = scannerInt * m;
         }
         else
+        {
             vRamController.enabled = crtController.enabled = scannerController.enabled = false;
+            SFX.volume = 0f;
+        }
     }
 }

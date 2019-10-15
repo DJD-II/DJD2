@@ -2,8 +2,24 @@
 using UnityEngine;
 
 [System.Serializable]
-sealed public class QuestController : object
+sealed public class QuestController : object, ISavable
 {
+    [System.Serializable]
+    public struct QuestInfo
+    {
+        private string name;
+        private bool completed;
+
+        public string Name { get { return name; } }
+        public bool Completed { get { return completed; } }
+
+        public QuestInfo(QuestID id)
+        {
+            name = id.quest.name;
+            completed = id.completed;
+        }
+    }
+
     sealed public class QuestID
     {
         public delegate void EventHandler(QuestID sender);
@@ -12,6 +28,13 @@ sealed public class QuestController : object
 
         public Quest quest;
         public bool completed;
+
+
+        public QuestID (QuestInfo info)
+        {
+            quest = QuestUtility.Get(info.Name);
+            completed = info.Completed;
+        }
 
         public QuestID(Quest quest)
         {
@@ -29,17 +52,48 @@ sealed public class QuestController : object
         }
     }
 
+    [System.Serializable]
+    sealed public class QuestSavable : Savable
+    {
+        private List<QuestInfo> questsInfo;
+
+        public List<QuestInfo> QuestsInfo { get { return questsInfo; } }
+
+        public QuestSavable(List<QuestID> quests)
+            : base ("", "")
+        {
+            questsInfo = new List<QuestInfo>();
+            foreach (QuestID id in quests)
+                questsInfo.Add(new QuestInfo(id));
+        }
+    }
+
     public delegate void EventHandler(QuestController sender);
     public delegate void QuestEventHandler(QuestController sender, QuestID quest);
 
-    public event QuestEventHandler OnQuestAdded,
+    public event QuestEventHandler  OnQuestAdded,
                                     OnQuestRemoved,
                                     OnQuestCompleted;
 
     [SerializeField]
-    private List<QuestID> quests = new List<QuestID>();
+    private List<QuestID> quests = new List<QuestID>(); 
 
-    public List<QuestID> Quest { get { return quests; } }
+    public List<QuestID> Quests { get { return quests; } }
+
+    public void Clear ()
+    {
+        quests.Clear();
+    }
+
+    public void Add(QuestID id)
+    {
+        if (Get(id.quest.name) != null)
+            return;
+
+        quests.Add(id);
+
+        id.OnCompleted += OnQuestHasBeenCompleted;
+    }
 
     public void Add(Quest quest)
     {
@@ -66,6 +120,7 @@ sealed public class QuestController : object
             if (auxQuest.quest.name.Equals(quest.name))
             {
                 quests.Remove(auxQuest);
+                OnQuestRemoved?.Invoke(this, auxQuest);
                 break;
             }
     }
@@ -83,4 +138,6 @@ sealed public class QuestController : object
         if (id != null)
             id.Complete();
     }
+
+    Savable ISavable.IO { get { return new QuestSavable(quests); } }
 }

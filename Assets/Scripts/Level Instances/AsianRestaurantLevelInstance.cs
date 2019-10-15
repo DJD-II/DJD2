@@ -1,3 +1,3 @@
-﻿public class AsianRestaurantLevelInstance : LevelInstance
+﻿sealed public class AsianRestaurantLevelInstance : LevelInstance
 {
 }

@@ -5,7 +5,9 @@ public class AnswersButton : MonoBehaviour
 {
     public PlayerAnswer pAnswer { get; private set; }
     public delegate void EventHandler(AnswersButton sender);
-    public Text label;
+
+    [SerializeField]
+    private Text label = null;
 
 
     public void Initialize(PlayerAnswer panswer)

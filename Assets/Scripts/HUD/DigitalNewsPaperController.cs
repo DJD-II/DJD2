@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class DigitalNewsPaperController : MonoBehaviour
+sealed public class DigitalNewsPaperController : MonoBehaviour
 {
     public void Close()
     {
