@@ -8,6 +8,7 @@ public class PlayerAnswer : ScriptableObject
     public Command[] command = new Command[0];
 
     public int cost;
+    public int Intelligence;
     public List<Item> itemsToGive = new List<Item>();
     public List<Quest> questsToGive = new List<Quest>();
 

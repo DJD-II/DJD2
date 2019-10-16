@@ -3,11 +3,12 @@ using UnityEngine.UI;
 
 public class AnswersButton : MonoBehaviour
 {
-    public PlayerAnswer pAnswer { get; private set; }
+    public PlayerAnswer PAnswer { get; private set; }
     public delegate void EventHandler(AnswersButton sender);
 
     [SerializeField]
     private Text label = null;
+    public Text Label { get => label; }
 
 
     public void Initialize(PlayerAnswer panswer)

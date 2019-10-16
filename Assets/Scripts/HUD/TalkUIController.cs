@@ -16,7 +16,6 @@ sealed public class TalkUIController : MonoBehaviour
     private int CurrentDialogue { get; set; }
     public TalkInteractable Interactable { get; set; }
     public PlayerController PlayerController { get; set; }
-    #endregion
 
     private Coroutine slowLettersCoroutine;
     public void Initialize()
@@ -34,12 +33,6 @@ sealed public class TalkUIController : MonoBehaviour
             SwitchToAnswers();
             InstanciateAnswers();
         }
-    }
-    public void Initialize()
-    {
-        CurrentDialogue = 0;
-        SwitchToConversation();
-        toTalkPanel.text = Interactable.currentConvo.managerContents[0].nPCdialogue.text;
     }
 
     // Creates a button and puts the contents inside
@@ -63,14 +56,29 @@ sealed public class TalkUIController : MonoBehaviour
 
         }
     }
+    private bool SkillCheck(PlayerAnswer other, AnswersButton button)
+    {
+        int playerIntellegence = 10;
+
+        if (playerIntellegence < other.Intelligence)
+        {
+            button.Label.text = "[Inteligence - " + other.Intelligence + "] - " + button.Label.text;
+            Color color = button.Label.color;
+            color.a = 0.5f;
+            button.Label.color = color;
+            button.Disable();
+            return false;
+        }
+        //if ("Implement_Necessaty skill checks")
+        return true;
+    }
 
     // Checks the contents on the button clicked
     private void OnAnswer(AnswersButton sender)
     {
         ActiveAnswerCheck(sender.PAnswer);
-        DialogueManager i = Interactable.currentConvo.managerContents.Find(x => x.nPCdialogue.id == sender.PAnswer.toID);
 
-        DialogueManager i = Interactable.Conversation.managerContents.Find(x => x.nPCdialogue.id == sender.pAnswer.toID);
+        DialogueManager i = Interactable.Conversation.managerContents.Find(x => x.nPCdialogue.id == sender.PAnswer.toID);
 
 
         if (i == null)
@@ -115,7 +123,7 @@ sealed public class TalkUIController : MonoBehaviour
 
         if (other.questsToGive != null)
         {
-            foreach (Quest q in other.questsToGive)
+            foreach (Quest q in other.questsToGive.ToArray())
                 GameInstance.GameState.QuestController.Add(other.questsToGive[0]);
         }
 
