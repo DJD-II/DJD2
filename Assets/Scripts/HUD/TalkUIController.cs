@@ -16,6 +16,7 @@ sealed public class TalkUIController : MonoBehaviour
     private int CurrentDialogue { get; set; }
     public TalkInteractable Interactable { get; set; }
     public PlayerController PlayerController { get; set; }
+    #endregion
 
     private Coroutine slowLettersCoroutine;
     public void Initialize()
@@ -34,6 +35,12 @@ sealed public class TalkUIController : MonoBehaviour
             InstanciateAnswers();
         }
     }
+    public void Initialize()
+    {
+        CurrentDialogue = 0;
+        SwitchToConversation();
+        toTalkPanel.text = Interactable.currentConvo.managerContents[0].nPCdialogue.text;
+    }
 
     // Creates a button and puts the contents inside
     private void InstanciateAnswers()
@@ -48,14 +55,20 @@ sealed public class TalkUIController : MonoBehaviour
             GameObject go = Instantiate(answerButton, answersPanel.transform);
             AnswersButton button = go.GetComponent<AnswersButton>();
             button.Initialize(i);
-            button.OnClick += OnAnswer;
+
+            if (SkillCheck(i, button))
+            {
+                button.OnClick += OnAnswer;
+            }
+
         }
     }
 
     // Checks the contents on the button clicked
     private void OnAnswer(AnswersButton sender)
     {
-        ActiveAnswerCheck(sender.pAnswer);
+        ActiveAnswerCheck(sender.PAnswer);
+        DialogueManager i = Interactable.currentConvo.managerContents.Find(x => x.nPCdialogue.id == sender.PAnswer.toID);
 
         DialogueManager i = Interactable.Conversation.managerContents.Find(x => x.nPCdialogue.id == sender.pAnswer.toID);
 
@@ -100,16 +113,24 @@ sealed public class TalkUIController : MonoBehaviour
                     break;
             }
 
+        if (other.questsToGive != null)
+        {
+            foreach (Quest q in other.questsToGive)
+                GameInstance.GameState.QuestController.Add(other.questsToGive[0]);
+        }
+
+        if (other.cost != 0)
+            Debug.Log("IMPLEMENT_MONEY");
+
     }
     private IEnumerator SlowLetters(string other)
     {
-
         SwitchToConversation();
 
         for (int i = 0; i < other.Length; i++)
         {
             toTalkPanel.text += (other[i]);
-            yield return new WaitForSecondsRealtime(0.15f);
+            yield return new WaitForSecondsRealtime(0.07f);
         }
     }
     private void Close()

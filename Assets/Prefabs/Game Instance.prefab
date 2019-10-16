@@ -5953,6 +5953,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9ff9ca9bda76b4e92a3695a918f32b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  answerButton: {fileID: 313292498859413745, guid: d750880c011b30e4faa5efc5ff1a537f,
+    type: 3}
   conversationPanel: {fileID: 8422001987725535335}
   answersPanel: {fileID: 1151044184051915625}
   toTalkPanel: {fileID: 5370934444413097008}

@@ -12,11 +12,16 @@ public class AnswersButton : MonoBehaviour
 
     public void Initialize(PlayerAnswer panswer)
     {
-        this.pAnswer = panswer;
+        this.PAnswer = panswer;
         this.label.text = panswer.text;
     }
 
     public event EventHandler OnClick;
+
+    public void Disable()
+    {
+        GetComponent<Button>().interactable = false;
+    }
 
     public void Click()
     {
