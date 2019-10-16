@@ -5,76 +5,83 @@ using UnityEngine;
 [System.Serializable]
 sealed public class QuestController : object
 {
+    sealed public class QuestID
+    {
+        public delegate void EventHandler(QuestID sender);
+
+        public event EventHandler OnCompleted;
+
+        public Quest quest;
+        public bool completed;
+
+        public QuestID(Quest quest)
+        {
+            this.quest = quest;
+        }
+
+        public void Complete()
+        {
+            if (completed)
+                return;
+
+            completed = true;
+
+            OnCompleted?.Invoke(this);
+        }
+    }
+
     public delegate void EventHandler(QuestController sender);
-    public delegate void QuestEventHandler(QuestController sender, Quest quest);
+    public delegate void QuestEventHandler(QuestController sender, QuestID quest);
 
     public event QuestEventHandler  OnQuestAdded,
                                     OnQuestRemoved,
                                     OnQuestCompleted;
 
     [SerializeField]
-    private List<Quest> quests = new List<Quest>();
+    private List<QuestID> quests = new List<QuestID>();
 
-    public List<Quest> Quest { get { return quests; } }
+    public List<QuestID> Quest { get { return quests; } }
 
     public void Add (Quest quest)
     {
-        if (quests.Contains(quest))
+        if (Get(quest.name) != null)
             return;
 
-        quests.Add(quest);
+        QuestID auxQuest = new QuestID(quest);
 
-        quest.OnCompleted += OnQuestHasBeenCompleted;
-        quest.OnSubQuestAdded += OnSubQuestAdded;
+        quests.Add(auxQuest);
 
-        OnQuestAdded?.Invoke(this, quest);
+        auxQuest.OnCompleted += OnQuestHasBeenCompleted;
+
+        OnQuestAdded?.Invoke(this, auxQuest);
     }
 
-    private void OnSubQuestAdded (Quest sender, Quest subQuest)
-    {
-
-    }
-
-    private void OnQuestHasBeenCompleted(Quest sender)
+    private void OnQuestHasBeenCompleted(QuestID sender)
     {
         OnQuestCompleted?.Invoke(this, sender);
     }
 
     public void Remove(Quest quest)
     {
-        if (quests.Remove(quest))
-        {
-            OnQuestRemoved?.Invoke(this, quest);
-            quest.OnCompleted       -= OnQuestHasBeenCompleted;
-            quest.OnSubQuestAdded   -= OnSubQuestAdded;
-        }
+        foreach (QuestID auxQuest in quests)
+            if (auxQuest.quest.name.Equals(quest.name))
+            {
+                quests.Remove(auxQuest);
+                break;
+            }
+    }
+
+    public QuestID Get (string name)
+    {
+        return quests.Find(x => x.quest.name.Equals(name));
     }
 
     public void CompleteQuest (string name)
     {
         string auxName = name.ToLower();
 
-        foreach (Quest q in quests)
-        {
-            bool found = false;
-            foreach (Quest sub in q.subQuests)
-            {
-                found = auxName.Equals(sub.name.ToLower());
-                if (found)
-                {
-                    sub.Complete();
-                    break;
-                }
-            }
-
-            if (found)
-                break;
-
-            if (auxName.Equals(q.name.ToLower()))
-            {
-                q.Complete();
-                break;
-            }
-        }
+        QuestID id = quests.Find(x => x.quest.name.ToLower().Equals(auxName));
+        if (id != null)
+            id.Complete();
     }
 }

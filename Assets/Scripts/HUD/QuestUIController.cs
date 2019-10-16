@@ -27,14 +27,14 @@ public class QuestUIController : MonoBehaviour
         };
     }
 
-    private void OnQuestAdded(QuestController sender, Quest quest)
+    private void OnQuestAdded(QuestController sender, QuestController.QuestID quest)
     {
         timer = 15f;
         if (titleLabel != null)
-            titleLabel.text = quest.name;
+            titleLabel.text = quest.quest.name;
 
         if (descriptionLabel != null)
-            descriptionLabel.text = quest.description;
+            descriptionLabel.text = quest.quest.description;
     }
 
     private void Update()

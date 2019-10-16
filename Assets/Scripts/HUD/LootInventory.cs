@@ -129,7 +129,7 @@ public class LootInventory : MonoBehaviour
             LootButton item = go.GetComponent<LootButton>();
             if (item != null)
             {
-                item.Initialize(items[i], inventory.Items.Where(x => x.name.Contains(items[i].name)).Count());
+                item.Initialize(items[i], inventory.Items.Where(x => x.tag.Equals(items[i].tag)).Count());
 
                 item.OnHoverEnter += OnItemHoverEnter;
                 item.OnHoverExit += OnItemHoverExit;
