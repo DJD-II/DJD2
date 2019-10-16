@@ -5,20 +5,6 @@ using UnityEngine.UI;
 
 public class PlayerController : Controller, ISavable
 {
-    #region --- Structs ---
-    internal struct CameraShakeSettings
-    {
-        public Vector3 pos,
-                            initialPosition;
-        public Vector3 rot,
-                            initialRotation;
-        public float fov,
-                            initialFieldOfView;
-        public Coroutine shakeCoroutine;
-    }
-
-    #endregion
-
     [System.Serializable]
     sealed public class PlayerSavable : Savable
     {
@@ -79,44 +65,20 @@ public class PlayerController : Controller, ISavable
     [SerializeField]
     private Camera cam = null;
     [SerializeField]
-    private Animation fallPivot = null;
+    private Transform shakePivot = null;
     [SerializeField]
-    private Transform cameraPivot = null;
+    private Animation fallPivot = null;
     [SerializeField]
     private Vector2 minMaxY = Vector2.zero;
     [SerializeField]
     private float lookSpeed = 20f;
     [Header("Wobble")]
     [SerializeField]
-    private Transform wobblePivot = null;
-    [Range(0f, 5f)]
-    [SerializeField]
-    private float walkWoobleAmount = 1.2f;
-    [Range(0f, 5f)]
-    [SerializeField]
-    private float runWoobleAmount = 1.2f;
-    [Range(0f, 90f)]
-    [SerializeField]
-    private float walkZRotation = 20f;
-    [Range(0f, 90f)]
-    [SerializeField]
-    private float runZRotation = 20f;
-    [Range(0f, 100f)]
-    [SerializeField]
-    private float walkWobbleSpeed = 20f;
-    [Range(0f, 100f)]
-    [SerializeField]
-    private float runWobbleSpeed = 20f;
-    CameraShakeSettings cameraShakeSettings;
-    public static CameraShake explosionShake;
+    private CameraWobble wobble = null;
     private float fallTimer = 0;
     [Header("Interaction")]
     [SerializeField]
-    [Range(1f, 500f)]
-    private float interactDistance = 100f;
-    private Interactable interactable;
-    [SerializeField]
-    private LayerMask ignoreLayers = 0;
+    private InteractController interaction = null;
     [Header("Inventory")]
     [SerializeField]
     private Inventory inventory = new Inventory();
@@ -133,6 +95,7 @@ public class PlayerController : Controller, ISavable
     private Transform messageContents = null;
     [SerializeField]
     private GameObject messagePrefab = null;
+    public CameraShake explosion = null;
 
     #endregion
 
@@ -141,9 +104,6 @@ public class PlayerController : Controller, ISavable
     Savable ISavable.IO { get { return new PlayerSavable(GetUniqueID(), Hp, Inventory.Items, transform); } }
     public bool CanControl { get { return canControl; } set { canControl = value; } }
     public Inventory Inventory { get { return inventory; } }
-    private float WobbleSpeed { get { return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ? runWobbleSpeed : walkWobbleSpeed; } }
-    private float ZRotation { get { return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ? runZRotation : walkZRotation; } }
-    private float WobleAmount { get { return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ? runWoobleAmount : walkWoobleAmount; } }
 
     #endregion
 
@@ -176,29 +136,7 @@ public class PlayerController : Controller, ISavable
         GameInstance.OnSave += OnSave;
         GameInstance.GameState.OnPausedChanged += OnPause;
 
-        cameraShakeSettings = new CameraShakeSettings
-        {
-            initialPosition = cameraPivot.localPosition,
-            initialRotation = cameraPivot.localRotation.eulerAngles,
-            initialFieldOfView = cam.fieldOfView
-        };
-
-        if (explosionShake == null)
-        {
-            explosionShake = new CameraShake(1f, 0.1f, 0.4f);
-
-            explosionShake.FieldOfViewShake = new CameraShake.ElementShake(0.3f, 2f);
-
-            explosionShake.PositionShake[0] = new CameraShake.ElementShake(0.1f, 2f);
-            explosionShake.PositionShake[1] = new CameraShake.ElementShake(0.1f, 2f);
-            explosionShake.PositionShake[2] = new CameraShake.ElementShake(0.1f, 2f);
-
-            explosionShake.RotationShake[0] = new CameraShake.ElementShake(0.1f, 2f);
-            explosionShake.RotationShake[1] = new CameraShake.ElementShake(0.1f, 2f);
-            explosionShake.RotationShake[2] = new CameraShake.ElementShake(0.1f, 2f);
-        }
-
-        InvokeRepeating("UpdateInteraction", 0f, 0.15f);
+        InvokeRepeating("UpdateInteraction", 0, interaction.InteractTime);
     }
 
     private void Update()
@@ -220,11 +158,14 @@ public class PlayerController : Controller, ISavable
         if (!GameInstance.GameState.Paused && Input.GetKeyDown(KeyCode.Escape))
             GameInstance.HUD.EnableMenu(true, this);
 
-        Interact();
+        interaction.Update(this);
 
         UpdateJumpInput();
 
         Look();
+
+        if (Input.GetKeyDown(KeyCode.L))
+            explosion.Play(this, cam, shakePivot, 2f);
     }
 
     protected virtual void FixedUpdate()
@@ -233,6 +174,8 @@ public class PlayerController : Controller, ISavable
     }
 
     #endregion
+
+    #region --- IO ---
 
     private void OnLoad(PlaySaveGameObject io)
     {
@@ -256,6 +199,8 @@ public class PlayerController : Controller, ISavable
         io.Feed(this, GetUniqueIDPersistent());
     }
 
+    #endregion
+
     #region --- HUD ---
 
     private void UpdateLifeHUD()
@@ -268,91 +213,11 @@ public class PlayerController : Controller, ISavable
 
     #endregion
 
-    #region --- Camera Shake ---
+    #region --- Interaction ---
 
-    public void PlayCameraShake(CameraShake cameraShake, float scale)
+    private void UpdateInteraction ()
     {
-        if (cameraShakeSettings.shakeCoroutine != null)
-            StopCoroutine(cameraShakeSettings.shakeCoroutine);
-
-        cameraShakeSettings.shakeCoroutine = StartCoroutine(ShakeCamera(cameraShake, scale));
-    }
-
-    private IEnumerator ShakeCamera(CameraShake cameraShake, float scale)
-    {
-        float blendScale;
-        float blendInTimer = cameraShake.Duration * Mathf.Min(cameraShake.BlendInTime, 1f);
-        float blendOutTimer = cameraShake.Duration * Mathf.Min(cameraShake.BlendOutTime, 1f);
-        float timer = 0f;
-
-        Transform t = cameraPivot.transform;
-
-        while (timer <= cameraShake.Duration)
-        {
-            float blendInScale = Mathf.Clamp01(timer / blendInTimer);
-            float blendOutScale = Mathf.Clamp01((cameraShake.Duration - timer) / blendOutTimer);
-
-            blendScale = scale * blendInScale * blendOutScale;
-
-            float blendTime = timer / cameraShake.Duration;
-
-            cameraShakeSettings.rot.x = (Mathf.Cos(blendTime * cameraShake.RotationShake[0].frequency * Mathf.Rad2Deg) * cameraShake.RotationShake[0].amplitude) * blendScale;
-            cameraShakeSettings.rot.y = (Mathf.Cos(blendTime * cameraShake.RotationShake[1].frequency * Mathf.Rad2Deg) * cameraShake.RotationShake[1].amplitude) * blendScale;
-            cameraShakeSettings.rot.z = (Mathf.Cos(blendTime * cameraShake.RotationShake[2].frequency * Mathf.Rad2Deg) * cameraShake.RotationShake[2].amplitude) * blendScale;
-
-            t.localRotation = Quaternion.Euler(cameraShakeSettings.initialRotation.x + cameraShakeSettings.rot.x,
-                                                cameraShakeSettings.initialRotation.y + cameraShakeSettings.rot.y,
-                                                cameraShakeSettings.initialRotation.z + cameraShakeSettings.rot.z);
-
-            cameraShakeSettings.pos.x = (Mathf.Cos(blendTime * cameraShake.PositionShake[0].frequency * Mathf.Rad2Deg) * cameraShake.PositionShake[0].amplitude) * blendScale;
-            cameraShakeSettings.pos.y = (Mathf.Cos(blendTime * cameraShake.PositionShake[1].frequency * Mathf.Rad2Deg) * cameraShake.PositionShake[1].amplitude) * blendScale;
-            cameraShakeSettings.pos.z = (Mathf.Cos(blendTime * cameraShake.PositionShake[2].frequency * Mathf.Rad2Deg) * cameraShake.PositionShake[2].amplitude) * blendScale;
-
-            t.localPosition = cameraShakeSettings.initialPosition + cameraShakeSettings.pos;
-
-            cameraShakeSettings.fov = (Mathf.Cos(blendTime * cameraShake.FieldOfViewShake.frequency * Mathf.Deg2Rad) * cameraShake.FieldOfViewShake.amplitude) * blendScale;
-
-            cam.fieldOfView = cameraShakeSettings.initialFieldOfView + cameraShakeSettings.fov;
-
-            timer += Time.deltaTime;
-            yield return null;
-        }
-
-        t.localRotation = Quaternion.Euler(cameraShakeSettings.initialRotation);
-        t.localPosition = cameraShakeSettings.initialPosition;
-        cam.fieldOfView = cameraShakeSettings.initialFieldOfView;
-    }
-
-    #endregion
-
-    #region --- Pick ---
-
-    private void Interact()
-    {
-        if (interactable == null)
-            return;
-
-        if (Input.GetKeyDown(KeyCode.E))
-            interactable.Interact(this);
-    }
-
-    private void UpdateInteraction()
-    {
-        if (GameInstance.GameState.Paused)
-            return;
-
-        GameInstance.HUD.EnableInteractMessage(false, null);
-        interactable = null;
-
-        if (Physics.Raycast(new Ray(cam.transform.position, cam.transform.forward), out RaycastHit hit, interactDistance, ~ignoreLayers))
-        {
-            Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
-            if (interactable != null)
-            {
-                GameInstance.HUD.EnableInteractMessage(true, interactable);
-                this.interactable = interactable;
-            }
-        }
+        interaction.UpdateInteraction();
     }
 
     #endregion
@@ -452,19 +317,9 @@ public class PlayerController : Controller, ISavable
     private void UpdateWobbleAnimation(float vertical, float horizontal)
     {
         if (grounded && (vertical != 0 || horizontal != 0))
-        {
-            float multiplier = currentSpeed / runSpeed;
-            multiplier *= Mathf.Clamp01(controller.velocity.magnitude);
-            float time = Time.time;
-
-            wobblePivot.transform.localPosition = Vector3.Lerp(wobblePivot.transform.localPosition, new Vector3(0f, Mathf.Sin(time * WobbleSpeed) * WobleAmount * multiplier, 0f), Time.deltaTime * 2f);
-            wobblePivot.transform.localRotation = Quaternion.Slerp(wobblePivot.transform.localRotation, Quaternion.Euler(0f, 0f, Mathf.Sin(time * WobbleSpeed / 2) * ZRotation * multiplier), Time.deltaTime * 2f);
-        }
+            wobble.UpdateMove(controller.velocity.magnitude, currentSpeed, runSpeed);
         else
-        {
-            wobblePivot.transform.localPosition = Vector3.Lerp(wobblePivot.transform.localPosition, Vector3.zero, Time.deltaTime * 6f);
-            wobblePivot.transform.localRotation = Quaternion.Slerp(wobblePivot.transform.localRotation, Quaternion.Euler(0f, 0f, 0f), Time.deltaTime * 6f);
-        }
+            wobble.UpdateStopped();
     }
 
     private void UpdateMovement()
@@ -523,6 +378,8 @@ public class PlayerController : Controller, ISavable
 
     #endregion
 
+    #region --- Misc ---
+
     public void PopMessage(string message)
     {
         GameObject go = Instantiate(messagePrefab, messageContents);
@@ -545,4 +402,6 @@ public class PlayerController : Controller, ISavable
 
         return false;
     }
+
+    #endregion
 }
