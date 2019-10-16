@@ -45,13 +45,13 @@ sealed public class GlitchController : MonoBehaviour
         if (controller.Hp.Scalar <= 0.3f)
         {
             float m = glitchProgress.Evaluate(1f - controller.Hp.Scalar);
-            float ramInt = vramIntensity.Evaluate(Time.time * vramSpeed * m) * vramMultiplier.Evaluate(Time.time * m);
+            float ramInt = vramIntensity.Evaluate(Time.unscaledTime * vramSpeed * m) * vramMultiplier.Evaluate(Time.unscaledTime * m);
             SFX.volume = ramInt;
             vRamController.enabled = crtController.enabled = ramInt > 0.5f;
             vRamController.Shift = ramInt * m;
             //SFX.pitch = ramInt / vramMultiplier;
-            bleedController.Intensity = bleedIntensity.Evaluate(Time.time * bleedSpeed * m) * bleedMultiplier.Evaluate(Time.time * m) * m;
-            float scannerInt = scannerIntensity.Evaluate(Time.time * scannerSpeed * m) * scannerMultiplier;
+            bleedController.Intensity = bleedIntensity.Evaluate(Time.unscaledTime * bleedSpeed * m) * bleedMultiplier.Evaluate(Time.unscaledTime * m) * m;
+            float scannerInt = scannerIntensity.Evaluate(Time.unscaledTime * scannerSpeed * m) * scannerMultiplier;
             scannerController.enabled = scannerInt > 0.5f;
             scannerController.Area = scannerInt * m;
         }
