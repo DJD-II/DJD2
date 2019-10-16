@@ -8,28 +8,58 @@ public class CameraShake : ScriptableObject
 {
     #region --- classes ---
 
-    private class CameraShakeSettings
+    private class Settings
     {
         private Vector3 position = Vector3.zero;
         private Vector3 initialPosition = Vector3.zero;
         private Vector3 rotation = Vector3.zero;
         private Vector3 initialRotation = Vector3.zero;
 
-        public ref Vector3 Position { get { return ref position; } }
-        public ref Vector3 InitialPosition { get { return ref initialPosition; } }
-        public ref Vector3 Rotation { get { return ref rotation; } }
-        public ref Vector3 InitialRotation { get { return ref initialRotation; } }
         public float FOV { get; set; }
         public float InitialFOV { get; }
         public Coroutine Coroutine { get; set; }
         public Transform Pivot { get; }
+        public MonoBehaviour Controller { get; }
+        public Camera Camera { get; }
 
-        public CameraShakeSettings (Transform pivot, Vector3 position, Quaternion rotation, float fov)
+        public Settings(MonoBehaviour controller, Camera camera, Transform pivot, float fov)
         {
+            Camera = camera;
+            Controller = controller;
             Pivot = pivot;
-            initialPosition = this.position = position;
-            initialRotation = this.rotation = rotation.eulerAngles;
+            initialPosition = this.position = pivot.localPosition;
+            initialRotation = this.rotation = pivot.localRotation.eulerAngles;
             InitialFOV = FOV = fov;
+        }
+
+        public void Reset ()
+        {
+            if (Coroutine != null)
+                Controller.StopCoroutine(Coroutine);
+
+            Pivot.localPosition = initialPosition;
+            Pivot.localRotation = Quaternion.Euler(initialRotation);
+            Camera.fieldOfView = InitialFOV;
+        }
+
+        public void Apply(CameraShake shake, float blendTime, float blendScale)
+        {
+            rotation.x = (Mathf.Cos(blendTime * shake.rotationX.frequency * Mathf.Rad2Deg) * shake.rotationX.amplitude) * blendScale;
+            rotation.y = (Mathf.Cos(blendTime * shake.rotationY.frequency * Mathf.Rad2Deg) * shake.rotationY.amplitude) * blendScale;
+            rotation.z = (Mathf.Cos(blendTime * shake.rotationZ.frequency * Mathf.Rad2Deg) * shake.rotationZ.amplitude) * blendScale;
+
+            Pivot.localRotation = Quaternion.Euler( initialRotation.x + rotation.x,
+                                                    initialRotation.y + rotation.y,
+                                                    initialRotation.z + rotation.z);
+
+            position.x = (Mathf.Cos(blendTime * shake.positionX.frequency * Mathf.Rad2Deg) * shake.positionX.amplitude) * blendScale;
+            position.y = (Mathf.Cos(blendTime * shake.positionY.frequency * Mathf.Rad2Deg) * shake.positionY.amplitude) * blendScale;
+            position.z = (Mathf.Cos(blendTime * shake.positionZ.frequency * Mathf.Rad2Deg) * shake.positionZ.amplitude) * blendScale;
+
+            Pivot.localPosition = initialPosition + position;
+
+            FOV = (Mathf.Cos(blendTime * shake.fov.frequency * Mathf.Deg2Rad) * shake.fov.amplitude) * blendScale;
+            Camera.fieldOfView = InitialFOV + FOV;
         }
     }
 
@@ -67,9 +97,7 @@ public class CameraShake : ScriptableObject
     public float blendInTime = 0.1f;
     [SerializeField]
     public float blendOutTime = 0.1f;
-    private CameraShakeSettings settings = null;
-    private MonoBehaviour controller = null;
-    private Camera camera = null;
+    private Settings settings = null;
 
     #endregion
 
@@ -78,21 +106,10 @@ public class CameraShake : ScriptableObject
     public void Play (MonoBehaviour controller, Camera camera, Transform pivot, float scale)
     {
         if (settings != null)
-        {
-            if (settings.Coroutine != null)
-                this.controller.StopCoroutine(settings.Coroutine);
+            settings.Reset();
 
-            settings.Pivot.localPosition = settings.InitialPosition;
-            settings.Pivot.localRotation = Quaternion.Euler(settings.InitialRotation);
-            this.camera.fieldOfView = settings.InitialFOV;
-
-            settings = null;
-        }
-
-        this.controller = controller;
-        this.camera = camera;
-        settings = new CameraShakeSettings(pivot, pivot.localPosition, pivot.localRotation, camera.fieldOfView);
-        settings.Coroutine = this.controller.StartCoroutine(ShakeCamera(camera, scale));
+        settings = new Settings(controller, camera, pivot, camera.fieldOfView);
+        settings.Coroutine = settings.Controller.StartCoroutine(ShakeCamera(camera, scale));
     }
 
     private IEnumerator ShakeCamera(Camera camera, float scale)
@@ -101,8 +118,6 @@ public class CameraShake : ScriptableObject
         float blendInTimer = duration * Mathf.Min(blendInTime, 1f);
         float blendOutTimer = duration * Mathf.Min(blendOutTime, 1f);
         float timer = 0f;
-
-        Transform t = settings.Pivot;
 
         while (timer <= duration)
         {
@@ -113,32 +128,13 @@ public class CameraShake : ScriptableObject
 
             float blendTime = timer / duration;
 
-            settings.Rotation.x = (Mathf.Cos(blendTime * rotationX.frequency * Mathf.Rad2Deg) * rotationX.amplitude) * blendScale;
-            settings.Rotation.y = (Mathf.Cos(blendTime * rotationY.frequency * Mathf.Rad2Deg) * rotationY.amplitude) * blendScale;
-            settings.Rotation.z = (Mathf.Cos(blendTime * rotationZ.frequency * Mathf.Rad2Deg) * rotationZ.amplitude) * blendScale;
-
-            t.localRotation = Quaternion.Euler(settings.InitialRotation.x + settings.Rotation.x,
-                                                settings.InitialRotation.y + settings.Rotation.y,
-                                                settings.InitialRotation.z + settings.Rotation.z);
-
-            settings.Position.x = (Mathf.Cos(blendTime * positionX.frequency * Mathf.Rad2Deg) * positionX.amplitude) * blendScale;
-            settings.Position.y = (Mathf.Cos(blendTime * positionY.frequency * Mathf.Rad2Deg) * positionY.amplitude) * blendScale;
-            settings.Position.z = (Mathf.Cos(blendTime * positionZ.frequency * Mathf.Rad2Deg) * positionZ.amplitude) * blendScale;
-
-            t.localPosition = settings.InitialPosition + settings.Position;
-
-            settings.FOV = (Mathf.Cos(blendTime * fov.frequency * Mathf.Deg2Rad) * fov.amplitude) * blendScale;
-
-            camera.fieldOfView = settings.InitialFOV + settings.FOV;
+            settings.Apply(this, blendTime, blendScale);
 
             timer += Time.deltaTime;
             yield return null;
         }
 
-        t.localRotation = Quaternion.Euler(settings.InitialRotation);
-        t.localPosition = settings.InitialPosition;
-        camera.fieldOfView = settings.InitialFOV;
-
+        settings.Reset();
         settings = null;
     }
 

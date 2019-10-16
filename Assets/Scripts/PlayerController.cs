@@ -104,6 +104,7 @@ public class PlayerController : Controller, ISavable
     Savable ISavable.IO { get { return new PlayerSavable(GetUniqueID(), Hp, Inventory.Items, transform); } }
     public bool CanControl { get { return canControl; } set { canControl = value; } }
     public Inventory Inventory { get { return inventory; } }
+    public Vector3 Velocity { get { return controller.velocity; } }
 
     #endregion
 
@@ -116,6 +117,8 @@ public class PlayerController : Controller, ISavable
         reducer = new PointDamage(this, true, 1);
 
         GameInstance.OnLoad += OnLoad;
+
+        GameInstance.GameState.QuestController.Initialize(this);
     }
 
     private void OnDestroy()
@@ -123,6 +126,8 @@ public class PlayerController : Controller, ISavable
         GameInstance.OnSave -= OnSave;
         GameInstance.OnLoad -= OnLoad;
         GameInstance.GameState.OnPausedChanged -= OnPause;
+
+        GameInstance.GameState.QuestController.Initialize(null);
     }
 
     private void OnPause(GameState sender)
@@ -151,9 +156,6 @@ public class PlayerController : Controller, ISavable
 
         if (!canControl)
             return;
-
-        if (vertical != 0 || horizontal != 0)
-            GameInstance.GameState.QuestController.CompleteQuest("Learn Quick!");
 
         if (!GameInstance.GameState.Paused && Input.GetKeyDown(KeyCode.Escape))
             GameInstance.HUD.EnableMenu(true, this);

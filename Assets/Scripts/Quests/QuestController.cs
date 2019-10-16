@@ -29,7 +29,6 @@ sealed public class QuestController : object, ISavable
         public Quest quest;
         public bool completed;
 
-
         public QuestID (QuestInfo info)
         {
             quest = QuestUtility.Get(info.Name);
@@ -49,6 +48,9 @@ sealed public class QuestController : object, ISavable
             completed = true;
 
             OnCompleted?.Invoke(this);
+
+            foreach (Quest q in quest.Requesites.QuestsToGive)
+                GameInstance.GameState.QuestController.Add(q);
         }
     }
 
@@ -79,6 +81,23 @@ sealed public class QuestController : object, ISavable
     private List<QuestID> quests = new List<QuestID>(); 
 
     public List<QuestID> Quests { get { return quests; } }
+
+    public PlayerController PlayerController { get; private set; }
+
+    public void Initialize (PlayerController controller)
+    {
+        PlayerController = controller;
+    }
+
+    public void Update ()
+    {
+        if (PlayerController == null)
+            return;
+
+        foreach (QuestID id in quests.ToArray())
+            if (!id.completed && id.quest.Requesites.IsValid(PlayerController))
+                id.Complete();
+    }
 
     public void Clear ()
     {

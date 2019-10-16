@@ -1,7 +1,13 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// This object represents the game instance. Only one is permited and holds the main game information.
+/// HUD, GameState and Save/Load is in this class.
+/// </summary>
 sealed public class GameInstance : MonoBehaviour, ISavable
 {
+    #region --- Classes ---
+
     [System.Serializable]
     public class GameInstanceSaveGameObject : Savable
     {
@@ -14,7 +20,19 @@ sealed public class GameInstance : MonoBehaviour, ISavable
         }
     }
 
+    #endregion
+
+    #region --- Events ---
+
     public delegate void IOEventHandler(PlaySaveGameObject io);
+
+
+    public static event IOEventHandler  OnSave,
+                                        OnLoad;
+
+    #endregion
+
+    #region --- Properties ---
 
     public static GameInstance Singleton { get; private set; }
     public static HUD HUD { get; private set; }
@@ -25,8 +43,9 @@ sealed public class GameInstance : MonoBehaviour, ISavable
     public bool IsLoadingSavedGame { get; private set; }
     private static PlaySaveGameObject SaveGameObject { get; set; }
 
-    public static event IOEventHandler      OnSave,
-                                            OnLoad;
+    #endregion
+
+    #region --- Methods ---
 
     private void Awake()
     {
@@ -77,6 +96,10 @@ sealed public class GameInstance : MonoBehaviour, ISavable
         IO.Delete(IO.tempFilename);
     }
 
+    /// <summary>
+    /// This method is called when the game is about to save.
+    /// </summary>
+    /// <param name="filename"></param>
     public static void Save(string filename = "")
     {
         SaveGameObject = IO.Load<PlaySaveGameObject>(IO.tempFilename);
@@ -98,6 +121,10 @@ sealed public class GameInstance : MonoBehaviour, ISavable
         SaveGameObject = null;
     }
 
+    /// <summary>
+    /// This method is called when the game is loading.
+    /// </summary>
+    /// <param name="filename"></param>
     public static void Load(string filename = "")
     {
         HUD.EnableLoadingScreen(true);
@@ -116,9 +143,17 @@ sealed public class GameInstance : MonoBehaviour, ISavable
             UnityEngine.SceneManagement.SceneManager.LoadScene(s.SceneName);
     }
 
+    /// <summary>
+    /// Sets the game cursor state.
+    /// its visibility and lock mode.
+    /// </summary>
+    /// <param name="visible"></param>
+    /// <param name="lockMode"></param>
     public void SetMouseCursorState(bool visible, CursorLockMode lockMode)
     {
         Cursor.visible = visible;
         Cursor.lockState = lockMode;
     }
+
+    #endregion
 }
