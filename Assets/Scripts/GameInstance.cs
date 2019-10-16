@@ -79,8 +79,6 @@ sealed public class GameInstance : MonoBehaviour, ISavable
 
     public static void Save(string filename = "")
     {
-        HUD.EnableLoadingScreen(true);
-
         SaveGameObject = IO.Load<PlaySaveGameObject>(IO.tempFilename);
 
         if (SaveGameObject == null)
