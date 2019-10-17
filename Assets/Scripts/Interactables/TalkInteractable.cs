@@ -14,15 +14,29 @@ public class ConversationRequesite
     public abstract class Operation<T, S> where T : IOperatable<S> where S : IConvertible, new()
     {
         [SerializeField]
-        protected LogicOperator operation = LogicOperator.Equal;
-        [SerializeField]
         protected S obj;
+    }
+
+    [System.Serializable]
+    public abstract class SimpleOperator<T, S> : Operation<T, S> where T : IOperatable<S> where S : IConvertible, new()
+    {
+        [SerializeField]
+        protected LogicOperator operation = LogicOperator.Equal;
 
         public abstract bool Calculate(T value);
     }
 
     [System.Serializable]
-    public class ScaledValueOperation : Operation<ScaledValue, float>
+    public abstract class RefOperator<T, S> : Operation<T, S> where T : IOperatable<S> where S :IConvertible, new()
+    {
+        [SerializeField]
+        protected T value;
+
+        public abstract bool Calculate();
+    }
+
+    [System.Serializable]
+    sealed public class ScaledValueOperation : SimpleOperator<ScaledValue, float>
     {
         [SerializeField]
         private bool enabled = false;
@@ -37,14 +51,12 @@ public class ConversationRequesite
     }
 
     [System.Serializable]
-    public class QuestOperation : Operation<Quest, bool>
-    {
-        [SerializeField]
-        private Quest value = null;
+    sealed public class QuestOperation : RefOperator<Quest, bool>  
+    { 
 
-        public override bool Calculate(Quest value = null)
+        public override bool Calculate()
         {
-            return ((IOperatable<bool>)this.value).Get(operation, obj); 
+            return ((IOperatable<bool>)value).Get(LogicOperator.Equal, obj); 
         }
     }
 
@@ -60,6 +72,9 @@ public class ConversationRequesite
     public bool Fullfills(PlayerController controller)
     {
         bool fullfilled = hp.Calculate(controller.Hp) && armour.Calculate(controller.Armour);
+
+        if (!fullfilled)
+            return false;
 
         foreach (QuestOperation op in quests)
         {
@@ -86,10 +101,8 @@ sealed public class TalkInteractable : Interactable
 
     public RuntimeAnimatorController InitController { get; private set; }
     public RuntimeAnimatorController Controller { get; private set; }
-
     public List<Conversation> Conversations { get => conversations; }
     public Conversation Conversation { get; private set; }
-
     public bool IsTalking { get; set; }
     private Quaternion InitRotation { get; set; }
 

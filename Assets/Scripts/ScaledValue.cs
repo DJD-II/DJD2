@@ -27,15 +27,15 @@ public struct ScaledValue : IOperatable<float>
         switch (operation)
         {
             case LogicOperator.LessThan:
-                return Value < value;
+                return value > Scalar;
             case LogicOperator.LessOrEqual:
-                return Value <= value;
+                return value >= Scalar;
             case LogicOperator.Equal:
-                return Value == value;
+                return value == Scalar;
             case LogicOperator.GreaterOrEqual:
-                return Value >= value;
+                return value <= Scalar;
             case LogicOperator.Greater:
-                return Value > value;
+                return value < Scalar;
         }
 
         return false;

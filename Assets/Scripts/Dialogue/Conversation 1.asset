@@ -15,57 +15,84 @@ MonoBehaviour:
   dialogues:
   - name: 0
     dialogue:
-      toAnswerID: 0
+      toID: 0
+      switchTo: 0
       text: Hello there!
   - name: 1
     dialogue:
-      toAnswerID: 0
+      toID: 0
+      switchTo: 0
       text: I'm not familiar with this place!
+  - name: 2
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: I'm not really sure!
   answers:
   - name: 0
     answers:
     - name: 0
-      toDialogueID: 1
+      switchTo: 1
+      toID: 1
       cost: 0
       itemsToGive: []
       questsToGive: []
-      text: Do you know where am I?
+      text: Do you know where I am?
       requisites:
         quests: []
         events: 
         hp:
-          operation: 0
           obj: 0
+          operation: 0
           enabled: 0
         armour:
-          operation: 0
           obj: 0
+          operation: 0
           enabled: 0
     - name: 1
-      toDialogueID: 100
+      switchTo: 1
+      toID: 2
       cost: 0
       itemsToGive: []
       questsToGive: []
-      text: Bye
+      text: I'm low on battery do you know where I can recharge?
       requisites:
         quests: []
         events: 
         hp:
-          operation: 0
+          obj: 0.3
+          operation: 1
+          enabled: 1
+        armour:
           obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
+      switchTo: 1
+      toID: 100
+      cost: 0
+      itemsToGive: []
+      questsToGive: []
+      text: bye
+      requisites:
+        quests: []
+        events: 
+        hp:
+          obj: 0
+          operation: 0
           enabled: 0
         armour:
-          operation: 0
           obj: 0
+          operation: 0
           enabled: 0
   requisites:
     quests: []
     events: 
     hp:
-      operation: 2
       obj: 0
+      operation: 2
       enabled: 0
     armour:
-      operation: 2
       obj: 0
+      operation: 2
       enabled: 0

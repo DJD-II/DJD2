@@ -20,6 +20,7 @@ sealed public class TalkUIController : MonoBehaviour
     private DialogueManager CurrentManager { get; set; }
     public TalkInteractable Interactable { get; set; }
     public PlayerController PlayerController { get; set; }
+    public PlayerAnswer[] Answers { get; private set; }
 
     private Coroutine slowLettersCoroutine;
 
@@ -33,7 +34,6 @@ sealed public class TalkUIController : MonoBehaviour
         animator.runtimeAnimatorController = Interactable.Controller;
 
         SwitchToConversation();
-        slowLettersCoroutine = StartCoroutine(SlowLetters(CurrentManager.Dialogue.Text));
     }
 
     private void Update()
@@ -52,8 +52,30 @@ sealed public class TalkUIController : MonoBehaviour
             }
             else
             {
-                SwitchToAnswers();
-                InstantiateAnswers();
+                switch(CurrentManager.Dialogue.SwitchTo)
+                {
+                    case SwitchType.Answers:
+                        if (CurrentManager.Dialogue.ToID < 0 || CurrentManager.Dialogue.ToID >= CurrentConversation.Answers.Count)
+                        {
+                            Close();
+                            return;
+                        }
+                        Answers = CurrentConversation.Answers[CurrentManager.Dialogue.ToID].Answers;
+                        SwitchToAnswers();
+                        break;
+
+                    case SwitchType.Dialogue:
+
+                        if (CurrentManager.Dialogue.ToID < 0 || CurrentManager.Dialogue.ToID >= CurrentConversation.dialogues.Count)
+                        {
+                            Close();
+                            return;
+                        }
+
+                        CurrentManager = CurrentConversation.dialogues[CurrentManager.Dialogue.ToID];
+                        SwitchToConversation();
+                        break;
+                }
             }
         }
     }
@@ -61,17 +83,14 @@ sealed public class TalkUIController : MonoBehaviour
     // Creates a button and puts the contents inside
     private void InstantiateAnswers()
     {
-        if (CurrentManager.Dialogue.ToAnswerID < 0 || CurrentManager.Dialogue.ToAnswerID >= CurrentConversation.Answers.Count)
-        {
-            Close();
-            return;
-        }
-
         while (answersPanel.transform.childCount > 0)
             DestroyImmediate(answersPanel.transform.GetChild(0).gameObject);
 
-        foreach (PlayerAnswer i in CurrentConversation.Answers[CurrentManager.Dialogue.ToAnswerID].Answers)
+        foreach (PlayerAnswer i in Answers)
         {
+            if (!i.Requesites.Fullfills(PlayerController))
+                continue;
+
             GameObject go = Instantiate(answerButton, answersPanel.transform);
             AnswersButton button = go.GetComponent<AnswersButton>();
             button.Initialize(i);
@@ -82,23 +101,41 @@ sealed public class TalkUIController : MonoBehaviour
     // Checks the contents on the button clicked
     private void OnAnswer(AnswersButton sender)
     {
-        if (sender.pAnswer.toDialogueID < 0 || sender.pAnswer.toDialogueID >= CurrentConversation.dialogues.Count)
+        switch(sender.pAnswer.SwitchTo)
         {
-            Close();
-            return;
+            case SwitchType.Dialogue:
+                if (sender.pAnswer.toID < 0 || sender.pAnswer.toID >= CurrentConversation.dialogues.Count)
+                {
+                    Close();
+                    return;
+                }
+
+                CurrentManager = CurrentConversation.dialogues[sender.pAnswer.toID];
+                if (CurrentManager == null)
+                    Close();
+                else
+                    SwitchToConversation();
+                break;
+
+            case SwitchType.Answers:
+
+                if (sender.pAnswer.toID < 0 || sender.pAnswer.toID >= CurrentConversation.Answers.Count)
+                {
+                    Close();
+                    return;
+                }
+
+                Answers = CurrentConversation.Answers[sender.pAnswer.toID].Answers;
+                SwitchToAnswers();
+
+                break;
         }
 
-        CurrentManager = CurrentConversation.dialogues[sender.pAnswer.toDialogueID];
-        if (CurrentManager == null)
-            Close();
-        else
-            slowLettersCoroutine = StartCoroutine(SlowLetters(CurrentManager.Dialogue.Text));
+       
     }
 
     private IEnumerator SlowLetters(string other)
     { 
-        SwitchToConversation();
-
         for (int i = 0; i < other.Length; i++)
         {
             toTalkPanel.text += (other[i]);
@@ -123,6 +160,7 @@ sealed public class TalkUIController : MonoBehaviour
     public void SwitchToAnswers()
     {
         Interactable.GetComponent<Animator>().SetBool("Talking", false);
+        InstantiateAnswers();
         if (conversationPanel != null)
             conversationPanel.SetActive(false);
 
@@ -134,6 +172,7 @@ sealed public class TalkUIController : MonoBehaviour
     {
         Interactable.GetComponent<Animator>().SetBool("Talking", true);
         toTalkPanel.text = "";
+        slowLettersCoroutine = StartCoroutine(SlowLetters(CurrentManager.Dialogue.Text));
 
         if (conversationPanel != null)
             conversationPanel.SetActive(true);
