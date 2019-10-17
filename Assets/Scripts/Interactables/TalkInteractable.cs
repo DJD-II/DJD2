@@ -43,6 +43,7 @@ sealed public class TalkInteractable : Interactable
 
         if (Conversation != null)
         {
+            GameInstance.GameState.QuestController.CompleteQuest("Talk To Someone!");
             GameInstance.HUD.EnableConversation(true, this, controller);
             IsTalking = true;
         }

@@ -31,6 +31,13 @@ MonoBehaviour:
       switchTo: 0
       text: Apperantly some scientist. I personally don't know the guy... You know
         what I mean.
+  - name: 3
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Well the district is closed and there's no recharger around here. This
+        might be crazy....just might....but maybe you can find some batteries in the
+        garbage. I don't know!
   answers:
   - name: 0
     answers:
@@ -53,6 +60,24 @@ MonoBehaviour:
           operation: 0
           enabled: 0
     - name: 1
+      switchTo: 1
+      toID: 3
+      cost: 0
+      itemsToGive: []
+      questsToGive: []
+      text: I'm low on battery do you know where i can recharge?
+      requisites:
+        quests: []
+        events: 
+        hp:
+          obj: 0.3
+          operation: 1
+          enabled: 1
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
       switchTo: 1
       toID: -1
       cost: 0

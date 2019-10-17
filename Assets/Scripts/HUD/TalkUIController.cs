@@ -101,7 +101,23 @@ sealed public class TalkUIController : MonoBehaviour
     // Checks the contents on the button clicked
     private void OnAnswer(AnswersButton sender)
     {
-        switch(sender.pAnswer.SwitchTo)
+        foreach (Quest q in sender.pAnswer.QuestsToComplete)
+        {
+            QuestController.QuestID id = GameInstance.GameState.QuestController.Quests.Find(x => x.quest.name.ToLower().Equals(q.name.ToLower()));
+            if (id != null)
+                id.Complete();
+        }
+
+        foreach (Quest q in sender.pAnswer.QuestsToEarn)
+            GameInstance.GameState.QuestController.Add(q);
+
+        foreach (Item i in sender.pAnswer.ItemsToGive)
+            PlayerController.Inventory.Remove(i.name);
+
+        foreach (Item i in sender.pAnswer.ItemsToEarn)
+            PlayerController.Inventory.Add(i);
+
+        switch (sender.pAnswer.SwitchTo)
         {
             case SwitchType.Dialogue:
                 if (sender.pAnswer.ToID < 0 || sender.pAnswer.ToID >= CurrentConversation.dialogues.Count)

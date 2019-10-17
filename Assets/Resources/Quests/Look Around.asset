@@ -21,5 +21,6 @@ MonoBehaviour:
     needsMovement: 0
     needsLooking: 1
     custom: 0
-    questsToGive: []
+    questsToGive:
+    - {fileID: 11400000, guid: a6e630a28db01c441b1d980a4ad0c16f, type: 2}
   position: []
