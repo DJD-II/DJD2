@@ -2,11 +2,6 @@
 using UnityEngine;
 using System;
 
-public interface IValue
-{
-
-}
-
 public interface IOperatable<S> where S : IConvertible
 {
     bool Get(LogicOperator operation, S value);
@@ -89,9 +84,19 @@ sealed public class TalkInteractable : Interactable
     [SerializeField]
     private List<Conversation> conversations = null;
 
+    public RuntimeAnimatorController InitController { get; private set; }
+    public RuntimeAnimatorController Controller { get; private set; }
+
     public List<Conversation> Conversations { get => conversations; }
     public Conversation Conversation { get; private set; }
-    
+
+    protected override void Awake()
+    {
+        base.Awake();
+        Controller = Resources.Load<RuntimeAnimatorController>("Animations/Talk");
+        InitController = GetComponent<Animator>().runtimeAnimatorController;
+    }
+
     protected override void OnInteract(PlayerController controller)
     {
         Conversation = null;

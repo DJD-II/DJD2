@@ -2483,7 +2483,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -107.16, y: -74}
+  m_AnchoredPosition: {x: -107.16016, y: -74}
   m_SizeDelta: {x: 93.14197, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5520277362976986456
@@ -5953,6 +5953,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9ff9ca9bda76b4e92a3695a918f32b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  letterSpeed: 0.02
   conversationPanel: {fileID: 8422001987725535335}
   answersPanel: {fileID: 1151044184051915625}
   toTalkPanel: {fileID: 5370934444413097008}
@@ -8137,7 +8138,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 
 --- !u!1 &8279511837304187828
 GameObject:
   m_ObjectHideFlags: 0

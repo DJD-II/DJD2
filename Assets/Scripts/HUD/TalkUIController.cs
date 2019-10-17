@@ -6,6 +6,8 @@ using UnityEngine.UI;
 sealed public class TalkUIController : MonoBehaviour
 {
     [SerializeField]
+    private float letterSpeed = 0.08f;
+    [SerializeField]
     private GameObject conversationPanel = null;
     [SerializeField]
     private GameObject answersPanel = null;
@@ -25,18 +27,30 @@ sealed public class TalkUIController : MonoBehaviour
     {
         CurrentConversation = Interactable.Conversation;
         CurrentManager = CurrentConversation.dialogues[0];
+       
+        Animator animator = Interactable.GetComponent<Animator>();
+        animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+        animator.runtimeAnimatorController = Interactable.Controller;
+
         SwitchToConversation();
         slowLettersCoroutine = StartCoroutine(SlowLetters(CurrentManager.Dialogue.Text));
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.anyKeyDown && toTalkPanel.gameObject.activeInHierarchy)
         {
             if (slowLettersCoroutine != null)
+            {
                 StopCoroutine(slowLettersCoroutine);
-            SwitchToAnswers();
-            InstantiateAnswers();
+                toTalkPanel.text = CurrentManager.Dialogue.Text;
+                slowLettersCoroutine = null;
+            }
+            else
+            {
+                SwitchToAnswers();
+                InstantiateAnswers();
+            }
         }
     }
 
@@ -70,12 +84,11 @@ sealed public class TalkUIController : MonoBehaviour
             return;
         }
 
-        DialogueManager i = CurrentConversation.dialogues[sender.pAnswer.toDialogueID];
-
-        if (i == null)
+        CurrentManager = CurrentConversation.dialogues[sender.pAnswer.toDialogueID];
+        if (CurrentManager == null)
             Close();
         else
-            slowLettersCoroutine = StartCoroutine(SlowLetters(i.Dialogue.Text));
+            slowLettersCoroutine = StartCoroutine(SlowLetters(CurrentManager.Dialogue.Text));
     }
 
     private IEnumerator SlowLetters(string other)
@@ -85,12 +98,17 @@ sealed public class TalkUIController : MonoBehaviour
         for (int i = 0; i < other.Length; i++)
         {
             toTalkPanel.text += (other[i]);
-            yield return new WaitForSecondsRealtime(0.15f);
+            yield return new WaitForSecondsRealtime(letterSpeed);
         }
+
+        slowLettersCoroutine = null;
     }
 
     private void Close()
     {
+        Animator animator = Interactable.GetComponent<Animator>();
+        animator.updateMode = AnimatorUpdateMode.Normal;
+        animator.runtimeAnimatorController = Interactable.InitController;
         if (slowLettersCoroutine != null)
             StopCoroutine(slowLettersCoroutine);
         GameInstance.GameState.Paused = false;
@@ -99,6 +117,7 @@ sealed public class TalkUIController : MonoBehaviour
 
     public void SwitchToAnswers()
     {
+        Interactable.GetComponent<Animator>().SetBool("Talking", false);
         if (conversationPanel != null)
             conversationPanel.SetActive(false);
 
@@ -108,6 +127,7 @@ sealed public class TalkUIController : MonoBehaviour
 
     public void SwitchToConversation()
     {
+        Interactable.GetComponent<Animator>().SetBool("Talking", true);
         toTalkPanel.text = "";
 
         if (conversationPanel != null)
