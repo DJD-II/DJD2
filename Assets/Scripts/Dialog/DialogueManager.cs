@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 [System.Serializable]
 public class DialogueManager
 {
-    public string name;
-    public NpcDialogue nPCdialogue;
-    public List<PlayerAnswer> answers;
+    [SerializeField]
+    private string name;
+    [SerializeField]
+    private NpcDialogue dialogue = null;
+
+    public NpcDialogue Dialogue { get => dialogue; }
 }

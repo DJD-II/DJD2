@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "Create Dialogue", menuName = "Dialogue/Dialogue")]
-public class NpcDialogue : ScriptableObject
+[System.Serializable]
+public class NpcDialogue
 {
-    public int id;
-    public string text = "APPLY_TEXT_FIELD";
-
+    [SerializeField]
+    private int toAnswerID = 0;
+    [SerializeField]
+    private string text = "APPLY_TEXT_FIELD";
+   
+    public int ToAnswerID { get => toAnswerID; }
+    public string Text { get => text; } 
 }

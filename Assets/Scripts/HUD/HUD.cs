@@ -97,8 +97,8 @@ sealed public class HUD : MonoBehaviour
 
         talkUIController.Interactable = interactable;
         talkUIController.PlayerController = controller;
-        talkUIController.Initialize();
         talkUIController.gameObject.SetActive(true);
+        talkUIController.Initialize();
     }
 
     public void EnableMenu(bool enable, PlayerController controller)

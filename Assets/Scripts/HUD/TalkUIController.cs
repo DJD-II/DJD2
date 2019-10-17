@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,17 +14,21 @@ sealed public class TalkUIController : MonoBehaviour
     [SerializeField]
     private GameObject answerButton = null;
 
-    private int CurrentDialogue { get; set; }
+    private Conversation CurrentConversation { get; set; }
+    private DialogueManager CurrentManager { get; set; }
     public TalkInteractable Interactable { get; set; }
     public PlayerController PlayerController { get; set; }
 
     private Coroutine slowLettersCoroutine;
+
     public void Initialize()
     {
-        CurrentDialogue = 0;
+        CurrentConversation = Interactable.Conversation;
+        CurrentManager = CurrentConversation.dialogues[0];
         SwitchToConversation();
-        toTalkPanel.text = Interactable.Conversation.managerContents[0].nPCdialogue.text;
+        slowLettersCoroutine = StartCoroutine(SlowLetters(CurrentManager.Dialogue.Text));
     }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -31,19 +36,23 @@ sealed public class TalkUIController : MonoBehaviour
             if (slowLettersCoroutine != null)
                 StopCoroutine(slowLettersCoroutine);
             SwitchToAnswers();
-            InstanciateAnswers();
+            InstantiateAnswers();
         }
     }
 
     // Creates a button and puts the contents inside
-    private void InstanciateAnswers()
+    private void InstantiateAnswers()
     {
-        while (answersPanel.transform.childCount > 0)
+        if (CurrentManager.Dialogue.ToAnswerID < 0 || CurrentManager.Dialogue.ToAnswerID >= CurrentConversation.Answers.Count)
         {
-            DestroyImmediate(answersPanel.transform.GetChild(0).gameObject);
+            Close();
+            return;
         }
 
-        foreach (PlayerAnswer i in Interactable.Conversation.managerContents[CurrentDialogue].answers)
+        while (answersPanel.transform.childCount > 0)
+            DestroyImmediate(answersPanel.transform.GetChild(0).gameObject);
+
+        foreach (PlayerAnswer i in CurrentConversation.Answers[CurrentManager.Dialogue.ToAnswerID].Answers)
         {
             GameObject go = Instantiate(answerButton, answersPanel.transform);
             AnswersButton button = go.GetComponent<AnswersButton>();
@@ -55,55 +64,22 @@ sealed public class TalkUIController : MonoBehaviour
     // Checks the contents on the button clicked
     private void OnAnswer(AnswersButton sender)
     {
-        ActiveAnswerCheck(sender.pAnswer);
+        if (sender.pAnswer.toDialogueID < 0 || sender.pAnswer.toDialogueID >= CurrentConversation.dialogues.Count)
+        {
+            Close();
+            return;
+        }
 
-        DialogueManager i = Interactable.Conversation.managerContents.Find(x => x.nPCdialogue.id == sender.pAnswer.toID);
-
+        DialogueManager i = CurrentConversation.dialogues[sender.pAnswer.toDialogueID];
 
         if (i == null)
             Close();
-
         else
-        {
-            toTalkPanel.text = "";
-            CurrentDialogue = Interactable.Conversation.managerContents.IndexOf(i);
-            slowLettersCoroutine = StartCoroutine(SlowLetters(i.nPCdialogue.text));
-        }
+            slowLettersCoroutine = StartCoroutine(SlowLetters(i.Dialogue.Text));
     }
-    private void ActiveAnswerCheck(PlayerAnswer other)
-    {
-        foreach (PlayerAnswer.Command c in other.command)
-            switch (c)
-            {
-                case PlayerAnswer.Command.Quit:
-                    Close();
-                    break;
 
-                case PlayerAnswer.Command.GiveItem:
-                    foreach (Item i in other.itemsToGive)
-                    {
-                        PlayerController.Inventory.Add(i);
-                    };
-                    break;
-
-                case PlayerAnswer.Command.GiveQuest:
-                    foreach (Quest q in other.questsToGive)
-                    {
-                        GameInstance.GameState.QuestController.Add(other.questsToGive[0]);
-                    }
-                    break;
-                case PlayerAnswer.Command.AddMoney:
-                    Debug.Log("IMPLEMENT_MONEY");
-                    break;
-                case PlayerAnswer.Command.SubtractMoney:
-                    Debug.Log("IMPLEMENT_MONEY");
-                    break;
-            }
-
-    }
     private IEnumerator SlowLetters(string other)
-    {
-
+    { 
         SwitchToConversation();
 
         for (int i = 0; i < other.Length; i++)
@@ -112,6 +88,7 @@ sealed public class TalkUIController : MonoBehaviour
             yield return new WaitForSecondsRealtime(0.15f);
         }
     }
+
     private void Close()
     {
         if (slowLettersCoroutine != null)
@@ -119,6 +96,7 @@ sealed public class TalkUIController : MonoBehaviour
         GameInstance.GameState.Paused = false;
         gameObject.SetActive(false);
     }
+
     public void SwitchToAnswers()
     {
         if (conversationPanel != null)
@@ -130,6 +108,8 @@ sealed public class TalkUIController : MonoBehaviour
 
     public void SwitchToConversation()
     {
+        toTalkPanel.text = "";
+
         if (conversationPanel != null)
             conversationPanel.SetActive(true);
 

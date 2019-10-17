@@ -12,8 +12,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29892019e56e33d42bf4de23ca83f18c, type: 3}
   m_Name: Conversation 1
   m_EditorClassIdentifier: 
-  managerContents:
-  - name: 
-    nPCdialogue: {fileID: 11400000, guid: af86d9e286fc9204c8d878ac8e14985b, type: 2}
+  dialogues:
+  - name: 0
+    dialogue:
+      toAnswerID: 0
+      text: Hello there!
+  - name: 1
+    dialogue:
+      toAnswerID: 0
+      text: I'm not familiar with this place!
+  answers:
+  - name: 0
     answers:
-    - {fileID: 11400000, guid: b54f57af5ff950f45bd59c7f3e290462, type: 2}
+    - name: 0
+      toDialogueID: 1
+      cost: 0
+      itemsToGive: []
+      questsToGive: []
+      text: Do you know where am I?
+      requisites:
+        quests: []
+        events: 
+        hp:
+          operation: 0
+          obj: 0
+          enabled: 0
+        armour:
+          operation: 0
+          obj: 0
+          enabled: 0
+    - name: 1
+      toDialogueID: 100
+      cost: 0
+      itemsToGive: []
+      questsToGive: []
+      text: Bye
+      requisites:
+        quests: []
+        events: 
+        hp:
+          operation: 0
+          obj: 0
+          enabled: 0
+        armour:
+          operation: 0
+          obj: 0
+          enabled: 0
+  requisites:
+    quests: []
+    events: 
+    hp:
+      operation: 2
+      obj: 0
+      enabled: 0
+    armour:
+      operation: 2
+      obj: 0
+      enabled: 0
