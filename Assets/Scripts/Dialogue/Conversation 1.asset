@@ -43,7 +43,7 @@ MonoBehaviour:
       text: They are androids who became autonomous.
   - name: 5
     dialogue:
-      toID: 0
+      toID: 2
       switchTo: 0
       text: As far as I know you can't. This district is in curfew. There is no way
         out. I think that until they find what they're looking for, it's not going
@@ -152,6 +152,24 @@ MonoBehaviour:
       itemsToGive: []
       questsToGive: []
       text: So how do you get out of this area?
+      requisites:
+        quests: []
+        events: 
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      switchTo: 0
+      toID: 0
+      cost: 0
+      itemsToGive: []
+      questsToGive: []
+      text: Let's Talk about something else.
       requisites:
         quests: []
         events: 

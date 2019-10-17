@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29892019e56e33d42bf4de23ca83f18c, type: 3}
+  m_Name: Conversation 3
+  m_EditorClassIdentifier: 
+  dialogues:
+  - name: 0
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: What do you want?
+  - name: 1
+    dialogue:
+      toID: 1
+      switchTo: 0
+      text: What do you mean going on? Haven't you heard. This district is closed.
+        It's seams these conspiracy guys were right. There are some androids going
+        autonomous and apperantly one of them killed a guy just across the street.
+  - name: 2
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Apperantly some scientist. I personally don't know the guy... You know
+        what I mean.
+  answers:
+  - name: 0
+    answers:
+    - name: 0
+      switchTo: 1
+      toID: 1
+      cost: 0
+      itemsToGive: []
+      questsToGive: []
+      text: Do you know whats going on?
+      requisites:
+        quests: []
+        events: 
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      switchTo: 1
+      toID: -1
+      cost: 0
+      itemsToGive: []
+      questsToGive: []
+      text: Bye
+      requisites:
+        quests: []
+        events: 
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 1
+    answers:
+    - name: 0
+      switchTo: 1
+      toID: 2
+      cost: 0
+      itemsToGive: []
+      questsToGive: []
+      text: Who was killed?
+      requisites:
+        quests: []
+        events: 
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      switchTo: 0
+      toID: 0
+      cost: 0
+      itemsToGive: []
+      questsToGive: []
+      text: I don't care!
+      requisites:
+        quests: []
+        events: 
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  requisites:
+    quests: []
+    events: 
+    hp:
+      obj: 0
+      operation: 2
+      enabled: 0
+    armour:
+      obj: 0
+      operation: 2
+      enabled: 0
