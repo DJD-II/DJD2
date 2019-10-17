@@ -90,11 +90,21 @@ sealed public class TalkInteractable : Interactable
     public List<Conversation> Conversations { get => conversations; }
     public Conversation Conversation { get; private set; }
 
+    public bool IsTalking { get; set; }
+    private Quaternion InitRotation { get; set; }
+
     protected override void Awake()
     {
         base.Awake();
+        InitRotation = transform.rotation;
         Controller = Resources.Load<RuntimeAnimatorController>("Animations/Talk");
         InitController = GetComponent<Animator>().runtimeAnimatorController;
+    }
+
+    private void Update()
+    {
+        if (!IsTalking)
+            transform.rotation = Quaternion.Lerp(transform.rotation, InitRotation, Time.unscaledDeltaTime * 3f);
     }
 
     protected override void OnInteract(PlayerController controller)
@@ -110,7 +120,10 @@ sealed public class TalkInteractable : Interactable
             }
 
         if (Conversation != null)
+        {
             GameInstance.HUD.EnableConversation(true, this, controller);
+            IsTalking = true;
+        }
         else
             Debug.LogError("No Conversation");
     }

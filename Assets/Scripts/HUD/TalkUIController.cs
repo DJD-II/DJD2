@@ -38,6 +38,10 @@ sealed public class TalkUIController : MonoBehaviour
 
     private void Update()
     {
+        Vector3 dir = PlayerController.transform.position - Interactable.transform.position;
+        dir.y = 0;
+        Interactable.transform.rotation = Quaternion.Lerp(Interactable.transform.rotation, Quaternion.LookRotation(dir), Time.unscaledDeltaTime * 3f);
+
         if (Input.anyKeyDown && toTalkPanel.gameObject.activeInHierarchy)
         {
             if (slowLettersCoroutine != null)
@@ -106,6 +110,7 @@ sealed public class TalkUIController : MonoBehaviour
 
     private void Close()
     {
+        Interactable.IsTalking = false;
         Animator animator = Interactable.GetComponent<Animator>();
         animator.updateMode = AnimatorUpdateMode.Normal;
         animator.runtimeAnimatorController = Interactable.InitController;
