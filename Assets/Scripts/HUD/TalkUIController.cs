@@ -104,13 +104,13 @@ sealed public class TalkUIController : MonoBehaviour
         switch(sender.pAnswer.SwitchTo)
         {
             case SwitchType.Dialogue:
-                if (sender.pAnswer.toID < 0 || sender.pAnswer.toID >= CurrentConversation.dialogues.Count)
+                if (sender.pAnswer.ToID < 0 || sender.pAnswer.ToID >= CurrentConversation.dialogues.Count)
                 {
                     Close();
                     return;
                 }
 
-                CurrentManager = CurrentConversation.dialogues[sender.pAnswer.toID];
+                CurrentManager = CurrentConversation.dialogues[sender.pAnswer.ToID];
                 if (CurrentManager == null)
                     Close();
                 else
@@ -119,13 +119,13 @@ sealed public class TalkUIController : MonoBehaviour
 
             case SwitchType.Answers:
 
-                if (sender.pAnswer.toID < 0 || sender.pAnswer.toID >= CurrentConversation.Answers.Count)
+                if (sender.pAnswer.ToID < 0 || sender.pAnswer.ToID >= CurrentConversation.Answers.Count)
                 {
                     Close();
                     return;
                 }
 
-                Answers = CurrentConversation.Answers[sender.pAnswer.toID].Answers;
+                Answers = CurrentConversation.Answers[sender.pAnswer.ToID].Answers;
                 SwitchToAnswers();
 
                 break;

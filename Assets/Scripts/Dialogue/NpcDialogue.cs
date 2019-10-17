@@ -1,20 +1,14 @@
 ﻿using UnityEngine;
 
-public enum SwitchType : byte
-{
-    Answers,
-    Dialogue,
-}
+
 
 [System.Serializable]
 public class NpcDialogue
 {
-    
-
     [SerializeField]
     private int toID = 0;
     [SerializeField]
-    private SwitchType switchTo;
+    private SwitchType switchTo = SwitchType.Answers;
     [SerializeField]
     private string text = "APPLY_TEXT_FIELD";
    

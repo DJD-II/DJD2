@@ -13,7 +13,7 @@ public class AnswersButton : MonoBehaviour
     public void Initialize(PlayerAnswer panswer)
     {
         this.pAnswer = panswer;
-        this.label.text = panswer.text;
+        this.label.text = panswer.Text;
     }
 
     public event EventHandler OnClick;
@@ -22,5 +22,4 @@ public class AnswersButton : MonoBehaviour
     {
         OnClick?.Invoke(this);
     }
-
 }
