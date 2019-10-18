@@ -84,6 +84,8 @@ public class PlayerController : Controller, ISavable
     private Inventory inventory = new Inventory();
     [Header("HUDs")]
     [SerializeField]
+    private bool HudsEnabled = true;
+    [SerializeField]
     private GameObject huds = null;
     [SerializeField]
     private Image batteryImage = null;
@@ -117,8 +119,6 @@ public class PlayerController : Controller, ISavable
         reducer = new PointDamage(this, true, 1);
 
         GameInstance.OnLoad += OnLoad;
-
-        GameInstance.GameState.QuestController.Initialize(this);
     }
 
     private void OnDestroy()
@@ -133,11 +133,13 @@ public class PlayerController : Controller, ISavable
     private void OnPause(GameState sender)
     {
         canControl = !sender.Paused;
-        huds.SetActive(!sender.Paused);
+        huds.SetActive(!sender.Paused && HudsEnabled);
     }
 
     private void Start()
     {
+        GameInstance.GameState.QuestController.Initialize(this);
+
         GameInstance.OnSave += OnSave;
         GameInstance.GameState.OnPausedChanged += OnPause;
 
@@ -381,6 +383,11 @@ public class PlayerController : Controller, ISavable
     #endregion
 
     #region --- Misc ---
+
+    public void GiveQuest (Quest quest)
+    {
+        GameInstance.GameState.QuestController.Add(quest);
+    }
 
     public void PopMessage(string message)
     {

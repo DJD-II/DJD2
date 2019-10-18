@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/StripClub.unity
     guid: 40c72e7722bff1740836f802464e6e45
+  - enabled: 1
+    path: Assets/Scenes/ICloud.unity
+    guid: 28d5ae286026db34498b2f6c1d1f0647
   m_configObjects: {}

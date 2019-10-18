@@ -20,6 +20,7 @@ sealed public class QuestController : object, ISavable
         }
     }
 
+    [System.Serializable]
     sealed public class QuestID : object
     {
         public delegate void EventHandler(QuestID sender);

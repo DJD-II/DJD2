@@ -5289,6 +5289,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d00de53c7c3806e4f89bd9924394d222, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questController:
+    quests: []
 --- !u!1 &5325395551150908295
 GameObject:
   m_ObjectHideFlags: 0
@@ -8565,7 +8567,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.7058824}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
