@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class ICloudLevelInstance : LevelInstance
 {
-
+    private void Start()
+    {
+        StartCoroutine(GameInstance.HUD.FadeFromWhite());
+    }
 }

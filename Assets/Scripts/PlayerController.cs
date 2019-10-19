@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class PlayerController : Controller, ISavable
 {
@@ -42,6 +43,8 @@ public class PlayerController : Controller, ISavable
     /*[Header("Character")]
     [SerializeField]
     private GameObject graphics = null;*/
+    [SerializeField]
+    private bool canPause = true;
     [Header("Weight")]
     [SerializeField]
     private float mass = 12f;
@@ -98,6 +101,14 @@ public class PlayerController : Controller, ISavable
     [SerializeField]
     private GameObject messagePrefab = null;
     public CameraShake explosion = null;
+    [Header("Cloud Transition")]
+    AsyncOperation sceneLoadOp;
+    [SerializeField]
+    private GameObject tunnelCamera;
+    [SerializeField]
+    private GameObject wormHoleTunnel = null;
+    [SerializeField]
+    private Animation shuttDown = null;
 
     #endregion
 
@@ -159,7 +170,7 @@ public class PlayerController : Controller, ISavable
         if (!canControl)
             return;
 
-        if (!GameInstance.GameState.Paused && Input.GetKeyDown(KeyCode.Escape))
+        if (!GameInstance.GameState.Paused && Input.GetKeyDown(KeyCode.Escape) && canPause)
             GameInstance.HUD.EnableMenu(true, this);
 
         interaction.Update(this);
@@ -170,6 +181,53 @@ public class PlayerController : Controller, ISavable
 
         if (Input.GetKeyDown(KeyCode.L))
             explosion.Play(this, cam, shakePivot, 2f);
+
+        if (hp.IsEmpty)
+        {
+            canControl = false;
+            StartCoroutine (SwitchToCloudScene());
+        }
+    }
+
+    private IEnumerator SwitchToCloudScene ()
+    {
+        shuttDown.clip = shuttDown["Shut Down"].clip;
+
+        shuttDown.Play();
+        while (shuttDown.isPlaying)
+            yield return null;
+
+        shuttDown.clip = shuttDown["Turn On"].clip;
+        
+        wormHoleTunnel.SetActive(true);
+        tunnelCamera.SetActive(true);
+        StartCoroutine(GameInstance.HUD.FadeFromWhite(1.5f));
+        shuttDown.Play();
+
+        ApplyHeal(new PointHeal(this, 100));
+        GameInstance.Save();
+
+        sceneLoadOp = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("ICloud");
+        sceneLoadOp.allowSceneActivation = false;
+
+        float passedTime = 0;
+
+        while (sceneLoadOp.progress <= 0.8f)
+        {
+            passedTime += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        yield return new WaitForSecondsRealtime(Mathf.Max(8f - passedTime, 0f));
+
+        yield return GameInstance.HUD.FadeToWhite();
+
+        sceneLoadOp.allowSceneActivation = true;
+    }
+
+    private void ActivateScene()
+    {
+
     }
 
     protected virtual void FixedUpdate()
