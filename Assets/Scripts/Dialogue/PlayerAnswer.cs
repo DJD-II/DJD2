@@ -7,6 +7,8 @@ public class PlayerAnswer
     [SerializeField]
     private string name;
     [SerializeField]
+    private int id = 0;
+    [SerializeField]
     SwitchType switchTo = SwitchType.Dialogue;
     [SerializeField]
     private int toID = 0;
@@ -25,6 +27,7 @@ public class PlayerAnswer
     [SerializeField]
     private ConversationRequesite requisites = null;
 
+    public int ID { get { return id; } }
     public ConversationRequesite Requesites { get => requisites; }
     public SwitchType SwitchTo { get => switchTo; }
     public string Text { get => text; }

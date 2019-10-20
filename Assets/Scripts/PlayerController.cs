@@ -104,11 +104,15 @@ public class PlayerController : Controller, ISavable
     [Header("Cloud Transition")]
     AsyncOperation sceneLoadOp;
     [SerializeField]
-    private GameObject tunnelCamera;
+    private GameObject tunnelCamera = null;
     [SerializeField]
     private GameObject wormHoleTunnel = null;
     [SerializeField]
     private Animation shuttDown = null;
+    [SerializeField]
+    private AudioSource tunnelSFX = null;
+    [SerializeField]
+    private CameraShake womHoleShake = null;
 
     #endregion
 
@@ -189,23 +193,31 @@ public class PlayerController : Controller, ISavable
         }
     }
 
-    private IEnumerator SwitchToCloudScene ()
+    private IEnumerator SwitchToCloudScene()
     {
-        shuttDown.clip = shuttDown["Shut Down"].clip;
+        ApplyHeal(new PointHeal(this, 100));
+        GameInstance.Singleton.FadeOutMasterMixer(0.2f);
+        shuttDown.clip = shuttDown.GetClip("Shut Down");
 
         shuttDown.Play();
         while (shuttDown.isPlaying)
             yield return null;
 
-        shuttDown.clip = shuttDown["Turn On"].clip;
-        
+        shuttDown.clip = shuttDown.GetClip("Turn On");
+
         wormHoleTunnel.SetActive(true);
         tunnelCamera.SetActive(true);
-        StartCoroutine(GameInstance.HUD.FadeFromWhite(1.5f));
+
+        GameInstance.HUD.MaskScreen(true);
+
+        womHoleShake.Play(this, tunnelCamera.GetComponent<Camera>(), tunnelCamera.transform, 1f);
+
+        StartCoroutine(GameInstance.HUD.FadeFromWhite(9.5f));
         shuttDown.Play();
 
-        ApplyHeal(new PointHeal(this, 100));
         GameInstance.Save();
+
+        yield return new WaitForSecondsRealtime(1f);
 
         sceneLoadOp = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("ICloud");
         sceneLoadOp.allowSceneActivation = false;
@@ -220,14 +232,22 @@ public class PlayerController : Controller, ISavable
 
         yield return new WaitForSecondsRealtime(Mathf.Max(8f - passedTime, 0f));
 
+        StartCoroutine(ChangeTunnelVolume());
+       
         yield return GameInstance.HUD.FadeToWhite();
 
         sceneLoadOp.allowSceneActivation = true;
+        GameInstance.HUD.MaskScreen(false);
+        GameInstance.Singleton.FadeInMasterMixer(2f);
     }
 
-    private void ActivateScene()
+    private IEnumerator ChangeTunnelVolume()
     {
-
+        while (tunnelSFX.volume > 0)
+        {
+            tunnelSFX.volume = Mathf.Lerp(tunnelSFX.volume, 0, Time.deltaTime * 2f);
+            yield return null;
+        }
     }
 
     protected virtual void FixedUpdate()

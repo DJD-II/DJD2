@@ -19,6 +19,9 @@ sealed public class TalkInteractable : Interactable
     {
         base.Awake();
         InitRotation = transform.rotation;
+
+        
+
         Controller = Resources.Load<RuntimeAnimatorController>("Animations/Talk");
         InitController = GetComponent<Animator>().runtimeAnimatorController;
     }

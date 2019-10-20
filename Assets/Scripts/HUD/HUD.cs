@@ -29,11 +29,18 @@ sealed public class HUD : MonoBehaviour
     [Header("Loading Screen")]
     [SerializeField]
     private GameObject loadingScreenPanel = null;
+    [Header("Past Lifes")]
+    [SerializeField]
+    private Image pastLifePanel = null;
     [Header("Fade")]
     [SerializeField]
     private GameObject fadeToWhitePanel = null;
     [SerializeField]
     private GameObject fadeToBlackPanel = null;
+    [SerializeField]
+    private GameObject maskPanel = null;
+
+    public TalkUIController TalkUIController { get { return talkUIController; } }
 
     public void Initialize()
     {
@@ -128,6 +135,15 @@ sealed public class HUD : MonoBehaviour
         loadingScreenPanel.SetActive(enable);
     }
 
+    public void MaskScreen (bool enable)
+    {
+        maskPanel.SetActive(enable);
+        if (!enable)
+            return;
+
+        maskPanel.GetComponent<Animation>().Play();
+    }
+
     public IEnumerator FadeToWhite (float multiplier = 1f)
     {
         Animation anim = fadeToWhitePanel.GetComponent<Animation>();
@@ -142,7 +158,6 @@ sealed public class HUD : MonoBehaviour
     {
         Animation anim = fadeToWhitePanel.GetComponent<Animation>();
         anim.clip = anim.GetClip("Alpha");
-        //anim["Alpha"].normalizedSpeed = anim["Alpha"].normalizedSpeed * multiplier;
         anim.Play();
 
         yield return WaitWhileAnimation(anim);
@@ -173,5 +188,10 @@ sealed public class HUD : MonoBehaviour
     {
         while (anim.isPlaying)
             yield return null;
+    }
+
+    public void EnablePastLife(bool enable)
+    {
+        pastLifePanel.gameObject.SetActive(enable);
     }
 }

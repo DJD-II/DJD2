@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 sealed public class TalkUIController : MonoBehaviour
 {
+    public delegate void EventHandler(TalkUIController sender, PlayerAnswer answer);
+
+    public event EventHandler OnAnswered;
+
     [SerializeField]
     private float letterSpeed = 0.08f;
     [SerializeField]
@@ -101,6 +105,8 @@ sealed public class TalkUIController : MonoBehaviour
     // Checks the contents on the button clicked
     private void OnAnswer(AnswersButton sender)
     {
+        OnAnswered?.Invoke(this, sender.pAnswer);
+
         foreach (Quest q in sender.pAnswer.QuestsToComplete)
         {
             QuestController.QuestID id = GameInstance.GameState.QuestController.Quests.Find(x => x.quest.name.ToLower().Equals(q.name.ToLower()));

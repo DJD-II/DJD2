@@ -43,6 +43,7 @@ MonoBehaviour:
   - name: 0
     answers:
     - name: 0
+      id: 0
       switchTo: 1
       toID: 1
       cost: 0
@@ -65,6 +66,7 @@ MonoBehaviour:
   - name: 1
     answers:
     - name: 0
+      id: 0
       switchTo: 1
       toID: 2
       cost: 0
@@ -87,6 +89,7 @@ MonoBehaviour:
   - name: 2
     answers:
     - name: 0
+      id: 0
       switchTo: 1
       toID: 3
       cost: 0
@@ -109,8 +112,9 @@ MonoBehaviour:
   - name: 3
     answers:
     - name: 0
+      id: 101
       switchTo: 1
-      toID: 5
+      toID: -1
       cost: 0
       itemsToEarn: []
       itemsToGive: []
@@ -129,6 +133,7 @@ MonoBehaviour:
           operation: 0
           enabled: 0
     - name: 1
+      id: 0
       switchTo: 1
       toID: -1
       cost: 0

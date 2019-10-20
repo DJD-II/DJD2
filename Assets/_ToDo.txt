@@ -1,3 +1,0 @@
-Add money to the player
-	Change TalkUIController to make use of the money
-
