@@ -178,7 +178,7 @@ sealed public class GameInstance : MonoBehaviour, ISavable
     {
         float volume;
         masterMixer.GetFloat("Master Volume", out volume);
-        Debug.Log("Volume = " + volume);
+
         while (volume < 0)
         {
             volume = Mathf.Lerp(volume, 0, Time.unscaledDeltaTime * speed);
@@ -192,7 +192,7 @@ sealed public class GameInstance : MonoBehaviour, ISavable
     {
         float volume;
         masterMixer.GetFloat("Master Volume", out volume);
-        Debug.Log("Volume = " + volume);
+
         while (volume > -80)
         {
             volume = Mathf.Lerp(volume, -80, Time.unscaledDeltaTime * speed);

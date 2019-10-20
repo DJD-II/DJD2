@@ -54,6 +54,11 @@ sealed public class HUD : MonoBehaviour
         };
     }
 
+    public void EnableCorssHair (bool enable)
+    {
+        crossHair.gameObject.SetActive(enable);
+    }
+
     public void EnableInteractMessage(bool visible, Interactable interactable)
     {
         if (interactMessage == null)
@@ -158,6 +163,7 @@ sealed public class HUD : MonoBehaviour
     {
         Animation anim = fadeToWhitePanel.GetComponent<Animation>();
         anim.clip = anim.GetClip("Alpha");
+        anim["Alpha"].normalizedSpeed = anim["Alpha"].normalizedSpeed * multiplier;
         anim.Play();
 
         yield return WaitWhileAnimation(anim);

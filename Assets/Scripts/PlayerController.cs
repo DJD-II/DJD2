@@ -87,7 +87,7 @@ public class PlayerController : Controller, ISavable
     private Inventory inventory = new Inventory();
     [Header("HUDs")]
     [SerializeField]
-    private bool HudsEnabled = true;
+    private bool hudsEnabled = true;
     [SerializeField]
     private GameObject huds = null;
     [SerializeField]
@@ -113,6 +113,8 @@ public class PlayerController : Controller, ISavable
     private AudioSource tunnelSFX = null;
     [SerializeField]
     private CameraShake womHoleShake = null;
+    [SerializeField]
+    private AudioSource wormHoleEnterSFX = null;
 
     #endregion
 
@@ -122,6 +124,16 @@ public class PlayerController : Controller, ISavable
     public bool CanControl { get { return canControl; } set { canControl = value; } }
     public Inventory Inventory { get { return inventory; } }
     public Vector3 Velocity { get { return controller.velocity; } }
+    public bool HudsEnabled
+    {
+        get { return hudsEnabled; }
+
+        set
+        {
+            hudsEnabled = value;
+            huds.SetActive(!GameInstance.GameState.Paused && value);
+        }
+    }
 
     #endregion
 
@@ -148,7 +160,7 @@ public class PlayerController : Controller, ISavable
     private void OnPause(GameState sender)
     {
         canControl = !sender.Paused;
-        huds.SetActive(!sender.Paused && HudsEnabled);
+        huds.SetActive(!sender.Paused && hudsEnabled);
     }
 
     private void Start()
@@ -195,8 +207,13 @@ public class PlayerController : Controller, ISavable
 
     private IEnumerator SwitchToCloudScene()
     {
+        GameInstance.HUD.EnableCorssHair(false);
+
         ApplyHeal(new PointHeal(this, 100));
         GameInstance.Singleton.FadeOutMasterMixer(0.2f);
+
+        HudsEnabled = false;
+
         shuttDown.clip = shuttDown.GetClip("Shut Down");
 
         shuttDown.Play();
@@ -205,6 +222,10 @@ public class PlayerController : Controller, ISavable
 
         shuttDown.clip = shuttDown.GetClip("Turn On");
 
+        wormHoleEnterSFX.Play();
+
+        yield return new WaitForSecondsRealtime(1f);
+
         wormHoleTunnel.SetActive(true);
         tunnelCamera.SetActive(true);
 
@@ -212,7 +233,7 @@ public class PlayerController : Controller, ISavable
 
         womHoleShake.Play(this, tunnelCamera.GetComponent<Camera>(), tunnelCamera.transform, 1f);
 
-        StartCoroutine(GameInstance.HUD.FadeFromWhite(9.5f));
+        StartCoroutine(GameInstance.HUD.FadeFromWhite(4f));
         shuttDown.Play();
 
         GameInstance.Save();

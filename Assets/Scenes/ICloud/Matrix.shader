@@ -2,19 +2,15 @@
 {
 	Properties
 	{
-		_Grid("Grid", range(1, 100.)) = 30.
+		_Grid("Grid", range(1, 50.)) = 30.
 		_SpeedMax("Speed Max", range(0, 30.)) = 20.
 		_SpeedMin("Speed Min", range(0, 10.)) = 2.
 		_Density("Density", range(0, 30.)) = 5.
-		_Alpha("Alpha", range(0, 1)) = 1.
 	}
 
 		SubShader
 	{
-		Tags { "RenderType" = "Transparent" "RenderType" = "Transparent"}
-
-		ZWrite Off
-		Blend SrcAlpha OneMinusSrcAlpha
+		Tags { "RenderType" = "Opaque" }
 
 		Pass
 		{
@@ -89,8 +85,6 @@
 					return step(.1, 1. - tex) * borders.x * borders.y;
 			}
 
-			float _UnscaledTime;
-			float _Alpha;
 			float _Grid;
 			float _SpeedMax;
 			float _SpeedMin;
@@ -100,11 +94,13 @@
 				float2 ipos = floor(i.uv * _Grid);
 				float2 fpos = frac(i.uv * _Grid);
 
-				ipos.y += floor(_UnscaledTime * max(_SpeedMin, _SpeedMax * noise(ipos.x)));
+				ipos.y += floor(_Time.y * max(_SpeedMin, _SpeedMax * noise(ipos.x)));
 				float charNum = noise(ipos);
 				float val = char(fpos, (20. + _Density) * charNum);
-				fixed4 col = fixed4(val, val, val, _Alpha);
-				if (col.g == 0)
+
+				fixed4 col = fixed4(val, val, val, 1.0);
+
+				if (val == 0)
 					discard;
 
 				return col;
