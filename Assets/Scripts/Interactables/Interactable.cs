@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 abstract public class Interactable : MonoBehaviour
 {
-    public delegate void EventHandler(Interactable sender);
+    public delegate void EventHandler(Interactable sender, PlayerController controller);
 
     public event EventHandler OnUnlocked;
 
@@ -13,23 +13,19 @@ abstract public class Interactable : MonoBehaviour
     private string message = "Interact";
     private UniqueID uniqueID;
 
-    public bool Locked
-    {
-        get { return locked; }
-
-        set
-        {
-            locked = value;
-
-            if (!locked)
-                OnUnlocked?.Invoke(this);
-        }
-    }
+    public bool CanInteract { get { return canInteract; } protected set { canInteract = value; } }
+    public bool Locked { get { return locked; }  protected set { locked = value; } }
     public string Message { get { return message; } }
 
     protected virtual void Awake()
     {
         uniqueID = GetComponent<UniqueID>();
+        GameInstance.OnLoad += OnLoad;
+    }
+
+    protected virtual void Start()
+    {
+        GameInstance.OnSave += OnSave;
     }
 
     public void Interact(PlayerController controller)
@@ -48,12 +44,38 @@ abstract public class Interactable : MonoBehaviour
         return "";
     }
 
+    protected virtual void OnSave (PlaySaveGameObject io)
+    {
+
+    }
+
+    protected virtual void OnLoad(PlaySaveGameObject io)
+    {
+
+    }
+
     protected bool GetUniqueIDPersistent()
     {
         if (uniqueID != null)
             return uniqueID.persistentAcrossLevels;
 
         return false;
+    }
+
+    public void Unlock (PlayerController controller)
+    {
+        if (!locked)
+            return;
+
+        locked = false;
+
+        OnUnlocked?.Invoke(this, controller);
+    }
+
+    protected virtual void OnDestroy()
+    {
+        GameInstance.OnSave -= OnSave;
+        GameInstance.OnLoad -= OnLoad;
     }
 
     protected abstract void OnInteract(PlayerController controller);

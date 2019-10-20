@@ -25,8 +25,11 @@ EditorBuildSettings:
     guid: 28d5ae286026db34498b2f6c1d1f0647
   - enabled: 1
     path: Assets/Scenes/Sewer.unity
-    guid: a8e7a677799629b41b4af69234ca9254
+    guid: 06792386e6dfc574299246df4cebac1e
+  - enabled: 1
+    path: Assets/Scenes/Control Room.unity
+    guid: 4bf4e451bdca129478ff8be9955aa9d7
   - enabled: 1
     path: Assets/Scenes/Sewer Village.unity
-    guid: 7c1c23325a43c2f4c88bd82503a091f2
+    guid: 21e244c9c38a70e4b9f420f7d7e38edf
   m_configObjects: {}

@@ -34,15 +34,19 @@ sealed public class GameInstance : MonoBehaviour, ISavable
 
     #endregion
 
-    #region --- FIelds ---
+    #region --- Fields ---
 
     [SerializeField]
     private AudioMixer masterMixer = null;
+    private Coroutine fadeInMasterCoroutine = null,
+                      fadeOutMasterCoroutine = null;
 
     #endregion
 
     #region --- Properties ---
 
+    public bool FadingInMasterMixer { get => fadeInMasterCoroutine != null; }
+    public bool FadingOutMasterMixer { get => fadeOutMasterCoroutine != null; }
     public static GameInstance Singleton { get; private set; }
     public static HUD HUD { get; private set; }
     public static GameState GameState { get; private set; }
@@ -94,6 +98,15 @@ sealed public class GameInstance : MonoBehaviour, ISavable
         OnLoad?.Invoke(SaveGameObject);
         SaveGameObject = null;
         IsLoadingSavedGame = false;
+
+        StartCoroutine(HideLoadingScreen());
+    }
+
+    private IEnumerator HideLoadingScreen ()
+    {
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+
         HUD.EnableLoadingScreen(false);
     }
 
@@ -166,12 +179,24 @@ sealed public class GameInstance : MonoBehaviour, ISavable
 
     public void FadeOutMasterMixer (float speed = 1f)
     {
-        StartCoroutine(FadeOutVolume(speed));
+        if (fadeInMasterCoroutine != null)
+        {
+            StopCoroutine(fadeInMasterCoroutine);
+            fadeInMasterCoroutine = null;
+        }
+
+        fadeOutMasterCoroutine = StartCoroutine(FadeOutVolume(speed));
     }
 
     public void FadeInMasterMixer(float speed = 1f)
     {
-        StartCoroutine(FadeInVolume(speed));
+        if (fadeOutMasterCoroutine != null)
+        {
+            StopCoroutine(fadeOutMasterCoroutine);
+            fadeOutMasterCoroutine = null;
+        }
+
+        fadeInMasterCoroutine = StartCoroutine(FadeInVolume(speed));
     }
 
     private IEnumerator FadeInVolume(float speed )
@@ -181,11 +206,13 @@ sealed public class GameInstance : MonoBehaviour, ISavable
 
         while (volume < 0)
         {
-            volume = Mathf.Lerp(volume, 0, Time.unscaledDeltaTime * speed);
+            volume += 80f * Time.unscaledDeltaTime * speed;
             masterMixer.SetFloat("Master Volume", volume);
-            masterMixer.GetFloat("Master Volume", out volume);
+
             yield return null;
         }
+        masterMixer.SetFloat("Master Volume", 0f);
+        fadeInMasterCoroutine = null;
     }
 
     private IEnumerator FadeOutVolume(float speed)
@@ -195,11 +222,13 @@ sealed public class GameInstance : MonoBehaviour, ISavable
 
         while (volume > -80)
         {
-            volume = Mathf.Lerp(volume, -80, Time.unscaledDeltaTime * speed);
+            volume -= 80f * Time.unscaledDeltaTime * speed;
             masterMixer.SetFloat("Master Volume", volume);
-            masterMixer.GetFloat("Master Volume", out volume);
+
             yield return null;
         }
+        masterMixer.SetFloat("Master Volume", -80f);
+        fadeOutMasterCoroutine = null;
     }
 
     #endregion

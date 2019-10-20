@@ -32,20 +32,12 @@ sealed public class TalkUIController : MonoBehaviour
     {
         CurrentConversation = Interactable.Conversation;
         CurrentManager = CurrentConversation.dialogues[0];
-       
-        Animator animator = Interactable.GetComponent<Animator>();
-        animator.updateMode = AnimatorUpdateMode.UnscaledTime;
-        animator.runtimeAnimatorController = Interactable.Controller;
 
         SwitchToConversation();
     }
 
     private void Update()
     {
-        Vector3 dir = PlayerController.transform.position - Interactable.transform.position;
-        dir.y = 0;
-        Interactable.transform.rotation = Quaternion.Lerp(Interactable.transform.rotation, Quaternion.LookRotation(dir), Time.unscaledDeltaTime * 3f);
-
         if (Input.anyKeyDown && toTalkPanel.gameObject.activeInHierarchy)
         {
             if (slowLettersCoroutine != null)
@@ -170,18 +162,19 @@ sealed public class TalkUIController : MonoBehaviour
     private void Close()
     {
         Interactable.IsTalking = false;
-        Animator animator = Interactable.GetComponent<Animator>();
-        animator.updateMode = AnimatorUpdateMode.Normal;
-        animator.runtimeAnimatorController = Interactable.InitController;
+
         if (slowLettersCoroutine != null)
             StopCoroutine(slowLettersCoroutine);
-        GameInstance.GameState.Paused = false;
-        gameObject.SetActive(false);
+
+        GameInstance.HUD.EnableConversation(false);
+
+        if (Interactable.UnpauseOnClose)
+            GameInstance.GameState.Paused = false;
     }
 
     public void SwitchToAnswers()
     {
-        Interactable.GetComponent<Animator>().SetBool("Talking", false);
+        Interactable.Listening = true;
         InstantiateAnswers();
         if (conversationPanel != null)
             conversationPanel.SetActive(false);
@@ -192,7 +185,7 @@ sealed public class TalkUIController : MonoBehaviour
 
     public void SwitchToConversation()
     {
-        Interactable.GetComponent<Animator>().SetBool("Talking", true);
+        Interactable.Listening = false;
         toTalkPanel.text = "";
         slowLettersCoroutine = StartCoroutine(SlowLetters(CurrentManager.Dialogue.Text));
 

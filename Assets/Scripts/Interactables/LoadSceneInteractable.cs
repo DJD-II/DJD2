@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,9 +30,35 @@ sealed public class LoadSceneInteractable : Interactable
             return;
         }
 
+        StartCoroutine(ChangeLevel());
+    }
+
+    private IEnumerator ChangeLevel ()
+    {
         GameInstance.HUD.EnableLoadingScreen(true);
+
+        GameInstance.Singleton.FadeOutMasterMixer(0.8f);
+
+        while (GameInstance.Singleton.FadingOutMasterMixer)
+            yield return null;
+
+        float time = Time.time;
+
         GameInstance.Save();
         GameInstance.Singleton.ToID = toId;
-        SceneManager.LoadScene(sceneName);
+
+        AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
+        op.allowSceneActivation = false;
+
+        while (op.progress <= 0.8f)
+            yield return null;
+
+        float passedTime = Time.time - time;
+
+        yield return new WaitForSecondsRealtime(Mathf.Max(1f - passedTime, 0));
+
+        op.allowSceneActivation = true;
+
+        GameInstance.Singleton.FadeInMasterMixer(1f);
     }
 }

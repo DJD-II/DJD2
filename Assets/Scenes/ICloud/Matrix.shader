@@ -6,14 +6,16 @@
 		_SpeedMax("Speed Max", range(0, 30.)) = 20.
 		_SpeedMin("Speed Min", range(0, 10.)) = 2.
 		_Density("Density", range(0, 30.)) = 5.
+		_Alpha ("Alpha", range(0, 1.)) = 1.
 	}
 
 		SubShader
 	{
-		Tags { "RenderType" = "Opaque" }
+		Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
 
 		Pass
 		{
+			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 			#pragma vertex vert_img
 			#pragma fragment frag
@@ -88,17 +90,19 @@
 			float _Grid;
 			float _SpeedMax;
 			float _SpeedMin;
+			float _Alpha;
+			float _UnscaledDeltaTime;
 
 			fixed4 frag(v2f_img i) : SV_Target
 			{
 				float2 ipos = floor(i.uv * _Grid);
 				float2 fpos = frac(i.uv * _Grid);
 
-				ipos.y += floor(_Time.y * max(_SpeedMin, _SpeedMax * noise(ipos.x)));
+				ipos.y += floor(_UnscaledDeltaTime * max(_SpeedMin, _SpeedMax * noise(ipos.x)));
 				float charNum = noise(ipos);
 				float val = char(fpos, (20. + _Density) * charNum);
 
-				fixed4 col = fixed4(val, val, val, 1.0);
+				fixed4 col = fixed4(val, val, val, _Alpha);
 
 				if (val == 0)
 					discard;
