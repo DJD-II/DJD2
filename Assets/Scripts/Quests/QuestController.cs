@@ -20,7 +20,8 @@ sealed public class QuestController : object, ISavable
         }
     }
 
-    sealed public class QuestID
+    [System.Serializable]
+    sealed public class QuestID : object
     {
         public delegate void EventHandler(QuestID sender);
 
@@ -33,11 +34,14 @@ sealed public class QuestController : object, ISavable
         {
             quest = QuestUtility.Get(info.Name);
             completed = info.Completed;
+            OnCompleted = null;
         }
 
         public QuestID(Quest quest)
         {
             this.quest = quest;
+            completed = false;
+            OnCompleted = null;
         }
 
         public void Complete()

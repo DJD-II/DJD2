@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections;
+using UnityEngine.Audio;
 
 /// <summary>
 /// This object represents the game instance. Only one is permited and holds the main game information.
@@ -29,6 +31,13 @@ sealed public class GameInstance : MonoBehaviour, ISavable
 
     public static event IOEventHandler  OnSave,
                                         OnLoad;
+
+    #endregion
+
+    #region --- FIelds ---
+
+    [SerializeField]
+    private AudioMixer masterMixer = null;
 
     #endregion
 
@@ -153,6 +162,44 @@ sealed public class GameInstance : MonoBehaviour, ISavable
     {
         Cursor.visible = visible;
         Cursor.lockState = lockMode;
+    }
+
+    public void FadeOutMasterMixer (float speed = 1f)
+    {
+        StartCoroutine(FadeOutVolume(speed));
+    }
+
+    public void FadeInMasterMixer(float speed = 1f)
+    {
+        StartCoroutine(FadeInVolume(speed));
+    }
+
+    private IEnumerator FadeInVolume(float speed )
+    {
+        float volume;
+        masterMixer.GetFloat("Master Volume", out volume);
+        Debug.Log("Volume = " + volume);
+        while (volume < 0)
+        {
+            volume = Mathf.Lerp(volume, 0, Time.unscaledDeltaTime * speed);
+            masterMixer.SetFloat("Master Volume", volume);
+            masterMixer.GetFloat("Master Volume", out volume);
+            yield return null;
+        }
+    }
+
+    private IEnumerator FadeOutVolume(float speed)
+    {
+        float volume;
+        masterMixer.GetFloat("Master Volume", out volume);
+        Debug.Log("Volume = " + volume);
+        while (volume > -80)
+        {
+            volume = Mathf.Lerp(volume, -80, Time.unscaledDeltaTime * speed);
+            masterMixer.SetFloat("Master Volume", volume);
+            masterMixer.GetFloat("Master Volume", out volume);
+            yield return null;
+        }
     }
 
     #endregion

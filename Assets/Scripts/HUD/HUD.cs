@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 sealed public class HUD : MonoBehaviour
 {
@@ -28,6 +29,18 @@ sealed public class HUD : MonoBehaviour
     [Header("Loading Screen")]
     [SerializeField]
     private GameObject loadingScreenPanel = null;
+    [Header("Past Lifes")]
+    [SerializeField]
+    private Image pastLifePanel = null;
+    [Header("Fade")]
+    [SerializeField]
+    private GameObject fadeToWhitePanel = null;
+    [SerializeField]
+    private GameObject fadeToBlackPanel = null;
+    [SerializeField]
+    private GameObject maskPanel = null;
+
+    public TalkUIController TalkUIController { get { return talkUIController; } }
 
     public void Initialize()
     {
@@ -97,8 +110,8 @@ sealed public class HUD : MonoBehaviour
 
         talkUIController.Interactable = interactable;
         talkUIController.PlayerController = controller;
-        talkUIController.Initialize();
         talkUIController.gameObject.SetActive(true);
+        talkUIController.Initialize();
     }
 
     public void EnableMenu(bool enable, PlayerController controller)
@@ -120,5 +133,65 @@ sealed public class HUD : MonoBehaviour
     public void EnableLoadingScreen(bool enable)
     {
         loadingScreenPanel.SetActive(enable);
+    }
+
+    public void MaskScreen (bool enable)
+    {
+        maskPanel.SetActive(enable);
+        if (!enable)
+            return;
+
+        maskPanel.GetComponent<Animation>().Play();
+    }
+
+    public IEnumerator FadeToWhite (float multiplier = 1f)
+    {
+        Animation anim = fadeToWhitePanel.GetComponent<Animation>();
+        anim.clip = anim.GetClip("Alpha Reversed");
+        anim["Alpha Reversed"].normalizedSpeed = anim["Alpha Reversed"].normalizedSpeed * multiplier;
+        anim.Play();
+
+        yield return WaitWhileAnimation(anim);
+    }
+
+    public IEnumerator FadeFromWhite (float multiplier = 1f)
+    {
+        Animation anim = fadeToWhitePanel.GetComponent<Animation>();
+        anim.clip = anim.GetClip("Alpha");
+        anim.Play();
+
+        yield return WaitWhileAnimation(anim);
+    }
+
+    public IEnumerator FadeToBlack(float multiplier = 1f)
+    {
+        Animation anim = fadeToBlackPanel.GetComponent<Animation>();
+        anim.clip = anim.GetClip("Alpha Reversed");
+        anim["Alpha Reversed"].normalizedSpeed = anim["Alpha Reversed"].normalizedSpeed * multiplier;
+
+        anim.Play();
+
+        yield return WaitWhileAnimation(anim);
+    }
+
+    public IEnumerator FadeFromBlack(float multiplier = 1f)
+    {
+        Animation anim = fadeToBlackPanel.GetComponent<Animation>();
+        anim.clip = anim.GetClip("Alpha");
+        anim["Alpha"].normalizedSpeed = anim["Alpha"].normalizedSpeed * multiplier;
+        anim.Play();
+
+        yield return WaitWhileAnimation(anim);
+    }
+
+    private IEnumerator WaitWhileAnimation (Animation anim)
+    {
+        while (anim.isPlaying)
+            yield return null;
+    }
+
+    public void EnablePastLife(bool enable)
+    {
+        pastLifePanel.gameObject.SetActive(enable);
     }
 }

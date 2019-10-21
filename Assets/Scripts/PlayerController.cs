@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class PlayerController : Controller, ISavable
 {
@@ -42,6 +43,8 @@ public class PlayerController : Controller, ISavable
     /*[Header("Character")]
     [SerializeField]
     private GameObject graphics = null;*/
+    [SerializeField]
+    private bool canPause = true;
     [Header("Weight")]
     [SerializeField]
     private float mass = 12f;
@@ -84,6 +87,8 @@ public class PlayerController : Controller, ISavable
     private Inventory inventory = new Inventory();
     [Header("HUDs")]
     [SerializeField]
+    private bool HudsEnabled = true;
+    [SerializeField]
     private GameObject huds = null;
     [SerializeField]
     private Image batteryImage = null;
@@ -96,6 +101,18 @@ public class PlayerController : Controller, ISavable
     [SerializeField]
     private GameObject messagePrefab = null;
     public CameraShake explosion = null;
+    [Header("Cloud Transition")]
+    AsyncOperation sceneLoadOp;
+    [SerializeField]
+    private GameObject tunnelCamera = null;
+    [SerializeField]
+    private GameObject wormHoleTunnel = null;
+    [SerializeField]
+    private Animation shuttDown = null;
+    [SerializeField]
+    private AudioSource tunnelSFX = null;
+    [SerializeField]
+    private CameraShake womHoleShake = null;
 
     #endregion
 
@@ -117,8 +134,6 @@ public class PlayerController : Controller, ISavable
         reducer = new PointDamage(this, true, 1);
 
         GameInstance.OnLoad += OnLoad;
-
-        GameInstance.GameState.QuestController.Initialize(this);
     }
 
     private void OnDestroy()
@@ -133,11 +148,13 @@ public class PlayerController : Controller, ISavable
     private void OnPause(GameState sender)
     {
         canControl = !sender.Paused;
-        huds.SetActive(!sender.Paused);
+        huds.SetActive(!sender.Paused && HudsEnabled);
     }
 
     private void Start()
     {
+        GameInstance.GameState.QuestController.Initialize(this);
+
         GameInstance.OnSave += OnSave;
         GameInstance.GameState.OnPausedChanged += OnPause;
 
@@ -157,7 +174,7 @@ public class PlayerController : Controller, ISavable
         if (!canControl)
             return;
 
-        if (!GameInstance.GameState.Paused && Input.GetKeyDown(KeyCode.Escape))
+        if (!GameInstance.GameState.Paused && Input.GetKeyDown(KeyCode.Escape) && canPause)
             GameInstance.HUD.EnableMenu(true, this);
 
         interaction.Update(this);
@@ -168,6 +185,69 @@ public class PlayerController : Controller, ISavable
 
         if (Input.GetKeyDown(KeyCode.L))
             explosion.Play(this, cam, shakePivot, 2f);
+
+        if (hp.IsEmpty)
+        {
+            canControl = false;
+            StartCoroutine (SwitchToCloudScene());
+        }
+    }
+
+    private IEnumerator SwitchToCloudScene()
+    {
+        ApplyHeal(new PointHeal(this, 100));
+        GameInstance.Singleton.FadeOutMasterMixer(0.2f);
+        shuttDown.clip = shuttDown.GetClip("Shut Down");
+
+        shuttDown.Play();
+        while (shuttDown.isPlaying)
+            yield return null;
+
+        shuttDown.clip = shuttDown.GetClip("Turn On");
+
+        wormHoleTunnel.SetActive(true);
+        tunnelCamera.SetActive(true);
+
+        GameInstance.HUD.MaskScreen(true);
+
+        womHoleShake.Play(this, tunnelCamera.GetComponent<Camera>(), tunnelCamera.transform, 1f);
+
+        StartCoroutine(GameInstance.HUD.FadeFromWhite(9.5f));
+        shuttDown.Play();
+
+        GameInstance.Save();
+
+        yield return new WaitForSecondsRealtime(1f);
+
+        sceneLoadOp = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("ICloud");
+        sceneLoadOp.allowSceneActivation = false;
+
+        float passedTime = 0;
+
+        while (sceneLoadOp.progress <= 0.8f)
+        {
+            passedTime += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        yield return new WaitForSecondsRealtime(Mathf.Max(8f - passedTime, 0f));
+
+        StartCoroutine(ChangeTunnelVolume());
+       
+        yield return GameInstance.HUD.FadeToWhite();
+
+        sceneLoadOp.allowSceneActivation = true;
+        GameInstance.HUD.MaskScreen(false);
+        GameInstance.Singleton.FadeInMasterMixer(2f);
+    }
+
+    private IEnumerator ChangeTunnelVolume()
+    {
+        while (tunnelSFX.volume > 0)
+        {
+            tunnelSFX.volume = Mathf.Lerp(tunnelSFX.volume, 0, Time.deltaTime * 2f);
+            yield return null;
+        }
     }
 
     protected virtual void FixedUpdate()
@@ -381,6 +461,11 @@ public class PlayerController : Controller, ISavable
     #endregion
 
     #region --- Misc ---
+
+    public void GiveQuest (Quest quest)
+    {
+        GameInstance.GameState.QuestController.Add(quest);
+    }
 
     public void PopMessage(string message)
     {
