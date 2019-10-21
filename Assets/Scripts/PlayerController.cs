@@ -244,7 +244,7 @@ public class PlayerController : Controller, ISavable
             yield return null;
         }
 
-        yield return new WaitForSecondsRealtime(Mathf.Max(8f - passedTime, 0f));
+        yield return new WaitForSecondsRealtime(Mathf.Max(6f - passedTime, 0f));
 
         StartCoroutine(ChangeTunnelVolume());
 

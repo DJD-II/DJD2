@@ -7240,15 +7240,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4608968192309270614, guid: af09c1ff2eb93d646903287dd5244bb6,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -2.099884
+      objectReference: {fileID: 0}
     - target: {fileID: 5325395551150908292, guid: af09c1ff2eb93d646903287dd5244bb6,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4608968192309270614, guid: af09c1ff2eb93d646903287dd5244bb6,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -2.0998535
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af09c1ff2eb93d646903287dd5244bb6, type: 3}
@@ -24553,7 +24553,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: 3c546d6484e604b4384a29c0ff9d2af7,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 87501305c4f27474796e002e3b72957a, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 130bdc7649e4fdc45ab2ebffa6018547, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
