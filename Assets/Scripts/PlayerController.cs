@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class PlayerController : Controller, ISavable
 {
@@ -42,6 +43,8 @@ public class PlayerController : Controller, ISavable
     /*[Header("Character")]
     [SerializeField]
     private GameObject graphics = null;*/
+    [SerializeField]
+    private bool canPause = true;
     [Header("Weight")]
     [SerializeField]
     private float mass = 12f;
@@ -65,8 +68,6 @@ public class PlayerController : Controller, ISavable
     [SerializeField]
     private Camera cam = null;
     [SerializeField]
-    private Transform shakePivot = null;
-    [SerializeField]
     private Animation fallPivot = null;
     [SerializeField]
     private Vector2 minMaxY = Vector2.zero;
@@ -84,18 +85,21 @@ public class PlayerController : Controller, ISavable
     private Inventory inventory = new Inventory();
     [Header("HUDs")]
     [SerializeField]
+    private bool hudsEnabled = true;
+    [SerializeField]
     private GameObject huds = null;
     [SerializeField]
     private Image batteryImage = null;
     private PointDamage reducer;
     private UniqueID uniqueID;
     [SerializeField]
-    private Quest mainQuest = null;
-    [SerializeField]
     private Transform messageContents = null;
     [SerializeField]
     private GameObject messagePrefab = null;
     public CameraShake explosion = null;
+    [Header("Cloud Transition")]
+    [SerializeField]
+    private WormHoleController wormHoleController = null;
 
     #endregion
 
@@ -105,6 +109,16 @@ public class PlayerController : Controller, ISavable
     public bool CanControl { get { return canControl; } set { canControl = value; } }
     public Inventory Inventory { get { return inventory; } }
     public Vector3 Velocity { get { return controller.velocity; } }
+    public bool HudsEnabled
+    {
+        get { return hudsEnabled; }
+
+        set
+        {
+            hudsEnabled = value;
+            huds.SetActive(!GameInstance.GameState.Paused && value);
+        }
+    }
 
     #endregion
 
@@ -117,8 +131,6 @@ public class PlayerController : Controller, ISavable
         reducer = new PointDamage(this, true, 1);
 
         GameInstance.OnLoad += OnLoad;
-
-        GameInstance.GameState.QuestController.Initialize(this);
     }
 
     private void OnDestroy()
@@ -133,11 +145,15 @@ public class PlayerController : Controller, ISavable
     private void OnPause(GameState sender)
     {
         canControl = !sender.Paused;
-        huds.SetActive(!sender.Paused);
+        huds.SetActive(!sender.Paused && hudsEnabled);
     }
 
     private void Start()
     {
+        GameInstance.HUD.EnableCorssHair(true);
+
+        GameInstance.GameState.QuestController.Initialize(this);
+
         GameInstance.OnSave += OnSave;
         GameInstance.GameState.OnPausedChanged += OnPause;
 
@@ -146,9 +162,6 @@ public class PlayerController : Controller, ISavable
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-            GameInstance.GameState.QuestController.Add(mainQuest);
-
         float vertical = Input.GetAxis("Vertical");
         float horizontal = Input.GetAxis("Horizontal");
 
@@ -157,8 +170,11 @@ public class PlayerController : Controller, ISavable
         if (!canControl)
             return;
 
-        if (!GameInstance.GameState.Paused && Input.GetKeyDown(KeyCode.Escape))
+        if (!GameInstance.GameState.Paused && Input.GetKeyDown(KeyCode.Escape) && canPause)
+        {
             GameInstance.HUD.EnableMenu(true, this);
+            return;
+        }
 
         interaction.Update(this);
 
@@ -166,13 +182,91 @@ public class PlayerController : Controller, ISavable
 
         Look();
 
-        if (Input.GetKeyDown(KeyCode.L))
-            explosion.Play(this, cam, shakePivot, 2f);
+        if (hp.IsEmpty)
+        {
+            canControl = false;
+            StartCoroutine (SwitchToCloudScene());
+        }
     }
 
     protected virtual void FixedUpdate()
     {
         UpdateMovement();
+    }
+
+    #endregion
+
+    #region --- To Cloud Scene ---
+
+    private IEnumerator SwitchToCloudScene()
+    {
+        GameInstance.HUD.EnableCorssHair(false);
+
+        ApplyHeal(new PointHeal(this, 100));
+        GameInstance.Singleton.FadeOutMasterMixer(0.2f);
+
+        HudsEnabled = false;
+
+        wormHoleController.ShuttDown.clip = wormHoleController.ShuttDown.GetClip("Shut Down");
+
+        wormHoleController.ShuttDown.Play();
+        while (wormHoleController.ShuttDown.isPlaying)
+            yield return null;
+
+        wormHoleController.ShuttDown.clip = wormHoleController.ShuttDown.GetClip("Turn On");
+
+        wormHoleController.WormHoleEnterSFX.Play();
+
+        yield return new WaitForSecondsRealtime(1f);
+
+        wormHoleController.WormHoleTunnel.SetActive(true);
+        wormHoleController.TunnelCamera.SetActive(true);
+
+        GameInstance.HUD.MaskScreen(true);
+
+        wormHoleController.WomHoleShake.Play(this, wormHoleController.TunnelCamera.GetComponent<Camera>(), wormHoleController.TunnelCamera.transform, 1f);
+
+        StartCoroutine(GameInstance.HUD.FadeFromWhite(4f));
+        wormHoleController.ShuttDown.Play();
+
+        GameInstance.Save();
+
+        yield return new WaitForSecondsRealtime(1f);
+
+        AsyncOperation sceneLoadOp = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("ICloud");
+        sceneLoadOp.allowSceneActivation = false;
+
+        float passedTime = 0;
+
+        while (sceneLoadOp.progress <= 0.8f)
+        {
+            passedTime += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        yield return new WaitForSecondsRealtime(Mathf.Max(6f - passedTime, 0f));
+
+        StartCoroutine(ChangeTunnelVolume());
+
+        wormHoleController.WormHoleExitSFX.Play();
+
+        yield return GameInstance.HUD.FadeToWhite(2.2f);
+
+        while (wormHoleController.WormHoleExitSFX.isPlaying)
+            yield return null;
+
+        sceneLoadOp.allowSceneActivation = true;
+        GameInstance.HUD.MaskScreen(false);
+        GameInstance.Singleton.FadeInMasterMixer(2f);
+    }
+
+    private IEnumerator ChangeTunnelVolume()
+    {
+        while (wormHoleController.TunnelSFX.volume > 0)
+        {
+            wormHoleController.TunnelSFX.volume = Mathf.Lerp(wormHoleController.TunnelSFX.volume, 0, Time.deltaTime * 2f);
+            yield return null;
+        }
     }
 
     #endregion
@@ -381,6 +475,11 @@ public class PlayerController : Controller, ISavable
     #endregion
 
     #region --- Misc ---
+
+    public void GiveQuest (Quest quest)
+    {
+        GameInstance.GameState.QuestController.Add(quest);
+    }
 
     public void PopMessage(string message)
     {

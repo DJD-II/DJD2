@@ -5,11 +5,11 @@ using UnityEngine.UI;
 [System.Serializable]
 public class StartMenuButtons : MonoBehaviour
 {
-    [SerializeField] protected GameObject optionsSubMenu;
-    [SerializeField] protected Dropdown resolution;
-    [SerializeField] protected Slider musicSlider;
-    [SerializeField] protected ConfirmBox confirmButton;
-    [SerializeField] private GameObject confirmBox;
+    [SerializeField] protected GameObject optionsSubMenu = null;
+    [SerializeField] protected Dropdown resolution = null;
+    [SerializeField] protected Slider musicSlider = null;
+    [SerializeField] protected ConfirmBox confirmButton = null;
+    [SerializeField] private GameObject confirmBox = null;
 
     private void Start()
     {

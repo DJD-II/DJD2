@@ -1,9 +1,15 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 sealed public class HUD : MonoBehaviour
 {
+    public delegate void EventHandler(HUD sender);
+
+    public event EventHandler   OnTalkBegin, 
+                                OnTalkClose;
+
     [Header("CrossHair")]
     [SerializeField]
     private Text crossHair = null;
@@ -28,6 +34,18 @@ sealed public class HUD : MonoBehaviour
     [Header("Loading Screen")]
     [SerializeField]
     private GameObject loadingScreenPanel = null;
+    [Header("Past Lifes")]
+    [SerializeField]
+    private Image pastLifePanel = null;
+    [Header("Fade")]
+    [SerializeField]
+    private GameObject fadeToWhitePanel = null;
+    [SerializeField]
+    private GameObject fadeToBlackPanel = null;
+    [SerializeField]
+    private GameObject maskPanel = null;
+
+    public TalkUIController TalkUIController { get { return talkUIController; } }
 
     public void Initialize()
     {
@@ -39,6 +57,11 @@ sealed public class HUD : MonoBehaviour
             EnableInteractMessage(false, null);
             crossHair.gameObject.SetActive(!sender.Paused);
         };
+    }
+
+    public void EnableCorssHair (bool enable)
+    {
+        crossHair.gameObject.SetActive(enable);
     }
 
     public void EnableInteractMessage(bool visible, Interactable interactable)
@@ -74,31 +97,45 @@ sealed public class HUD : MonoBehaviour
         digitalNewsPaper.gameObject.SetActive(enable);
     }
 
-    public void EnableLockPick(bool enable, Interactable interactable, PlayerController controller)
+    public void EnableLockPick(bool enable, Interactable interactable = null, PlayerController controller = null)
     {
-        if (lockPickController == null)
-            return;
-
-        GameInstance.GameState.Paused = true;
-
-        lockPickController.Interactable = interactable;
-        lockPickController.PlayerController = controller;
-        lockPickController.Initialize();
         lockPickController.gameObject.SetActive(enable);
-        lockPickController.PlayEnterSound();
+
+        if (enable)
+        {
+            if (interactable == null || controller == null)
+                return;
+
+            GameInstance.GameState.Paused = true;
+
+            lockPickController.Interactable = interactable;
+            lockPickController.PlayerController = controller;
+            lockPickController.Initialize();
+            lockPickController.PlayEnterSound();
+        }
     }
 
-    public void EnableConversation(bool enable, TalkInteractable interactable, PlayerController controller)
+    public void EnableConversation(bool enable, TalkInteractable interactable = null, PlayerController controller = null)
     {
-        if (talkUIController == null)
+        bool opened = talkUIController.gameObject.activeInHierarchy;
+
+        talkUIController.gameObject.SetActive(enable);
+
+        if (!enable)
+        {
+            if (opened)
+                OnTalkClose?.Invoke(this);
+
             return;
+        }
+
+        OnTalkBegin?.Invoke(this);
 
         GameInstance.GameState.Paused = true;
 
         talkUIController.Interactable = interactable;
         talkUIController.PlayerController = controller;
         talkUIController.Initialize();
-        talkUIController.gameObject.SetActive(true);
     }
 
     public void EnableMenu(bool enable, PlayerController controller)
@@ -120,5 +157,66 @@ sealed public class HUD : MonoBehaviour
     public void EnableLoadingScreen(bool enable)
     {
         loadingScreenPanel.SetActive(enable);
+    }
+
+    public void MaskScreen (bool enable)
+    {
+        maskPanel.SetActive(enable);
+        if (!enable)
+            return;
+
+        maskPanel.GetComponent<Animation>().Play();
+    }
+
+    public IEnumerator FadeToWhite (float multiplier = 1f)
+    {
+        Animation anim = fadeToWhitePanel.GetComponent<Animation>();
+        anim.clip = anim.GetClip("Alpha Reversed");
+        anim["Alpha Reversed"].normalizedSpeed = anim["Alpha Reversed"].normalizedSpeed * multiplier;
+        anim.Play();
+
+        yield return WaitWhileAnimation(anim);
+    }
+
+    public IEnumerator FadeFromWhite (float multiplier = 1f)
+    {
+        Animation anim = fadeToWhitePanel.GetComponent<Animation>();
+        anim.clip = anim.GetClip("Alpha");
+        anim["Alpha"].normalizedSpeed = anim["Alpha"].normalizedSpeed * multiplier;
+        anim.Play();
+
+        yield return WaitWhileAnimation(anim);
+    }
+
+    public IEnumerator FadeToBlack(float multiplier = 1f)
+    {
+        Animation anim = fadeToBlackPanel.GetComponent<Animation>();
+        anim.clip = anim.GetClip("Alpha Reversed");
+        anim["Alpha Reversed"].normalizedSpeed = anim["Alpha Reversed"].normalizedSpeed * multiplier;
+
+        anim.Play();
+
+        yield return WaitWhileAnimation(anim);
+    }
+
+    public IEnumerator FadeFromBlack(float multiplier = 1f)
+    {
+        Animation anim = fadeToBlackPanel.GetComponent<Animation>();
+        anim.clip = anim.GetClip("Alpha");
+        anim["Alpha"].normalizedSpeed = anim["Alpha"].normalizedSpeed * multiplier;
+        anim.Play();
+
+        yield return WaitWhileAnimation(anim);
+    }
+
+    private IEnumerator WaitWhileAnimation (Animation anim)
+    {
+        while (anim.isPlaying)
+            yield return null;
+    }
+
+    public void EnablePastLife(bool enable)
+    {
+        pastLifePanel.gameObject.SetActive(enable);
     }
 }

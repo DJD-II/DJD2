@@ -4232,21 +4232,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4871878391432380255, guid: da0033dfdf9e403479123d9c5a1ae707,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -0.0970459
-      objectReference: {fileID: 0}
-    - target: {fileID: 4871878391432380255, guid: da0033dfdf9e403479123d9c5a1ae707,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -0.7999878
-      objectReference: {fileID: 0}
-    - target: {fileID: 3973445414392937146, guid: da0033dfdf9e403479123d9c5a1ae707,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 6.799988
-      objectReference: {fileID: 0}
     - target: {fileID: 384874118247153307, guid: da0033dfdf9e403479123d9c5a1ae707,
         type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -4271,6 +4256,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -61.581543
+      objectReference: {fileID: 0}
+    - target: {fileID: 4871878391432380255, guid: da0033dfdf9e403479123d9c5a1ae707,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.0970459
+      objectReference: {fileID: 0}
+    - target: {fileID: 4871878391432380255, guid: da0033dfdf9e403479123d9c5a1ae707,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.7999878
+      objectReference: {fileID: 0}
+    - target: {fileID: 3973445414392937146, guid: da0033dfdf9e403479123d9c5a1ae707,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 6.799988
       objectReference: {fileID: 0}
     - target: {fileID: 8992835724152261393, guid: da0033dfdf9e403479123d9c5a1ae707,
         type: 3}
@@ -4321,7 +4321,8 @@ AudioSource:
   m_GameObject: {fileID: 791604209}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 3c546d6484e604b4384a29c0ff9d2af7,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 8668d63ee1f53094e9f24a5354691d8c, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -5361,7 +5362,11 @@ MonoBehaviour:
   canInteract: 1
   locked: 0
   message: Talk
-  currentConvo: {fileID: 0}
+  conversations: []
+  rotateTowardsPlayer: 1
+  changeAnimator: 1
+  rotateToInitialRotation: 1
+  unpauseOnClose: 1
 --- !u!4 &1045821426 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4328033527015456, guid: 10a4b7b1359186d449f593c3f853f7dc,

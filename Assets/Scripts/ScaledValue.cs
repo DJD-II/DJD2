@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public struct ScaledValue
+public struct ScaledValue : IOperatable<float>
 {
     [SerializeField]
     private float max;
@@ -20,6 +20,25 @@ public struct ScaledValue
     public void Add(float value)
     {
         Scalar = Mathf.Min((Value + value) / Max, 1);
+    }
+
+    bool IOperatable<float>.Get(LogicOperator operation, float value)
+    {
+        switch (operation)
+        {
+            case LogicOperator.LessThan:
+                return value > Scalar;
+            case LogicOperator.LessOrEqual:
+                return value >= Scalar;
+            case LogicOperator.Equal:
+                return value == Scalar;
+            case LogicOperator.GreaterOrEqual:
+                return value <= Scalar;
+            case LogicOperator.Greater:
+                return value < Scalar;
+        }
+
+        return false;
     }
 
     public float Value { get { return Scalar * max; } }
