@@ -2,7 +2,7 @@
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "New Item", menuName = "Item")]
-public class Item : ScriptableObject
+sealed public class Item : ScriptableObject
 {
     public enum Tag
     {
@@ -12,27 +12,27 @@ public class Item : ScriptableObject
         Bobby_Pin,
         Bubble_Gum,
         Scrap_Metal,
+        Crow_Bar,
     }
 
-    public Sprite       icon;
-    public Tag          tag;
-    public string       description;
-    public float        weight;
-    public float        cost;
+    public Sprite icon;
+    public Tag tag;
+    public string description;
+    public float weight;
+    public float cost;
 
-    public void Use (PlayerController controller)
+    public void Use(PlayerController controller)
     {
-        switch(tag)
+        switch (tag)
         {
             case Tag.Battery:
                 controller.Hp.Add(50);
-                Debug.Log("Added HP to " + controller.gameObject.name);
                 break;
             case Tag.Used_Battery:
                 controller.Hp.Add(20);
                 break;
             case Tag.Oil:
-                
+
                 break;
             case Tag.Bubble_Gum:
 

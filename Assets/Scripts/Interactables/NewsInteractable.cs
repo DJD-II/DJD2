@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class NewsInteractable : Interactable
+﻿sealed public class NewsInteractable : Interactable
 {
     protected override void OnInteract(PlayerController controller)
     {

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0a77e030dfb1c64688891bedecbe3b8, type: 3}
+  m_Name: Learn Quick
+  m_EditorClassIdentifier: 
+  name: Learn Quick!
+  description: Press W,A,S,D to move around!
+  hide: 0
+  requesites:
+    itemsNeeded: []
+    eventsNeeded: 
+    needsMovement: 1
+    needsLooking: 0
+    custom: 0
+    questsToGive:
+    - {fileID: 11400000, guid: 0804e57bab292c84ea0f59ecb5643b9a, type: 2}
+  position: []

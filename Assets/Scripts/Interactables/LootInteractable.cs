@@ -1,5 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 sealed public class LootInteractable : Interactable, ISavable
 {
@@ -22,54 +23,67 @@ sealed public class LootInteractable : Interactable, ISavable
 
     [SerializeField]
     private Item[] items = new Item[0];
-    private Inventory inventory;
 
-    public Inventory Inventory { get { return inventory; } }
+    public Inventory Inventory { get; private set; }
 
     protected override void Awake()
     {
         base.Awake();
 
-        GameInstance.OnSave += OnSceneChange;
-
-        inventory = new Inventory();
-
-       
+        Inventory = new Inventory();
     }
 
-    private void Start()
+    protected override void Start()
     {
-        LootSavable savable = GameInstance.Singleton.GetSavable(GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, GetUniqueIDPersistent()) as LootSavable;
+        base.Start();
+
+        OnUnlocked += (Interactable sender, PlayerController controller) =>
+        {
+            StartCoroutine(SwitchToLootInventory(controller));
+        };
+    }
+
+    private IEnumerator SwitchToLootInventory(PlayerController controller)
+    {
+        yield return new WaitForSecondsRealtime(2f);
+
+        GameInstance.HUD.EnableLockPick(false);
+        GameInstance.HUD.EnableObjectInventory(this, controller);
+    }
+
+    protected override void OnLoad(PlaySaveGameObject io)
+    {
+        LootSavable savable = io.Get(GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, GetUniqueIDPersistent()) as LootSavable;
         if (savable != null)
         {
             Locked = savable.locked;
 
             foreach (ItemID i in savable.items)
-                inventory.Add(ItemUtility.GetItem(i.name));
+                Inventory.Add(ItemUtility.GetItem(i.name));
 
             return;
         }
 
         foreach (Item item in items)
-            inventory.Add(item);
+            Inventory.Add(item);
     }
 
-    private void OnSceneChange()
+    protected override void OnSave(PlaySaveGameObject io)
     {
-        GameInstance.Singleton.FeedSavable(this, GetUniqueIDPersistent());
+        io.Feed(this, GetUniqueIDPersistent());
     }
 
-    protected override void OnInteract (PlayerController controller)
+    protected override void OnInteract(PlayerController controller)
     {
-        if (Locked && controller.Inventory.Contains("Bobby Pin"))
-            GameInstance.HUD.EnableLockPick(true, this, controller);
-        else if (!Locked)
+        if (Locked)
+        {
+            if (controller.Inventory.Contains("Bobby Pin"))
+                GameInstance.HUD.EnableLockPick(true, this, controller);
+            else
+                controller.PopMessage("Not Enough Bobby Pins");
+        }
+        else
             GameInstance.HUD.EnableObjectInventory(this, controller);
-    }
-
-    void OnDestroy()
-    {
-        GameInstance.OnSave -= OnSceneChange;
     }
 
     Savable ISavable.IO { get { return new LootSavable(GetUniqueID(), Inventory.Items, Locked); } }

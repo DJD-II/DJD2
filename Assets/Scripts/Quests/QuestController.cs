@@ -1,11 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-sealed public class QuestController : object
+sealed public class QuestController : object, ISavable
 {
-    sealed public class QuestID
+    [System.Serializable]
+    public struct QuestInfo
+    {
+        private string name;
+        private bool completed;
+
+        public string Name { get { return name; } }
+        public bool Completed { get { return completed; } }
+
+        public QuestInfo(QuestID id)
+        {
+            name = id.quest.name;
+            completed = id.completed;
+        }
+    }
+
+    [System.Serializable]
+    sealed public class QuestID : object
     {
         public delegate void EventHandler(QuestID sender);
 
@@ -14,9 +30,18 @@ sealed public class QuestController : object
         public Quest quest;
         public bool completed;
 
+        public QuestID (QuestInfo info)
+        {
+            quest = QuestUtility.Get(info.Name);
+            completed = info.Completed;
+            OnCompleted = null;
+        }
+
         public QuestID(Quest quest)
         {
             this.quest = quest;
+            completed = false;
+            OnCompleted = null;
         }
 
         public void Complete()
@@ -27,6 +52,25 @@ sealed public class QuestController : object
             completed = true;
 
             OnCompleted?.Invoke(this);
+
+            foreach (Quest q in quest.Requesites.QuestsToGive)
+                GameInstance.GameState.QuestController.Add(q);
+        }
+    }
+
+    [System.Serializable]
+    sealed public class QuestSavable : Savable
+    {
+        private List<QuestInfo> questsInfo;
+
+        public List<QuestInfo> QuestsInfo { get { return questsInfo; } }
+
+        public QuestSavable(List<QuestID> quests)
+            : base ("", "")
+        {
+            questsInfo = new List<QuestInfo>();
+            foreach (QuestID id in quests)
+                questsInfo.Add(new QuestInfo(id));
         }
     }
 
@@ -38,11 +82,43 @@ sealed public class QuestController : object
                                     OnQuestCompleted;
 
     [SerializeField]
-    private List<QuestID> quests = new List<QuestID>();
+    private List<QuestID> quests = new List<QuestID>(); 
 
-    public List<QuestID> Quest { get { return quests; } }
+    public List<QuestID> Quests { get { return quests; } }
 
-    public void Add (Quest quest)
+    public PlayerController PlayerController { get; private set; }
+
+    public void Initialize (PlayerController controller)
+    {
+        PlayerController = controller;
+    }
+
+    public void Update ()
+    {
+        if (PlayerController == null)
+            return;
+
+        foreach (QuestID id in quests.ToArray())
+            if (!id.completed && id.quest.Requesites.IsValid(PlayerController))
+                id.Complete();
+    }
+
+    public void Clear ()
+    {
+        quests.Clear();
+    }
+
+    public void Add(QuestID id)
+    {
+        if (Get(id.quest.name) != null)
+            return;
+
+        quests.Add(id);
+
+        id.OnCompleted += OnQuestHasBeenCompleted;
+    }
+
+    public void Add(Quest quest)
     {
         if (Get(quest.name) != null)
             return;
@@ -67,16 +143,17 @@ sealed public class QuestController : object
             if (auxQuest.quest.name.Equals(quest.name))
             {
                 quests.Remove(auxQuest);
+                OnQuestRemoved?.Invoke(this, auxQuest);
                 break;
             }
     }
 
-    public QuestID Get (string name)
+    public QuestID Get(string name)
     {
         return quests.Find(x => x.quest.name.Equals(name));
     }
 
-    public void CompleteQuest (string name)
+    public void CompleteQuest(string name)
     {
         string auxName = name.ToLower();
 
@@ -84,4 +161,6 @@ sealed public class QuestController : object
         if (id != null)
             id.Complete();
     }
+
+    Savable ISavable.IO { get { return new QuestSavable(quests); } }
 }

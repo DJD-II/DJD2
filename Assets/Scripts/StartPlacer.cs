@@ -1,11 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class StartPlacer : MonoBehaviour
+sealed public class StartPlacer : MonoBehaviour
 {
+    private bool ignore = false;
+
+    private void Awake()
+    {
+        GameInstance.OnLoad += OnLoad;
+    }
+
+    private void OnLoad(PlaySaveGameObject io)
+    {
+        ignore = GameInstance.Singleton.IsLoadingSavedGame;
+    }
+
+    private void OnDestroy()
+    {
+        GameInstance.OnLoad -= OnLoad;
+    }
+
     private void Start()
     {
+        if (ignore)
+            return;
+
         PlayerStart[] playerStartPositions = LevelInstance.Singleton.StartPositions;
         PlayerStart startPosition = null;
 

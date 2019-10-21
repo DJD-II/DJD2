@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 
 namespace CurvedHUD
@@ -36,7 +35,7 @@ namespace CurvedHUD
         {
             CreateCollider();
         }
-        
+
         #endregion
 
         #region --- Methods ---
@@ -55,10 +54,10 @@ namespace CurvedHUD
             Ray ray3D;
 
             //get a ray to raycast with depending on the control method
-           
+
             // Get a ray from the camera through the point on the screen - used for mouse input
             ray3D = worldCamera.ScreenPointToRay(eventData.position);
-                
+
             //Create a copy of the eventData to be used by this canvas. This allows
             PointerEventData newEventData = new PointerEventData(EventSystem.current);
             if (!overrideEventData)
@@ -201,9 +200,9 @@ namespace CurvedHUD
 
             if (!settings.BlocksRaycasts) return; //null;
 
-                        //rigidbody in parent?
-             if (GetComponent<Rigidbody>() != null || GetComponentInParent<Rigidbody>() != null)
-             Debug.LogWarning("CurvedUI: Sphere shape canvases as children of rigidbodies do not support user input. Switch to Cyllinder shape or remove the rigidbody from parent.", this.gameObject);
+            //rigidbody in parent?
+            if (GetComponent<Rigidbody>() != null || GetComponentInParent<Rigidbody>() != null)
+                Debug.LogWarning("CurvedUI: Sphere shape canvases as children of rigidbodies do not support user input. Switch to Cyllinder shape or remove the rigidbody from parent.", this.gameObject);
 
             SetupMeshColliderUsingMesh(CreateSphereColliderMesh());
             return;

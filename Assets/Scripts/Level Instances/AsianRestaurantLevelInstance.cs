@@ -1,7 +1,3 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class AsianRestaurantLevelInstance : LevelInstance
+﻿sealed public class AsianRestaurantLevelInstance : LevelInstance
 {
 }

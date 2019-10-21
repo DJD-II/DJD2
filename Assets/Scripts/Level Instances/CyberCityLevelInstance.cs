@@ -10,10 +10,12 @@ sealed public class CyberCityLevelInstance : LevelInstance
 
     private void Start()
     {
-        if (!play)
+        if (!play || GameInstance.GameState.EventController.Contains(Event.Beginings))
             return;
 
         timeline.gameObject.SetActive(true);
         timeline.Play();
+
+        GameInstance.GameState.EventController.Add(Event.Beginings);
     }
 }

@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ShaderToTexture : MonoBehaviour {
+sealed public class ShaderToTexture : MonoBehaviour {
 
-	public ComputeShader shader;
-	
-	void RunShader()
+    [SerializeField]
+	private ComputeShader shader = null;
+
+    public ComputeShader Shader { get { return shader; } }
+
+    private void RunShader()
 	{
-
 		int kernelHandle = shader.FindKernel("CSMain");
 		
 		RenderTexture tex = new RenderTexture(256,256,24);
@@ -18,13 +20,9 @@ public class ShaderToTexture : MonoBehaviour {
 		shader.Dispatch(kernelHandle, 256/8, 256/8, 1);
 	}
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    private void Start ()
+    {
 		RunShader();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 }

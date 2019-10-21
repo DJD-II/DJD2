@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class Actor : MonoBehaviour
 {
@@ -8,11 +6,11 @@ public abstract class Actor : MonoBehaviour
 
     [Header("Actor")]
     [SerializeField]
-    protected bool canBeDamaged   = true;
+    protected bool canBeDamaged = true;
     [SerializeField]
-    protected bool canBeHealed    = true;
+    protected bool canBeHealed = true;
     [SerializeField]
-    protected bool canBeRevived   = true;
+    protected bool canBeRevived = true;
 
     public bool ApplyDamage(Damage damage)
     {

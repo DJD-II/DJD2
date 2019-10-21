@@ -2,19 +2,21 @@
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class ShaderEffect_CorruptedVram : MonoBehaviour {
-
-	public float shift = 10;
+sealed public class ShaderEffect_CorruptedVram : MonoBehaviour {
+    [SerializeField]
+	private float shift = 10;
 	private Texture texture;
 	private Material material;
 
-	void Awake ()
+    public float Shift { get { return shift; } set { shift = value; } }
+
+    private void Awake ()
 	{
 		material = new Material( Shader.Find("Hidden/Distortion") );
 		texture = Resources.Load<Texture>("Checkerboard-big");
 	}
 		
-	void OnRenderImage (RenderTexture source, RenderTexture destination)
+	private void OnRenderImage (RenderTexture source, RenderTexture destination)
 	{
 		material.SetFloat("_ValueX", shift);
 		material.SetTexture("_Texture", texture);
