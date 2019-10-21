@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 sealed public class LootInteractable : Interactable, ISavable
@@ -29,17 +30,28 @@ sealed public class LootInteractable : Interactable, ISavable
     {
         base.Awake();
 
-        GameInstance.OnLoad += OnLoad;
-
         Inventory = new Inventory();
     }
 
-    private void Start()
+    protected override void Start()
     {
-        GameInstance.OnSave += OnSave;
+        base.Start();
+
+        OnUnlocked += (Interactable sender, PlayerController controller) =>
+        {
+            StartCoroutine(SwitchToLootInventory(controller));
+        };
     }
 
-    private void OnLoad(PlaySaveGameObject io)
+    private IEnumerator SwitchToLootInventory(PlayerController controller)
+    {
+        yield return new WaitForSecondsRealtime(2f);
+
+        GameInstance.HUD.EnableLockPick(false);
+        GameInstance.HUD.EnableObjectInventory(this, controller);
+    }
+
+    protected override void OnLoad(PlaySaveGameObject io)
     {
         LootSavable savable = io.Get(GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, GetUniqueIDPersistent()) as LootSavable;
         if (savable != null)
@@ -56,7 +68,7 @@ sealed public class LootInteractable : Interactable, ISavable
             Inventory.Add(item);
     }
 
-    private void OnSave(PlaySaveGameObject io)
+    protected override void OnSave(PlaySaveGameObject io)
     {
         io.Feed(this, GetUniqueIDPersistent());
     }
@@ -72,12 +84,6 @@ sealed public class LootInteractable : Interactable, ISavable
         }
         else
             GameInstance.HUD.EnableObjectInventory(this, controller);
-    }
-
-    void OnDestroy()
-    {
-        GameInstance.OnSave -= OnSave;
-        GameInstance.OnLoad -= OnLoad;
     }
 
     Savable ISavable.IO { get { return new LootSavable(GetUniqueID(), Inventory.Items, Locked); } }

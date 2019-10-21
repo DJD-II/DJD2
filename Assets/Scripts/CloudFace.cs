@@ -14,6 +14,6 @@ public class CloudFace : MonoBehaviour
 
     void Update()
     {
-        material.SetFloat("_UnscaledTime", Time.unscaledTime);    
+        material.SetFloat("_UnscaledDeltaTime", Time.unscaledTime);    
     }
 }

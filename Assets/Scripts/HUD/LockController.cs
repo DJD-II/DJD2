@@ -96,23 +96,10 @@ sealed public class LockController : MonoBehaviour
 
             unlockSFX.Play();
 
-            Interactable.Locked = false;
-            StartCoroutine(SwitchToLootInventory());
+            active = false;
+
+            Interactable.Unlock(PlayerController);
         };
-    }
-
-    private IEnumerator SwitchToLootInventory()
-    {
-        active = false;
-
-        yield return new WaitForSecondsRealtime(2f);
-
-        gameObject.SetActive(false);
-
-        if (Interactable is LootInteractable)
-            GameInstance.HUD.EnableObjectInventory((LootInteractable)Interactable, PlayerController);
-        else
-            GameInstance.GameState.Paused = false;
     }
 
     public void Initialize()
@@ -252,7 +239,7 @@ sealed public class LockController : MonoBehaviour
             int ammount = PlayerController.Inventory.GetAmmount("Bobby Pin");
             PlayerController.Inventory.Remove("Bobby Pin");
             //Update Bobby pin label to the new bobby pin ammount.
-            bobbyPinsAmmount.text = "+" + (ammount - 1).ToString();
+            bobbyPinsAmmount.text = "+" + Mathf.Max(ammount - 1, 0).ToString();
 
             //Deactive breifely the HUD
             active = false;

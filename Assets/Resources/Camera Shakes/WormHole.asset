@@ -22,17 +22,17 @@ MonoBehaviour:
     amplitude: 0
     frequency: 0
   rotationX:
-    amplitude: 0.8
-    frequency: 18
-  rotationY:
     amplitude: 0.6
+    frequency: 16
+  rotationY:
+    amplitude: 0.8
     frequency: 18
   rotationZ:
     amplitude: 1.5
-    frequency: 18
+    frequency: 20
   fov:
-    amplitude: 0.1
-    frequency: 1
-  duration: 20
+    amplitude: 1
+    frequency: 0.2
+  duration: 12
   blendInTime: 0.1
-  blendOutTime: 0.01
+  blendOutTime: 0.1

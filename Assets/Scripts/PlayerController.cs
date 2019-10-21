@@ -68,8 +68,6 @@ public class PlayerController : Controller, ISavable
     [SerializeField]
     private Camera cam = null;
     [SerializeField]
-    private Transform shakePivot = null;
-    [SerializeField]
     private Animation fallPivot = null;
     [SerializeField]
     private Vector2 minMaxY = Vector2.zero;
@@ -87,7 +85,7 @@ public class PlayerController : Controller, ISavable
     private Inventory inventory = new Inventory();
     [Header("HUDs")]
     [SerializeField]
-    private bool HudsEnabled = true;
+    private bool hudsEnabled = true;
     [SerializeField]
     private GameObject huds = null;
     [SerializeField]
@@ -95,24 +93,13 @@ public class PlayerController : Controller, ISavable
     private PointDamage reducer;
     private UniqueID uniqueID;
     [SerializeField]
-    private Quest mainQuest = null;
-    [SerializeField]
     private Transform messageContents = null;
     [SerializeField]
     private GameObject messagePrefab = null;
     public CameraShake explosion = null;
     [Header("Cloud Transition")]
-    AsyncOperation sceneLoadOp;
     [SerializeField]
-    private GameObject tunnelCamera = null;
-    [SerializeField]
-    private GameObject wormHoleTunnel = null;
-    [SerializeField]
-    private Animation shuttDown = null;
-    [SerializeField]
-    private AudioSource tunnelSFX = null;
-    [SerializeField]
-    private CameraShake womHoleShake = null;
+    private WormHoleController wormHoleController = null;
 
     #endregion
 
@@ -122,6 +109,16 @@ public class PlayerController : Controller, ISavable
     public bool CanControl { get { return canControl; } set { canControl = value; } }
     public Inventory Inventory { get { return inventory; } }
     public Vector3 Velocity { get { return controller.velocity; } }
+    public bool HudsEnabled
+    {
+        get { return hudsEnabled; }
+
+        set
+        {
+            hudsEnabled = value;
+            huds.SetActive(!GameInstance.GameState.Paused && value);
+        }
+    }
 
     #endregion
 
@@ -148,11 +145,13 @@ public class PlayerController : Controller, ISavable
     private void OnPause(GameState sender)
     {
         canControl = !sender.Paused;
-        huds.SetActive(!sender.Paused && HudsEnabled);
+        huds.SetActive(!sender.Paused && hudsEnabled);
     }
 
     private void Start()
     {
+        GameInstance.HUD.EnableCorssHair(true);
+
         GameInstance.GameState.QuestController.Initialize(this);
 
         GameInstance.OnSave += OnSave;
@@ -163,9 +162,6 @@ public class PlayerController : Controller, ISavable
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-            GameInstance.GameState.QuestController.Add(mainQuest);
-
         float vertical = Input.GetAxis("Vertical");
         float horizontal = Input.GetAxis("Horizontal");
 
@@ -175,16 +171,16 @@ public class PlayerController : Controller, ISavable
             return;
 
         if (!GameInstance.GameState.Paused && Input.GetKeyDown(KeyCode.Escape) && canPause)
+        {
             GameInstance.HUD.EnableMenu(true, this);
+            return;
+        }
 
         interaction.Update(this);
 
         UpdateJumpInput();
 
         Look();
-
-        if (Input.GetKeyDown(KeyCode.L))
-            explosion.Play(this, cam, shakePivot, 2f);
 
         if (hp.IsEmpty)
         {
@@ -193,33 +189,51 @@ public class PlayerController : Controller, ISavable
         }
     }
 
+    protected virtual void FixedUpdate()
+    {
+        UpdateMovement();
+    }
+
+    #endregion
+
+    #region --- To Cloud Scene ---
+
     private IEnumerator SwitchToCloudScene()
     {
+        GameInstance.HUD.EnableCorssHair(false);
+
         ApplyHeal(new PointHeal(this, 100));
         GameInstance.Singleton.FadeOutMasterMixer(0.2f);
-        shuttDown.clip = shuttDown.GetClip("Shut Down");
 
-        shuttDown.Play();
-        while (shuttDown.isPlaying)
+        HudsEnabled = false;
+
+        wormHoleController.ShuttDown.clip = wormHoleController.ShuttDown.GetClip("Shut Down");
+
+        wormHoleController.ShuttDown.Play();
+        while (wormHoleController.ShuttDown.isPlaying)
             yield return null;
 
-        shuttDown.clip = shuttDown.GetClip("Turn On");
+        wormHoleController.ShuttDown.clip = wormHoleController.ShuttDown.GetClip("Turn On");
 
-        wormHoleTunnel.SetActive(true);
-        tunnelCamera.SetActive(true);
+        wormHoleController.WormHoleEnterSFX.Play();
+
+        yield return new WaitForSecondsRealtime(1f);
+
+        wormHoleController.WormHoleTunnel.SetActive(true);
+        wormHoleController.TunnelCamera.SetActive(true);
 
         GameInstance.HUD.MaskScreen(true);
 
-        womHoleShake.Play(this, tunnelCamera.GetComponent<Camera>(), tunnelCamera.transform, 1f);
+        wormHoleController.WomHoleShake.Play(this, wormHoleController.TunnelCamera.GetComponent<Camera>(), wormHoleController.TunnelCamera.transform, 1f);
 
-        StartCoroutine(GameInstance.HUD.FadeFromWhite(9.5f));
-        shuttDown.Play();
+        StartCoroutine(GameInstance.HUD.FadeFromWhite(4f));
+        wormHoleController.ShuttDown.Play();
 
         GameInstance.Save();
 
         yield return new WaitForSecondsRealtime(1f);
 
-        sceneLoadOp = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("ICloud");
+        AsyncOperation sceneLoadOp = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("ICloud");
         sceneLoadOp.allowSceneActivation = false;
 
         float passedTime = 0;
@@ -230,11 +244,16 @@ public class PlayerController : Controller, ISavable
             yield return null;
         }
 
-        yield return new WaitForSecondsRealtime(Mathf.Max(8f - passedTime, 0f));
+        yield return new WaitForSecondsRealtime(Mathf.Max(6f - passedTime, 0f));
 
         StartCoroutine(ChangeTunnelVolume());
-       
-        yield return GameInstance.HUD.FadeToWhite();
+
+        wormHoleController.WormHoleExitSFX.Play();
+
+        yield return GameInstance.HUD.FadeToWhite(2.2f);
+
+        while (wormHoleController.WormHoleExitSFX.isPlaying)
+            yield return null;
 
         sceneLoadOp.allowSceneActivation = true;
         GameInstance.HUD.MaskScreen(false);
@@ -243,16 +262,11 @@ public class PlayerController : Controller, ISavable
 
     private IEnumerator ChangeTunnelVolume()
     {
-        while (tunnelSFX.volume > 0)
+        while (wormHoleController.TunnelSFX.volume > 0)
         {
-            tunnelSFX.volume = Mathf.Lerp(tunnelSFX.volume, 0, Time.deltaTime * 2f);
+            wormHoleController.TunnelSFX.volume = Mathf.Lerp(wormHoleController.TunnelSFX.volume, 0, Time.deltaTime * 2f);
             yield return null;
         }
-    }
-
-    protected virtual void FixedUpdate()
-    {
-        UpdateMovement();
     }
 
     #endregion

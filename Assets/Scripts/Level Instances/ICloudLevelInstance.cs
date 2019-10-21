@@ -14,7 +14,9 @@ public class ICloudLevelInstance : LevelInstance
         GameInstance.HUD.TalkUIController.OnAnswered += (TalkUIController sender, PlayerAnswer answer) =>
         {
             if (answer.ID == 101)
+            {
                 GameInstance.HUD.EnablePastLife(true);
+            }
         };
         startVolume = ambientMusic.volume;
         ambientMusic.volume = 0;

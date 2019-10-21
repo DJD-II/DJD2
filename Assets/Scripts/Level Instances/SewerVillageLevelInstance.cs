@@ -4,5 +4,4 @@ using UnityEngine;
 
 public class SewerVillageLevelInstance : LevelInstance
 {
-    
 }

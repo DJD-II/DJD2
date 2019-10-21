@@ -5,6 +5,11 @@ using System.Collections;
 
 sealed public class HUD : MonoBehaviour
 {
+    public delegate void EventHandler(HUD sender);
+
+    public event EventHandler   OnTalkBegin, 
+                                OnTalkClose;
+
     [Header("CrossHair")]
     [SerializeField]
     private Text crossHair = null;
@@ -54,6 +59,11 @@ sealed public class HUD : MonoBehaviour
         };
     }
 
+    public void EnableCorssHair (bool enable)
+    {
+        crossHair.gameObject.SetActive(enable);
+    }
+
     public void EnableInteractMessage(bool visible, Interactable interactable)
     {
         if (interactMessage == null)
@@ -87,30 +97,44 @@ sealed public class HUD : MonoBehaviour
         digitalNewsPaper.gameObject.SetActive(enable);
     }
 
-    public void EnableLockPick(bool enable, Interactable interactable, PlayerController controller)
+    public void EnableLockPick(bool enable, Interactable interactable = null, PlayerController controller = null)
     {
-        if (lockPickController == null)
-            return;
-
-        GameInstance.GameState.Paused = true;
-
-        lockPickController.Interactable = interactable;
-        lockPickController.PlayerController = controller;
-        lockPickController.Initialize();
         lockPickController.gameObject.SetActive(enable);
-        lockPickController.PlayEnterSound();
+
+        if (enable)
+        {
+            if (interactable == null || controller == null)
+                return;
+
+            GameInstance.GameState.Paused = true;
+
+            lockPickController.Interactable = interactable;
+            lockPickController.PlayerController = controller;
+            lockPickController.Initialize();
+            lockPickController.PlayEnterSound();
+        }
     }
 
-    public void EnableConversation(bool enable, TalkInteractable interactable, PlayerController controller)
+    public void EnableConversation(bool enable, TalkInteractable interactable = null, PlayerController controller = null)
     {
-        if (talkUIController == null)
+        bool opened = talkUIController.gameObject.activeInHierarchy;
+
+        talkUIController.gameObject.SetActive(enable);
+
+        if (!enable)
+        {
+            if (opened)
+                OnTalkClose?.Invoke(this);
+
             return;
+        }
+
+        OnTalkBegin?.Invoke(this);
 
         GameInstance.GameState.Paused = true;
 
         talkUIController.Interactable = interactable;
         talkUIController.PlayerController = controller;
-        talkUIController.gameObject.SetActive(true);
         talkUIController.Initialize();
     }
 
@@ -158,6 +182,7 @@ sealed public class HUD : MonoBehaviour
     {
         Animation anim = fadeToWhitePanel.GetComponent<Animation>();
         anim.clip = anim.GetClip("Alpha");
+        anim["Alpha"].normalizedSpeed = anim["Alpha"].normalizedSpeed * multiplier;
         anim.Play();
 
         yield return WaitWhileAnimation(anim);

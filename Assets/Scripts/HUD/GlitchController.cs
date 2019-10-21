@@ -40,7 +40,7 @@ sealed public class GlitchController : MonoBehaviour
     [SerializeField]
     private AudioSource SFX = null;
 
-    private void Update()
+    private void OnPreRender()
     {
         if (controller.Hp.Scalar <= 0.3f)
         {
