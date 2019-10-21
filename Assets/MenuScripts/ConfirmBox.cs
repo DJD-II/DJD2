@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class ConfirmBox : MonoBehaviour
 {
     [SerializeField] private Options options;
-    [SerializeField] private Text label;
+    [SerializeField] private Text label = null;
     [SerializeField] public int value;
 
     public void SetLabel(string label)
