@@ -1,11 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class TalkInteractable : Interactable
+sealed public class TalkInteractable : Interactable
 {
+    [SerializeField]
+    private Conversation currentConvo = null;
+
+    public Conversation Conversation { get { return currentConvo; } }
+
     protected override void OnInteract(PlayerController controller)
     {
-        GameInstance.HUD.EnableConversation(true, this);
+        if (currentConvo != null)
+            GameInstance.HUD.EnableConversation(true, this, controller);
+        else
+            Debug.LogError("No CurrentConvo");
     }
 }

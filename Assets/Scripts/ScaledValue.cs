@@ -19,7 +19,7 @@ public struct ScaledValue
 
     public void Add(float value)
     {
-        Scalar = Mathf.Min((Value + value ) / Max, 1) ;
+        Scalar = Mathf.Min((Value + value) / Max, 1);
     }
 
     public float Value { get { return Scalar * max; } }

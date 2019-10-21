@@ -16,7 +16,7 @@ public struct ShaderParams {
 }
 
 [ExecuteInEditMode]
-public class DiyEffect__FullOnly : MonoBehaviour {
+sealed public class DiyEffect__FullOnly : MonoBehaviour {
 
 
 }

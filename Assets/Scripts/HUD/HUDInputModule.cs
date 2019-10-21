@@ -1,18 +1,15 @@
 ﻿#pragma warning disable 414, 0649
 
 using UnityEngine;
-using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Collections.Generic;
-using CurvedHUD;
 
 [ExecuteInEditMode]
 public class UIInputModule : StandaloneInputModule
 {
     //SETTINGS-------------------------------------------------//
     #region --- Fields ---
-   
+
     public static UIInputModule Singleton { get; private set; }
 
     [SerializeField]

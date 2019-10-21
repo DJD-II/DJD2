@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "New Quest", menuName = "Quests/New Quest")]
-public class Quest : ScriptableObject
+sealed public class Quest : ScriptableObject
 {
-    public new string       name;
-    public string           description;
-    public bool             hide;
-    public Vector3[]        position;
+    public new string name;
+    public string description;
+    public bool hide;
+    [SerializeField]
+    private QuestRequesite requesites = null;
+    public Vector3[] position;
+
+    public QuestRequesite Requesites { get { return requesites; } }
 }

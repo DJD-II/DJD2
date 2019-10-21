@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemMenuController : MonoBehaviour
+sealed public class ItemMenuController : MonoBehaviour
 {
-    private PlayerController controller;
-    private LootButton button;
+    private PlayerController controller = null;
+    private LootButton button = null;
     [SerializeField]
-    private Text itemNameLabel;
+    private Text itemNameLabel = null;
 
     public void Initialize(PlayerController controller, LootButton button)
     {
@@ -20,9 +18,10 @@ public class ItemMenuController : MonoBehaviour
     public void OnUseButtonClick()
     {
         button.Item.Use(controller);
+        Close();
     }
 
-    public void Close ()
+    public void Close()
     {
         gameObject.SetActive(false);
     }

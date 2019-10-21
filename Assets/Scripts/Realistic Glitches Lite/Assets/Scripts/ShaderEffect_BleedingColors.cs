@@ -4,18 +4,23 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class ShaderEffect_BleedingColors : MonoBehaviour {
 
-	public float intensity = 3;
-	public float shift = 0.5f;
+    [SerializeField]
+	private float intensity = 3;
+    [SerializeField]
+    private float shift = 0.5f;
 	private Material material;
 
-	// Creates a private material used to the effect
-	void Awake ()
+    public float Intensity { get { return intensity; } set { intensity = value; } }
+    public float Shift { get { return shift; } set { shift = value; } }
+
+    // Creates a private material used to the effect
+    private void Awake ()
 	{
 		material = new Material( Shader.Find("Hidden/BleedingColors") );
 	}
 
 	// Postprocess the image
-	void OnRenderImage (RenderTexture source, RenderTexture destination)
+	private void OnRenderImage (RenderTexture source, RenderTexture destination)
 	{
 		material.SetFloat("_Intensity", intensity);
 		material.SetFloat("_ValueX", shift);

@@ -2,19 +2,22 @@
 using System.Collections;
 
 [ExecuteInEditMode]
-public class BWEffect : MonoBehaviour {
+sealed public class BWEffect : MonoBehaviour {
 
-	public float intensity;
+    [SerializeField]
+	private float intensity = 1;
 	private Material material;
 
+    public float Intensity { get { return intensity; } set { intensity = value; } }
+
 	// Creates a private material used to the effect
-	void Awake ()
+	private void Awake ()
 	{
 		material = new Material( Shader.Find("Hidden/BWDiffuse") );
 	}
 
 	// Postprocess the image
-	void OnRenderImage (RenderTexture source, RenderTexture destination)
+	private void OnRenderImage (RenderTexture source, RenderTexture destination)
 	{
 		if (intensity == 0)
 		{

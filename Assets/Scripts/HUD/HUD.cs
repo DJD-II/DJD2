@@ -1,24 +1,33 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-public class HUD : MonoBehaviour
+sealed public class HUD : MonoBehaviour
 {
     [Header("CrossHair")]
-    public Text crossHair;
-    [Header ("Interaction")]
-    public TextMeshProUGUI interactMessage;
+    [SerializeField]
+    private Text crossHair = null;
+    [Header("Interaction")]
+    [SerializeField]
+    private TextMeshProUGUI interactMessage = null;
     [Header("Loot")]
-    public LootInventory loot;
+    [SerializeField]
+    private LootInventory loot = null;
     [Header("News")]
-    public GameObject digitalNewsPaper;
+    [SerializeField]
+    private GameObject digitalNewsPaper = null;
     [Header("Lock Pick")]
-    public LockController lockPickController;
-    [Header("Conversaton")]
-    public TalkUIController talkController;
+    [SerializeField]
+    private LockController lockPickController = null;
     [Header("Menu")]
     [SerializeField]
-    private HUDMenuController menu;
+    private HUDMenuController menu = null;
+    [Header("Conversation")]
+    [SerializeField]
+    private TalkUIController talkUIController = null;
+    [Header("Loading Screen")]
+    [SerializeField]
+    private GameObject loadingScreenPanel = null;
 
     public void Initialize()
     {
@@ -32,7 +41,7 @@ public class HUD : MonoBehaviour
         };
     }
 
-    public void EnableInteractMessage (bool visible, Interactable interactable)
+    public void EnableInteractMessage(bool visible, Interactable interactable)
     {
         if (interactMessage == null)
             return;
@@ -41,7 +50,7 @@ public class HUD : MonoBehaviour
         interactMessage.text = interactable == null ? "" : "[E] " + interactable.Message + (interactable.Locked ? " [LOCKED]" : "");
     }
 
-    public void EnableObjectInventory (LootInteractable interactable, PlayerController controller)
+    public void EnableObjectInventory(LootInteractable interactable, PlayerController controller)
     {
         if (loot == null)
             return;
@@ -65,11 +74,11 @@ public class HUD : MonoBehaviour
         digitalNewsPaper.gameObject.SetActive(enable);
     }
 
-    public void EnableLockPick (bool enable, Interactable interactable, PlayerController controller)
+    public void EnableLockPick(bool enable, Interactable interactable, PlayerController controller)
     {
         if (lockPickController == null)
             return;
-        
+
         GameInstance.GameState.Paused = true;
 
         lockPickController.Interactable = interactable;
@@ -79,23 +88,37 @@ public class HUD : MonoBehaviour
         lockPickController.PlayEnterSound();
     }
 
-    public void EnableConversation(bool enable, TalkInteractable interactable)
+    public void EnableConversation(bool enable, TalkInteractable interactable, PlayerController controller)
     {
-        if (talkController == null)
+        if (talkUIController == null)
             return;
 
         GameInstance.GameState.Paused = true;
 
-        talkController.Interactable = interactable;
-        talkController.Initialize();
-        talkController.gameObject.SetActive(enable);
+        talkUIController.Interactable = interactable;
+        talkUIController.PlayerController = controller;
+        talkUIController.Initialize();
+        talkUIController.gameObject.SetActive(true);
     }
 
-    public void EnableMenu (PlayerController controller)
+    public void EnableMenu(bool enable, PlayerController controller)
     {
-        GameInstance.GameState.Paused = true;
+        if (enable)
+        {
+            GameInstance.GameState.Paused = true;
 
-        menu.Initialize(controller);
-        menu.gameObject.SetActive(true);
+            menu.Initialize(controller);
+            menu.gameObject.SetActive(true);
+        }
+        else
+        {
+            GameInstance.GameState.Paused = false;
+            menu.gameObject.SetActive(false);
+        }
+    }
+
+    public void EnableLoadingScreen(bool enable)
+    {
+        loadingScreenPanel.SetActive(enable);
     }
 }
