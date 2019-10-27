@@ -3,24 +3,33 @@ using UnityEngine.UI;
 
 public class ConfirmBox : MonoBehaviour
 {
-    [SerializeField] private Options options;
+    private StartMenuButtons options;
+    private LoadSave save;
     [SerializeField] private Text label = null;
-    [SerializeField] public int value;
+    [SerializeField] private int value;
 
-    public void SetLabel(string label)
+    private void Start()
+    {
+        options = GameObject.Find("MainMenu").GetComponent<StartMenuButtons>();
+        save = GameObject.Find("MainMenu").GetComponent<LoadSave>();
+    }
+    public void SetLabel(string label, int value)
     {
         this.label.text = label;
+        this.value = value;
     }
-    public void OnCancel(bool activate)
+    public void OnCancel()
     {
-        gameObject.SetActive(activate);
+        Destroy(gameObject);
     }
     public void OnConfirm()
     {
         switch (value)
         {
             case 0: Application.Quit(); break;
-            case 1: options.ConfirmAplly() ; break;
+            case 1: options.ConfirmAplly(); break;
+            case 2: save.ConfirmDelete(); break;
         }
+        OnCancel();
     }
 }
