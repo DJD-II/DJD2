@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class StartMenuButtons : MonoBehaviour
 {
@@ -10,9 +11,10 @@ public class StartMenuButtons : MonoBehaviour
     [SerializeField] private GameObject loadGameButton = null;
     [SerializeField] private GameObject optionsSubMenu = null;
     [SerializeField] private GameObject continueButton = null;
-    [SerializeField] private Dropdown resolution = null;
+    [SerializeField] private TMP_Dropdown resolution = null;
     [SerializeField] private Slider musicSlider = null;
 
+    
     private ConfirmBox confirmBox;
     private bool fullscreen = true;
     private Resolution wantedResolution;

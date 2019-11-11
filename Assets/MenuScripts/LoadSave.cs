@@ -1,9 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System;
 using System.IO;
 
 public class LoadSave : MonoBehaviour
@@ -33,7 +30,9 @@ public class LoadSave : MonoBehaviour
     }
     public void ConfirmDelete()
     {
-        IO.Delete(deleteName);
+        IO.Delete(deleteName); 
+        infos = new List<FileInfo>(IO.GetFilenames());
+        SortFilesByModified();
         InitializeButtons();
     }
     public void Load(SaveGameButton sender)

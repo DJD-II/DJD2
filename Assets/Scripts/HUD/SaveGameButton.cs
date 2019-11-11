@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 sealed public class SaveGameButton : MonoBehaviour
 {
@@ -13,16 +14,16 @@ sealed public class SaveGameButton : MonoBehaviour
                                 OnLoad;
 
     [SerializeField]
-    private Text savedGameTitleLabel = null;
+    private TMP_Text savedGameTitleLabel = null;
     [SerializeField]
-    private Text savedGameDateLabel = null;
+    private TMP_Text savedGameDateLabel = null;
     public System.IO.FileInfo FileInfo { get; private set; }
 
     public void Initialize (System.IO.FileInfo fileInfo)
     {
         FileInfo = fileInfo;
-        savedGameTitleLabel.text = fileInfo.Name.Replace(fileInfo.Extension, "");
-        savedGameDateLabel.text = fileInfo.LastWriteTimeUtc.ToString();
+        savedGameTitleLabel.text = "Name : " + fileInfo.Name.Replace(fileInfo.Extension, "");
+        savedGameDateLabel.text = "Last Modified : " + fileInfo.LastWriteTimeUtc.ToString();
     }
 
     public void OnOverrideClick()

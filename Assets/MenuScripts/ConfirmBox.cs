@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ConfirmBox : MonoBehaviour
 {
     private StartMenuButtons options;
     private LoadSave save;
-    [SerializeField] private Text label = null;
+    [SerializeField] private TMP_Text label = null;
     [SerializeField] private int value;
 
     private void Start()
