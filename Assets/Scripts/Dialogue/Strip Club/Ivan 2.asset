@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29892019e56e33d42bf4de23ca83f18c, type: 3}
+  m_Name: Ivan 2
+  m_EditorClassIdentifier: 
+  dialogues:
+  - name: 0
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Have you found her?
+      audio: {fileID: 0}
+  - name: 1
+    dialogue:
+      toID: -1
+      switchTo: 0
+      text: She was last seen In an underground city called Neverland. It's beneath
+        this city. Enter the sewers and you'll find the city.
+      audio: {fileID: 0}
+  answers:
+  - name: 0
+    answers:
+    - name: 0
+      text: Where can I look for her?
+      id: 0
+      switchTo: 1
+      toID: 1
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      text: Bye
+      id: 0
+      switchTo: 0
+      toID: -1
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  requisites:
+    quests:
+    - obj: 0
+      value: {fileID: 11400000, guid: b6ee85753d8595d40a17284c9258b4bc, type: 2}
+    events: []
+    hp:
+      obj: 0
+      operation: 2
+      enabled: 0
+    armour:
+      obj: 0
+      operation: 2
+      enabled: 0

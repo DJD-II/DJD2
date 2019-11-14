@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0a77e030dfb1c64688891bedecbe3b8, type: 3}
+  m_Name: Get out through the Sewers
+  m_EditorClassIdentifier: 
+  name: The homeless Entrace!
+  description: Find a manhole and try to slip trough to get out of this district.
+  hide: 0
+  requesites:
+    itemsNeeded: []
+    eventsNeeded: 
+    needsMovement: 0
+    needsLooking: 0
+    custom: 0
+    questsToGive: []
+  position: []

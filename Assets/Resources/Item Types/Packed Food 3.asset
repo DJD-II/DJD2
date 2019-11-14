@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a8e7b5c668402042b37d7bf1540d51e, type: 3}
+  m_Name: Packed Food 3
+  m_EditorClassIdentifier: 
+  icon: {fileID: 0}
+  gameObject: {fileID: 1261558800475146, guid: 265dbc59a56488d47b5e35db05d5936d, type: 3}
+  tag: 19
+  description: packed Food.
+  weight: 0
+  cost: 8

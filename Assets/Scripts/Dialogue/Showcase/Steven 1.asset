@@ -1,0 +1,175 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29892019e56e33d42bf4de23ca83f18c, type: 3}
+  m_Name: Steven 1
+  m_EditorClassIdentifier: 
+  dialogues:
+  - name: 0
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Hi there fella!
+      audio: {fileID: 8300000, guid: 4ba56a1c16b4ae042ab9f87698250549, type: 3}
+  - name: 1
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Well there was a murder down the street. Some guy was killed possibly
+        by an android.
+      audio: {fileID: 8300000, guid: 6f3a683ae1da5ca48be2c9585b404565, type: 3}
+  - name: 2
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Maybe the guy on the alley can help you!
+      audio: {fileID: 8300000, guid: 3eb93820e066e774ea1e35d221806995, type: 3}
+  - name: 3
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: This may help you. There is a guy on the alley down the street. He knows
+        this city like the back of his hands. Go talk to him.
+      audio: {fileID: 8300000, guid: fd9bee329253a7040b7779f6fef42fd3, type: 3}
+  - name: 4
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: I'm not sure....you're out of luck fella!
+      audio: {fileID: 8300000, guid: 420b2ed39e73e3149b0a2a24a138c8b9, type: 3}
+  answers:
+  - name: 0
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 1
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Do you know what's going on?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      id: 0
+      switchTo: 1
+      toID: 2
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: I'm low on battery do you know where can I recharge?
+      requisites:
+        quests: []
+        events:
+        - obj: 1
+          value:
+            evnt: 8
+        hp:
+          obj: 0.3
+          operation: 1
+          enabled: 1
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
+      id: 0
+      switchTo: 1
+      toID: 4
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 0800
+      text: I'm low on battery do you know where can I recharge?
+      requisites:
+        quests: []
+        events:
+        - obj: 0
+          value:
+            evnt: 8
+        hp:
+          obj: 0.3
+          operation: 1
+          enabled: 1
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 3
+      id: 0
+      switchTo: 1
+      toID: 3
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 0800
+      text: How do you get out of this district?
+      requisites:
+        quests: []
+        events:
+        - obj: 1
+          value:
+            evnt: 12
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 4
+      id: 0
+      switchTo: 1
+      toID: -1
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Bye
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  requisites:
+    quests: []
+    events: []
+    hp:
+      obj: 0
+      operation: 2
+      enabled: 0
+    armour:
+      obj: 0
+      operation: 2
+      enabled: 0

@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05c7545b56eb001468608c055c06ce45, type: 3}
+  m_Name: Anti-Tech
+  m_EditorClassIdentifier: 
+  layout: 0
+  icon: {fileID: 21300000, guid: 9cd62c1994ed4cb49b9601dbd24b652e, type: 3}
+  headline: Anti-Tech Protests aren't new.
+  text1: "For the people that loved Robocorp new androids and its features,  it's
+    probably going to come as disappointing news that the giant is making preparations
+    to discontinue their new model.  The model is scheduled to be shut down and Robocorp
+    encourages buyers to seek out the features in other Robocorp products. Meanwhile
+    The situation in Bedrock has gone from bad to worse.  Robocorp\u2019s corporate
+    buses are being vandalized by protestors upset with Stephen Lawrence murder.  Last
+    week, a Robocorp engineer was personally vilified by fliers left around his home
+    saying,  \u201CYou are building an unconscionable world of surveillance, control
+    and automation. He is also your neighbour.\u201D  The activists objected to Robocorp's
+    role in creating military androids, so they followed him to his home to publicly
+    try to shame him."
+  text2: "The Luddite movement in the early 1800s was history\u2019s most famous display
+    of people organizing to prove how essential the human workforce is to the economy.
+    \ Working class Englishmen, during a a seemingly endless war on Napolean\u2019s
+    France and rampant low wages, lashed out at the Industrial Revolution\u2019s textile
+    machinery.  The men saw machines as a threat to their employment as they were
+    gradually phased out and replaced by technology. So they met at night secretly,
+    \ sent death threats to magistrates, attacked the British army, and assailed the
+    machines. Luddites didn\u2019t attack the foundations of emerging industry,  but
+    rather wanted high-quality machines run by well-paid, properly trained workers.
+    Still, society was fearful in early 1800s England that machines were jeopardizing
+    their livelihoods as they knew them,  a sentiment that sounds familiar today.
+    Back then, machines were attacked. "

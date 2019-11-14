@@ -1,0 +1,166 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29892019e56e33d42bf4de23ca83f18c, type: 3}
+  m_Name: ICloud Conversation
+  m_EditorClassIdentifier: 
+  dialogues:
+  - name: 0
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Hello my dear child... XJ-32012
+  - name: 1
+    dialogue:
+      toID: 1
+      switchTo: 0
+      text: Don't worry... everything will be just fine.
+  - name: 2
+    dialogue:
+      toID: 2
+      switchTo: 0
+      text: Not quite...
+  - name: 3
+    dialogue:
+      toID: 4
+      switchTo: 1
+      text: This is the root of your backend programming... The cloud!
+  - name: 4
+    dialogue:
+      toID: 3
+      switchTo: 0
+      text: Were all your memories....all your thoughts are stored. Here you can access
+        them. Would you like to?
+  answers:
+  - name: 0
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 1
+      cost: 0
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      text: What's going on?
+      requisites:
+        quests: []
+        events: 
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 1
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 2
+      cost: 0
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      text: Am I dead?
+      requisites:
+        quests: []
+        events: 
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 2
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 3
+      cost: 0
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      text: Where am I?
+      requisites:
+        quests: []
+        events: 
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 3
+    answers:
+    - name: 0
+      id: 101
+      switchTo: 1
+      toID: -1
+      cost: 0
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      text: Sure
+      requisites:
+        quests: []
+        events: 
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      id: 0
+      switchTo: 1
+      toID: -1
+      cost: 0
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      text: I don't
+      requisites:
+        quests: []
+        events: 
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  requisites:
+    quests: []
+    events: 
+    hp:
+      obj: 0
+      operation: 2
+      enabled: 0
+    armour:
+      obj: 0
+      operation: 2
+      enabled: 0

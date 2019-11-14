@@ -1,0 +1,147 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29892019e56e33d42bf4de23ca83f18c, type: 3}
+  m_Name: Richard
+  m_EditorClassIdentifier: 
+  dialogues:
+  - name: 0
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: I tottaly agree with what he's saying! Androids should be put out of their
+        misery. Don't you agree?
+      audio: {fileID: 8300000, guid: 3030483e8ddd5f547a69e773b83d8b34, type: 3}
+  - name: 1
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: What? I'm sorry... Androids are kiling people! These new models that are
+        comming out are glitchy! They are becoming aware.... Autonomous. Who knows
+        what is going to happen next?
+      audio: {fileID: 8300000, guid: 7db94d08f7e53ce42bf10029c76fe0ea, type: 3}
+  - name: 2
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Screw you!
+      audio: {fileID: 8300000, guid: 562e3726f2298b54c8d1d0acef2d45f6, type: 3}
+  - name: 3
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: That's right! We don't need androids for nothing. All they do is steal
+        our jobs!
+      audio: {fileID: 8300000, guid: 0e826916d8bc6504fb52d3933117ac64, type: 3}
+  answers:
+  - name: 0
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 1
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Why do you hate androids so much?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
+      id: 0
+      switchTo: 1
+      toID: 2
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 0200
+      text: I think androids should be given a second chance.
+      requisites:
+        quests: []
+        events:
+        - obj: 0
+          value:
+            evnt: 2
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 3
+      id: 0
+      switchTo: 1
+      toID: 3
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 0200
+      text: I Tottaly agree with you. They shouldn't exist!
+      requisites:
+        quests: []
+        events:
+        - obj: 0
+          value:
+            evnt: 2
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 4
+      id: 0
+      switchTo: 1
+      toID: -1
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Bye
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  requisites:
+    quests: []
+    events: []
+    hp:
+      obj: 0
+      operation: 2
+      enabled: 0
+    armour:
+      obj: 0
+      operation: 2
+      enabled: 0

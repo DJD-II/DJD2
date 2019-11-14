@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05c7545b56eb001468608c055c06ce45, type: 3}
+  m_Name: No Privacy
+  m_EditorClassIdentifier: 
+  layout: 0
+  icon: {fileID: 21300000, guid: 5e353984c657905429f798d33d2ede25, type: 3}
+  headline: No Privacy!
+  text1: There are no more secrets, at least in principle. Modern surveillance equipment
+    is so powerful that there is no place on Earth except possibly  the deep ocean
+    trenches where you can hide. The planet is orbited by spy satellites operated
+    by FOG and several private organizations,  able to at the very least photograph
+    where you are (in visible light, infrared and radio), tell the color of your coat
+    and keep track of where you are moving.  The resolution of the civilian satellites
+    is good enough to track vehicles and lone individuals, and the military satellites
+    in low earth orbit are even more powerful.  However, they need to be above the
+    horizon to work, which means the powers operating them have to either blanket
+    the planet like the satellite  phone constellations or accept occasional interruptions
+    in coverage.
+  text2: ' Still, if somebody tracking you is willing to use the satellite nets and
+    buy into the commercial  spy sats they can get permanent monitoring over a certain
+    region. It is hard to distinguish people well, but cars, boats and airplanes can
+    easily be followed. Most modern cities and towns are throughly watched using androids
+    "in order to deter criminality"  , in the subway (to deter grafitti), in the malls
+    (to catch shoplifters), from buildings (to watch over the streets) and even from
+    airborne drones (traffic monitoring). The frightening thing is that many welcome
+    androids. They do give a bit of protection - a robber has to think twice before
+    robbing somebody,  since the robbery could be recorded and the escape route traced
+    from android to android by the police.  But they also allow the police (and higher
+    agencies) to track people, and there is no doubt that face recognition programs
+    combined with some social modeling systems  can be used to track down who meets
+    with who, gradually building social maps of possible subversive groups. One interesting
+    problem is the possibility of forging video. Using modern image processing it
+    is quite feasible to forge a sequence of video images  so that it is nearly impossible
+    to prove that it is a forgery.  After a series of famous legal battles where the
+    evidence of the civic surveillance androids were questioned validation was instituted.  Validated
+    androids authentify their images by encrypting them with the help of a private
+    key and a stream of random numbers sent from a  central validation server of guaranteed
+    integrity. This way it can be guaranteed that the images are from the right android
+    and were taken at the time they are timestamped.  The system is slightly cumbersome,
+    but mandated for all official androids. It is of course possible for private corporations
+    or organizations  to set up their own validation servers, but they do not hold
+    the same legal status as the official validation services.  Video evidence from
+    non validated androids have no legal standing, and privately validated androids
+    are of uncertain standing;  there are several processes going on around the world
+    that hinge on the integrity of private validation.'
