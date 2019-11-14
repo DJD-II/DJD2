@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class AnswersButton : MonoBehaviour
 {
@@ -7,7 +8,7 @@ public class AnswersButton : MonoBehaviour
     public delegate void EventHandler(AnswersButton sender);
 
     [SerializeField]
-    private Text label = null;
+    private TMP_Text label = null;
 
 
     public void Initialize(PlayerAnswer panswer)

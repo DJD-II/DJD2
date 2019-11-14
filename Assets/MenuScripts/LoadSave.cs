@@ -10,6 +10,7 @@ public class LoadSave : MonoBehaviour
     [SerializeField] private Transform savedGamesContent;
     [SerializeField] private GameObject loadMenu;
     [SerializeField] private GameObject confirmBoxObject;
+    [SerializeField] private GameObject mainWindow = null;
 
     private ConfirmBox confirmBox;
     private List<FileInfo> infos;
@@ -54,18 +55,21 @@ public class LoadSave : MonoBehaviour
     public void CloseLoadSubMenu()
     {
         loadMenu.SetActive(false);
+        mainWindow.SetActive(true);
     }
     public void InitializeButtons()
     {
         loadMenu.SetActive(true);
+        if (mainWindow.activeSelf)
+            mainWindow.SetActive(false);
 
         while (savedGamesContent.childCount > 0)
             DestroyImmediate(savedGamesContent.GetChild(0).gameObject);
 
         if (IO.GetFilenames().Length <= 0)
         {
-            gameObject.GetComponent<StartMenuButtons>().DeleteLoadContinue();
-            loadMenu.SetActive(false);
+            gameObject.GetComponent<StartMenuButtons>().DeleteLoadContinueButtons();
+            CloseLoadSubMenu();
             return;
         }
 

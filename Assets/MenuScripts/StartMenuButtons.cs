@@ -13,6 +13,7 @@ public class StartMenuButtons : MonoBehaviour
     [SerializeField] private GameObject continueButton = null;
     [SerializeField] private TMP_Dropdown resolution = null;
     [SerializeField] private Slider musicSlider = null;
+    [SerializeField] private GameObject mainWindow = null;
 
     
     private ConfirmBox confirmBox;
@@ -26,11 +27,12 @@ public class StartMenuButtons : MonoBehaviour
         wantedResolution = Screen.resolutions[Screen.resolutions.Length - 1];
         ConfirmAplly();
         AddDropDownOptions();
-        DeleteLoadContinue();
+        DeleteLoadContinueButtons();
     }
     private void AddDropDownOptions()
     {
         resolution.ClearOptions();
+
         List<string> dropdowns = new List<string>();
         for (int i = Screen.resolutions.Length - 1; i > 0; i--)
         {
@@ -43,7 +45,7 @@ public class StartMenuButtons : MonoBehaviour
         confirmBox.SetLabel(message, value);
         Instantiate(confirmBoxObject, gameObject.transform);
     }
-    public void DeleteLoadContinue()
+    public void DeleteLoadContinueButtons()
     {
         if (IO.GetFilenames().Length <= 0)
         {
@@ -79,13 +81,14 @@ public class StartMenuButtons : MonoBehaviour
     // Enters function after clicking yes on the confirm box
     public void ConfirmAplly()
     {
-        optionsSubMenu.SetActive(false);
+        ShowOptionsMenu(false);
         Settings.SetResolution(wantedResolution, fullscreen);
         Settings.SetFullscreen(fullscreen);
     }
     public void ShowOptionsMenu(bool active)
     {
         optionsSubMenu.SetActive(active);
+        mainWindow.SetActive(!active);
     }
     public void ApplySettings()
     {
