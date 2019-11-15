@@ -11,8 +11,8 @@ public class ConfirmBox : MonoBehaviour
 
     private void Start()
     {
-        options = GameObject.Find("MainMenu").GetComponent<StartMenuButtons>();
-        save = GameObject.Find("MainMenu").GetComponent<LoadSave>();
+        options = GameObject.Find("Main Menu").GetComponent<StartMenuButtons>();
+        save = GameObject.Find("Main Menu").GetComponent<LoadSave>();
     }
     public void SetLabel(string label, int value)
     {

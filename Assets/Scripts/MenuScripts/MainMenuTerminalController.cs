@@ -6,12 +6,12 @@ using TMPro;
 
 public class MainMenuTerminalController : MonoBehaviour
 {
-    [SerializeField] private TMP_Text terminalText;
-    [SerializeField] private Scrollbar bar;
-    [SerializeField] private string[] code;
+    [SerializeField] private TMP_Text terminalText = null;
+    [SerializeField] private Scrollbar bar = null;
+    [SerializeField] private string[] code = new string[0];
     [SerializeField] private float speed = 1;
 
-    [SerializeField] private RawImage tempFadeImage;
+    [SerializeField] private RawImage tempFadeImage = null;
 
     void Start()
     {

@@ -14,9 +14,9 @@ sealed public class SaveGameButton : MonoBehaviour
                                 OnLoad;
 
     [SerializeField]
-    private TMP_Text savedGameTitleLabel = null;
+    private Text savedGameTitleLabel = null;
     [SerializeField]
-    private TMP_Text savedGameDateLabel = null;
+    private Text savedGameDateLabel = null;
     public System.IO.FileInfo FileInfo { get; private set; }
 
     public void Initialize (System.IO.FileInfo fileInfo)

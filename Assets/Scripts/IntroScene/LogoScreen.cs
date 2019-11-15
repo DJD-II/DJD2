@@ -9,17 +9,17 @@ public class LogoScreen : MonoBehaviour
 {
     #region ---Parameters---
     [Header ("Warning")]
-    [SerializeField] private RawImage backgroundEpilepsi;
-    [SerializeField] private RawImage logoEpilepsi;
-    [SerializeField] private TMP_Text textEpilepsi;
+    [SerializeField] private RawImage backgroundEpilepsi = null;
+    [SerializeField] private RawImage logoEpilepsi = null;
+    [SerializeField] private TMP_Text textEpilepsi = null;
     [Header("Lusofona")]
-    [SerializeField] private RawImage backgroundLusofona;
-    [SerializeField] private RawImage logoLusofona;
-    [SerializeField] private TMP_Text textLusofona;
+    [SerializeField] private RawImage backgroundLusofona = null;
+    [SerializeField] private RawImage logoLusofona = null;
+    [SerializeField] private TMP_Text textLusofona = null;
     [Header ("Company")]
-    [SerializeField] private RawImage backgroundCompany;
-    [SerializeField] private RawImage logoCompany;
-    [SerializeField] private TMP_Text textCompany;
+    [SerializeField] private RawImage backgroundCompany = null;
+    [SerializeField] private RawImage logoCompany = null;
+    [SerializeField] private TMP_Text textCompany = null;
     #endregion
 
     [SerializeField] private Color bgColor;

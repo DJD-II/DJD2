@@ -1,24 +1,6 @@
 ﻿using System.Collections.Generic;
 
 [System.Serializable]
-public abstract class Savable : object
-{
-    public string sceneName;
-    public string id;
-
-    public Savable(string id, string sceneName)
-    {
-        this.id = id;
-        this.sceneName = sceneName;
-    }
-}
-
-public interface ISavable
-{
-    Savable IO { get; }
-}
-
-[System.Serializable]
 public class PlaySaveGameObject : IO.Object
 {
     public List<Savable> objects;
@@ -35,9 +17,9 @@ public class PlaySaveGameObject : IO.Object
                 io2;
 
         if (persistent)
-            io2 = objects.Find(x => io.id.Equals(x.id));
+            io2 = objects.Find(x => io.ID.Equals(x.ID));
         else
-            io2 = objects.Find(x => io.id.Equals(x.id) && io.sceneName.Equals(x.sceneName));
+            io2 = objects.Find(x => io.ID.Equals(x.ID) && io.SceneName.Equals(x.SceneName));
 
         if (io2 != null)
             objects.Remove(io2);
@@ -48,8 +30,8 @@ public class PlaySaveGameObject : IO.Object
     public Savable Get(string id, string sceneName, bool persistent)
     {
         if (persistent)
-            return objects.Find(i => id == i.id);
+            return objects.Find(i => id == i.ID);
 
-        return objects.Find(i => id == i.id && i.sceneName == sceneName);
+        return objects.Find(i => id == i.ID && i.SceneName == sceneName);
     }
 }

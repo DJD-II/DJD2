@@ -28,7 +28,7 @@ sealed public class QuestUIController : MonoBehaviour
         };
     }
 
-    private void OnQuestAdded(QuestController sender, QuestController.QuestID quest)
+    private void OnQuestAdded(QuestController sender, QuestID quest)
     {
         timer = 15f;
         if (titleLabel != null)

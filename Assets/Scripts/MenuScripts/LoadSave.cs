@@ -6,10 +6,10 @@ using System.IO;
 public class LoadSave : MonoBehaviour
 {
     [Header("Load/save button")]
-    [SerializeField] private GameObject LoadSaveButtons;
-    [SerializeField] private Transform savedGamesContent;
-    [SerializeField] private GameObject loadMenu;
-    [SerializeField] private GameObject confirmBoxObject;
+    [SerializeField] private GameObject LoadSaveButtons = null;
+    [SerializeField] private Transform savedGamesContent = null;
+    [SerializeField] private GameObject loadMenu = null;
+    [SerializeField] private GameObject confirmBoxObject = null;
     [SerializeField] private GameObject mainWindow = null;
 
     private ConfirmBox confirmBox;
@@ -22,6 +22,7 @@ public class LoadSave : MonoBehaviour
         infos = new List<FileInfo>(IO.GetFilenames());
         SortFilesByModified();
     }
+
     public void Delete(SaveGameButton sender)
     {
         deleteName = sender.FileInfo.Name;
