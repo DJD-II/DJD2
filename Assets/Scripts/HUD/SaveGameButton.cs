@@ -1,26 +1,29 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 sealed public class SaveGameButton : MonoBehaviour
 {
-
+   
     public delegate void EventHandler(SaveGameButton sender);
 
-    public event EventHandler OnOverride,
+    public event EventHandler   OnOverride,
                                 OnDelete,
                                 OnLoad;
 
     [SerializeField]
-    private Text savedGameTitleLabel = null;
+    private TMP_Text savedGameTitleLabel = null;
     [SerializeField]
-    private Text savedGameDateLabel = null;
+    private TMP_Text savedGameDateLabel = null;
     public System.IO.FileInfo FileInfo { get; private set; }
 
-    public void Initialize(System.IO.FileInfo fileInfo)
+    public void Initialize (System.IO.FileInfo fileInfo)
     {
         FileInfo = fileInfo;
-        savedGameTitleLabel.text = fileInfo.Name.Replace(fileInfo.Extension, "");
-        savedGameDateLabel.text = fileInfo.LastWriteTimeUtc.ToString();
+        savedGameTitleLabel.text = "Name : " + fileInfo.Name.Replace(fileInfo.Extension, "");
+        savedGameDateLabel.text = "Last Modified : " + fileInfo.LastWriteTimeUtc.ToString();
     }
 
     public void OnOverrideClick()
@@ -33,7 +36,7 @@ sealed public class SaveGameButton : MonoBehaviour
         OnDelete?.Invoke(this);
     }
 
-    public void OnLoadClick()
+    public void OnLoadClick ()
     {
         OnLoad?.Invoke(this);
     }
