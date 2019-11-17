@@ -68,18 +68,11 @@ sealed public class LootInventory : MonoBehaviour
                     lootableInventoryListScrollBar.value : 
                     0;
 
-                    if (playerInventory != null)
-                    {
-                        InitializeItems(playerContent.transform, playerInventory);
-
-                        if (playerInventoryListScrollBar != null)
-                            playerInventoryListScrollBar.value = playerScrollbarValue;
-                    }
+                    InitializeItems(playerContent.transform, playerInventory);
+                    playerInventoryListScrollBar.value = playerScrollbarValue;
 
                     InitializeItems(lootContent.transform, interactable.Inventory);
-
-                    if (lootableInventoryListScrollBar != null)
-                        lootableInventoryListScrollBar.value = lootableScrollbarValue;
+                    lootableInventoryListScrollBar.value = lootableScrollbarValue;
 
                     active = true;
                 };
@@ -100,11 +93,8 @@ sealed public class LootInventory : MonoBehaviour
 
     public void Initialize()
     {
-        if (lootableInventoryListScrollBar != null)
-            lootableInventoryListScrollBar.value = 1;
-
-        if (playerInventoryListScrollBar != null)
-            playerInventoryListScrollBar.value = 1;
+        lootableInventoryListScrollBar.value = 1;
+        playerInventoryListScrollBar.value = 1;
     }
 
     public void Close()
@@ -125,13 +115,17 @@ sealed public class LootInventory : MonoBehaviour
             while (lootContent.transform.childCount > 0)
             {
                 LootButton button = 
-                    lootContent.transform.GetChild(0).gameObject.GetComponent<LootButton>();
-                if (button != null)
-                {
-                    controller.Initialize(button, interactable.Inventory, playerInventory);
-                    if (controller.Take(uint.Parse(button.quantityLabel.text.Replace("x", ""))))
-                        takeAll.Play();
-                }
+                    lootContent.transform.GetChild(0).
+                    gameObject.GetComponent<LootButton>();
+
+                controller.Initialize(
+                    button,
+                    interactable.Inventory,
+                    playerInventory);
+
+                if (controller.Take(
+                    uint.Parse(button.quantityLabel.text.Replace("x", ""))))
+                    takeAll.Play();
             }
         }
 
@@ -174,11 +168,8 @@ sealed public class LootInventory : MonoBehaviour
 
                         if (count > 1)
                         {
-                            if (lootQuantityPanel != null)
-                            {
-                                active = false;
-                                lootQuantityPanel.gameObject.SetActive(true);
-                            }
+                            active = false;
+                            lootQuantityPanel.gameObject.SetActive(true);
                         }
                         else
                             controller.Take(1);
@@ -190,25 +181,14 @@ sealed public class LootInventory : MonoBehaviour
 
     private void OnItemHoverEnter(LootButton sender)
     {
-        if (itemIconImage != null)
-        {
-            itemIconImage.gameObject.SetActive(true);
-            itemIconImage.sprite = sender.Item.Icon;
-        }
-
-        if (itemDescriptionLabel != null)
-            itemDescriptionLabel.text = sender.Item.Description;
+        itemIconImage.gameObject.SetActive(true);
+        itemIconImage.sprite = sender.Item.Icon;
+        itemDescriptionLabel.text = sender.Item.Description;
     }
 
     private void OnItemHoverExit(LootButton sender)
     {
-        if (itemIconImage != null)
-            itemIconImage.gameObject.SetActive(false);
-
-        if (itemDescriptionLabel == null)
-            return;
-
+        itemIconImage.gameObject.SetActive(false);
         itemDescriptionLabel.text = "";
     }
-
 }

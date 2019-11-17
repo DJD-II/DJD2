@@ -12,10 +12,12 @@ sealed public class NewsInteractable : Interactable
         News[] currentNews = GetNews();
 
         foreach (News n in currentNews)
-            if (n.headline.ToLower().Equals("Scientist killed at his home.".ToLower()))
+            if (n.headline.ToLower().Equals("scientist killed at his home."))
             {
-                GameInstance.GameState.EventController.Add(Event.GetOutOfShowcase);
-                GameInstance.GameState.QuestController.Add(QuestUtility.Get("Get Out!"));
+                GameInstance.GameState.
+                    EventController.Add(Event.GetOutOfShowcase);
+                GameInstance.GameState.
+                    QuestController.Add(QuestUtility.Get("Get Out!"));
                 break;
             }
 

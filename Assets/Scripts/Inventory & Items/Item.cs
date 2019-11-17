@@ -67,7 +67,7 @@ sealed public class Item : ScriptableObject
                 if (controller.Interaction.Interactable != null &&
                     controller.Interaction.Interactable.Locked)
                 {
-                    GameInstance.HUD.EnableMainMenu(false);
+                    GameInstance.HUD.EnableMenu(false);
                     controller.Interaction.Interact(controller);
                 }
                 break;

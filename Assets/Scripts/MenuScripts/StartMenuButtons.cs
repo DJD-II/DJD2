@@ -55,7 +55,7 @@ public class StartMenuButtons : MonoBehaviour
     }
     public void OnClickStart()
     {
-        gameObject.SetActive(false);
+        GameInstance.HUD.EnableMainMenu(false);
         GameInstance.HUD.EnableLoadingScreen(true);
         SceneManager.LoadScene("Showcase");
     }

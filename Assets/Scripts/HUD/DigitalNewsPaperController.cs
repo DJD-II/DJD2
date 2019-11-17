@@ -3,16 +3,11 @@ using UnityEngine.UI;
 
 sealed public class DigitalNewsPaperController : MonoBehaviour
 {
-    [SerializeField]
-    private Scrollbar verticalBar = null;
-    [SerializeField]
-    private Image newsImage = null;
-    [SerializeField]
-    private Text headline = null;
-    [SerializeField]
-    private Text text1 = null;
-    [SerializeField]
-    private Text text2 = null;
+    [SerializeField] private Scrollbar verticalBar = null;
+    [SerializeField] private Image newsImage = null;
+    [SerializeField] private Text headline = null;
+    [SerializeField] private Text text1 = null;
+    [SerializeField] private Text text2 = null;
     private News[] news = null;
     private uint current = 0;
 

@@ -17,7 +17,7 @@ MonoBehaviour:
     dialogue:
       toID: 0
       switchTo: 0
-      text: I already told you. You cannot come in...
+      text: You cannot come in...
       audio: {fileID: 0}
   - name: 1
     dialogue:
@@ -73,6 +73,7 @@ MonoBehaviour:
       requisites:
         quests: []
         events: []
+        items: []
         hp:
           obj: 0
           operation: 0
@@ -94,6 +95,7 @@ MonoBehaviour:
       requisites:
         quests: []
         events: []
+        items: []
         hp:
           obj: 0
           operation: 0
@@ -118,6 +120,7 @@ MonoBehaviour:
       requisites:
         quests: []
         events: []
+        items: []
         hp:
           obj: 0
           operation: 0
@@ -139,6 +142,7 @@ MonoBehaviour:
       requisites:
         quests: []
         events: []
+        items: []
         hp:
           obj: 0
           operation: 0
@@ -165,6 +169,7 @@ MonoBehaviour:
         - obj: 1
           value:
             evnt: 15
+        items: []
         hp:
           obj: 0
           operation: 0
@@ -189,6 +194,7 @@ MonoBehaviour:
         - obj: 1
           value:
             evnt: 16
+        items: []
         hp:
           obj: 0
           operation: 0
@@ -213,6 +219,7 @@ MonoBehaviour:
         - obj: 1
           value:
             evnt: 17
+        items: []
         hp:
           obj: 0
           operation: 0
@@ -234,6 +241,7 @@ MonoBehaviour:
       requisites:
         quests: []
         events: []
+        items: []
         hp:
           obj: 0
           operation: 0
@@ -255,6 +263,7 @@ MonoBehaviour:
       requisites:
         quests: []
         events: []
+        items: []
         hp:
           obj: 0
           operation: 0
@@ -269,6 +278,7 @@ MonoBehaviour:
     - obj: 1
       value:
         evnt: 1
+    items: []
     hp:
       obj: 0
       operation: 2

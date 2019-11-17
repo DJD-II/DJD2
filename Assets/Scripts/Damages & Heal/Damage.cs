@@ -44,10 +44,10 @@ public sealed class RadialDamage : Damage
 
         float influence = 1 - (distance / Area);
 
-        if (!TrueDamage && actor is Controller character)
+        if (actor is Controller character)
             return base.Get(actor) * influence * (100 / (100 + character.Armour.Value * 2));
-        else
-            return base.Get(actor) * influence;
+
+        return base.Get(actor);
     }
 
     public Vector3 Origin { get; set; }

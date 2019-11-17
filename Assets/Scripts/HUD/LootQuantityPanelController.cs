@@ -8,18 +8,14 @@ sealed public class LootQuantityPanelController : MonoBehaviour
 
     public event EventHandler OnClose;
 
-    [SerializeField]
-    private TextMeshProUGUI minLabel = null;
-    [SerializeField]
-    private TextMeshProUGUI maxLabel = null;
-    [SerializeField]
-    private Slider quantitySlider = null;
-    private Inventory fromInventory,
-                            toInventory;
+    [SerializeField] private TextMeshProUGUI minLabel = null;
+    [SerializeField] private TextMeshProUGUI maxLabel = null;
+    [SerializeField] private Slider quantitySlider = null;
+    private Inventory  fromInventory,
+                       toInventory;
     private LootButton lootButton;
     [Header("Audio")]
-    [SerializeField]
-    private AudioSource takeAll = null;
+    [SerializeField] private AudioSource takeAll = null;
 
     public void Initialize(LootButton lootButton, Inventory from, Inventory to)
     {

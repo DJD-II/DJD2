@@ -32,6 +32,8 @@ sealed public class HUD : MonoBehaviour
     [SerializeField] private GameObject loadingScreenPanel = null;
     [Header("Past Lifes")]
     [SerializeField] private Image pastLifePanel = null;
+    [Header("Main Menu")]
+    [SerializeField] private GameObject mainMenu = null;
     [Header("Fade")]
     [SerializeField] private GameObject fadeToWhitePanel = null;
     [SerializeField] private GameObject fadeToBlackPanel = null;
@@ -70,9 +72,6 @@ sealed public class HUD : MonoBehaviour
     /// <param name="enable">If the crosshair should enabled/Disabled.</param>
     public void EnableCrossHair(bool enable)
     {
-        if (crossHair == null)
-            return;
-
         crossHair.gameObject.SetActive(enable);
     }
 
@@ -106,7 +105,6 @@ sealed public class HUD : MonoBehaviour
         loot.Interactable = interactable;
         loot.PlayerInventory = controller.Inventory;
         loot.gameObject.SetActive(true);
-
         loot.Initialize();
     }
 
@@ -230,7 +228,7 @@ sealed public class HUD : MonoBehaviour
     /// </summary>
     /// <param name="enable">The visibility of the HUD.</param>
     /// <param name="controller">The player controller.</param>
-    public void EnableMainMenu(bool enable, PlayerController controller = null)
+    public void EnableMenu(bool enable, PlayerController controller = null)
     {
         if (enable)
         {
@@ -244,6 +242,11 @@ sealed public class HUD : MonoBehaviour
             GameInstance.GameState.Paused = false;
             menu.Close();
         }
+    }
+
+    public void EnableMainMenu(bool enable)
+    {
+        mainMenu.SetActive(enable);
     }
 
     /// <summary>
@@ -265,6 +268,7 @@ sealed public class HUD : MonoBehaviour
     public void MaskScreen(bool enable)
     {
         maskPanel.SetActive(enable);
+
         if (!enable)
             return;
 

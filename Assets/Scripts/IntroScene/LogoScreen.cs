@@ -66,7 +66,7 @@ public class LogoScreen : MonoBehaviour
 
     private void Scaler(Transform other)
     {
-        other.localScale *= 1.0005f;
+        //other.localScale *= 1.0005f;
     }
     private IEnumerator Opacity(RawImage bg, RawImage logo, TMP_Text text)
     {

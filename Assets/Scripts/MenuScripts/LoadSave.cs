@@ -40,13 +40,13 @@ public class LoadSave : MonoBehaviour
     public void Load(SaveGameButton sender)
     {
         GameInstance.Load(sender.FileInfo.Name);
-        gameObject.SetActive(false);
+        GameInstance.HUD.EnableMainMenu(false);
     }
     public void OnClickContinue()
     {
         SortFilesByModified();
         GameInstance.Load(infos[0].Name);
-        gameObject.SetActive(false);
+        GameInstance.HUD.EnableMainMenu(false);
     }
     private void SortFilesByModified()
     {

@@ -231,7 +231,7 @@ sealed public class HUDMenuController : MonoBehaviour
 
             case SaveGameOperation.Load:
                 Close();
-                GameInstance.HUD.EnableMainMenu(false);
+                GameInstance.HUD.EnableMenu(false);
                 GameInstance.Load(name);
                 return;
 

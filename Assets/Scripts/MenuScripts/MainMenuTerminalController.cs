@@ -18,7 +18,6 @@ public class MainMenuTerminalController : MonoBehaviour
         terminalText = GetComponent<TMP_Text>();
 
         StartCoroutine(TempFade());
-        StartCoroutine(Log());
     }
     private void OnEnable()
     {

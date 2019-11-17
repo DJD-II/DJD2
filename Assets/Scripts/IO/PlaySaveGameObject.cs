@@ -10,7 +10,6 @@ public class PlaySaveGameObject : IO.Object
         objects = new List<Savable>();
     }
 
-
     public void Feed(ISavable savable, bool persistent)
     {
         Savable io = savable.IO,

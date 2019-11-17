@@ -226,7 +226,7 @@ sealed public class PlayerController : Character, ISavable
             Input.GetKeyDown(KeyCode.Escape) &&
             canPause)
         {
-            GameInstance.HUD.EnableMainMenu(true, this);
+            GameInstance.HUD.EnableMenu(true, this);
             return true;
         }
 
