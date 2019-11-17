@@ -1,0 +1,555 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29892019e56e33d42bf4de23ca83f18c, type: 3}
+  m_Name: Ivan 1
+  m_EditorClassIdentifier: 
+  dialogues:
+  - name: 0
+    dialogue:
+      toID: 1
+      switchTo: 1
+      text: How did you get in here!?
+      audio: {fileID: 0}
+  - name: 1
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Well if it isn't the android everyone is looking for!
+      audio: {fileID: 0}
+  - name: 2
+    dialogue:
+      toID: 1
+      switchTo: 0
+      text: 'You.... You killed Steven Lawrence. Everybody is after you. '
+      audio: {fileID: 0}
+  - name: 3
+    dialogue:
+      toID: 4
+      switchTo: 1
+      text: Am I? You can't remember...
+      audio: {fileID: 0}
+  - name: 4
+    dialogue:
+      toID: 2
+      switchTo: 0
+      text: Someone controlled you to kill Lawrence.... I guess he cleaned you memory.
+        I just don't understand why he hasn't killed you already.
+      audio: {fileID: 0}
+  - name: 5
+    dialogue:
+      toID: 2
+      switchTo: 0
+      text: That my friend I can't tell you.... You'll have to find out for yourself.
+      audio: {fileID: 0}
+  - name: 6
+    dialogue:
+      toID: 1
+      switchTo: 0
+      text: I'm the city councilour my friend.... Let's say I know my way around stuff.
+      audio: {fileID: 0}
+  - name: 7
+    dialogue:
+      toID: 3
+      switchTo: 0
+      text: How dare you come here and blackmail me!? Who do you think you are?
+      audio: {fileID: 0}
+  - name: 8
+    dialogue:
+      toID: 9
+      switchTo: 1
+      text: Yes it seams you know more than you should.....
+      audio: {fileID: 0}
+  - name: 9
+    dialogue:
+      toID: 4
+      switchTo: 0
+      text: Tell me my boy..... What do you need?
+      audio: {fileID: 0}
+  - name: 10
+    dialogue:
+      toID: 4
+      switchTo: 0
+      text: 'There''s no way out of here boy. Can''t you see the district is in curfew? '
+      audio: {fileID: 0}
+  - name: 11
+    dialogue:
+      toID: 6
+      switchTo: 0
+      text: It looks like you know your way around. Why would you want to get out....
+      audio: {fileID: 0}
+  - name: 12
+    dialogue:
+      toID: 13
+      switchTo: 1
+      text: Easy there boy. Are you forgetting I know you killed Steven Lawrence?
+        Let's reach an understanding here.
+      audio: {fileID: 0}
+  - name: 13
+    dialogue:
+      toID: 14
+      switchTo: 1
+      text: I need a favor.... If you help me. I'll help you....
+      audio: {fileID: 0}
+  - name: 14
+    dialogue:
+      toID: 5
+      switchTo: 0
+      text: I'll give you clearence but you have to get someone for me!
+      audio: {fileID: 0}
+  - name: 15
+    dialogue:
+      toID: 5
+      switchTo: 0
+      text: Sylvana. I miss sylvana too much....But she's not here anymore. I need
+        for you to help me get her here again!
+      audio: {fileID: 0}
+  - name: 16
+    dialogue:
+      toID: 7
+      switchTo: 0
+      text: Bring her by any means necessary.... Bring Sylvana back.
+      audio: {fileID: 0}
+  - name: 17
+    dialogue:
+      toID: -1
+      switchTo: 0
+      text: Don't you think I've already asked it? Just bring her here and I'll help
+        you.
+      audio: {fileID: 0}
+  answers:
+  - name: 0
+    answers:
+    - name: 0
+      text: What do you mean everybody is looking for?
+      id: 2
+      switchTo: 1
+      toID: 2
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      text: Yeah....But I think you should help me!
+      id: 0
+      switchTo: 1
+      toID: 7
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
+      text: Bye
+      id: 0
+      switchTo: 0
+      toID: -1
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 1
+    answers:
+    - name: 0
+      text: You're lying!
+      id: 0
+      switchTo: 1
+      toID: 3
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      text: How do you know that!?
+      id: 0
+      switchTo: 1
+      toID: 6
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
+      text: Let's talk about something else.
+      id: 0
+      switchTo: 0
+      toID: 0
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 2
+    answers:
+    - name: 0
+      text: Who are you talking about?
+      id: 0
+      switchTo: 1
+      toID: 5
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
+      text: Let's talk about something else.
+      id: 0
+      switchTo: 0
+      toID: 1
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 3
+    answers:
+    - name: 0
+      text: I'm just a nobody...I just think we can reach an understanding!
+      id: 0
+      switchTo: 1
+      toID: 8
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
+      text: Let's talk about something else.
+      id: 0
+      switchTo: 0
+      toID: 0
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 4
+    answers:
+    - name: 0
+      text: I want out of this district.
+      id: 0
+      switchTo: 1
+      toID: 10
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      text: It seams the only way out of here is through the sewers. But I need clearence.
+      id: 0
+      switchTo: 1
+      toID: 11
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
+      text: Help me or I'll tell what I know!
+      id: 0
+      switchTo: 1
+      toID: 12
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 3
+      text: Let's talk about something else.
+      id: 0
+      switchTo: 0
+      toID: 3
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 5
+    answers:
+    - name: 0
+      text: Who are you looking for?
+      id: 0
+      switchTo: 1
+      toID: 15
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      text: What do you mean get someone for you?
+      id: 0
+      switchTo: 1
+      toID: 16
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
+      text: Let's talk about something else.
+      id: 0
+      switchTo: 0
+      toID: 4
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 6
+    answers:
+    - name: 0
+      text: Don't ask me question.... I didn't ask you either.
+      id: 0
+      switchTo: 1
+      toID: 14
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 7
+    answers:
+    - name: 0
+      text: Why don't you send your goons to get her instead?
+      id: 0
+      switchTo: 1
+      toID: 17
+      itemsToEarn: []
+      questsToEarn:
+      - {fileID: 11400000, guid: b6ee85753d8595d40a17284c9258b4bc, type: 2}
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  requisites:
+    quests: []
+    events: []
+    hp:
+      obj: 0
+      operation: 2
+      enabled: 0
+    armour:
+      obj: 0
+      operation: 2
+      enabled: 0

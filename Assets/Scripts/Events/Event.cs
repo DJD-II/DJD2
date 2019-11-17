@@ -1,0 +1,25 @@
+﻿public enum Event : ushort
+{
+    Beginings = 0,
+    IHaveSomeEvidence = 1,
+    AndroidsShouldBePutToDeath = 2,
+    StevenIsAFriend = 3,
+    PaulHadEnough = 4,
+    MoIsNotSure = 5,
+    ImNoAndroidSteven = 6,
+    ImNoAndroidDealer = 7,
+    PeopleSayDealerCanHelp = 8,
+    DealerIsAFriend = 9,
+    HereForTheStripClub = 10,
+    ImCelibate = 11,
+    GetOutOfShowcase = 12,
+    GetOutThroughTheSewers = 13,
+    TheCictyCouncilourIsAtTheStripClub = 14,
+    IKnowStripClubIsMoneyLundring = 15,
+    IKnowStripClubIsSleepingNeighboursWife = 16,
+    IKnowStripClubIsSleepingWthKids = 17,
+    IGainedAccessToTheVIPArea = 18,
+    IHelpedLucas = 19,
+
+    End = 1000,
+}

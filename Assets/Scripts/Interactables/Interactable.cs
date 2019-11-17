@@ -1,21 +1,40 @@
 ﻿using UnityEngine;
+
+[DisallowMultipleComponent]
 abstract public class Interactable : MonoBehaviour
 {
     public delegate void EventHandler(Interactable sender, PlayerController controller);
 
     public event EventHandler OnUnlocked;
 
-    [SerializeField]
-    private bool canInteract = true;
-    [SerializeField]
-    private bool locked = false;
-    [SerializeField]
-    private string message = "Interact";
+    [SerializeField] private bool canInteract = true;
+    [SerializeField] private bool locked = false;
+    [SerializeField] private string message = "Interact";
     private UniqueID uniqueID;
 
     public bool CanInteract { get { return canInteract; } protected set { canInteract = value; } }
-    public bool Locked { get { return locked; }  protected set { locked = value; } }
+    public bool Locked { get { return locked; } protected set { locked = value; } }
     public string Message { get { return message; } }
+    public string UniqueID
+    {
+        get
+        {
+            if (uniqueID == null)
+                return "";
+
+            return uniqueID.Id;
+        }
+    }
+    public bool PersistentAcrossLevels
+    {
+        get
+        {
+            if (uniqueID == null)
+                return false;
+
+            return uniqueID.PersistentAcrossLevels;
+        }
+    }
 
     protected virtual void Awake()
     {
@@ -36,33 +55,19 @@ abstract public class Interactable : MonoBehaviour
         OnInteract(controller);
     }
 
-    protected string GetUniqueID()
-    {
-        if (uniqueID != null)
-            return uniqueID.uniqueId;
+    protected abstract void OnInteract(PlayerController controller);
 
-        return "";
-    }
-
-    protected virtual void OnSave (PlaySaveGameObject io)
+    protected virtual void OnSave(SaveGame io)
     {
 
     }
 
-    protected virtual void OnLoad(PlaySaveGameObject io)
+    protected virtual void OnLoad(SaveGame io)
     {
 
     }
 
-    protected bool GetUniqueIDPersistent()
-    {
-        if (uniqueID != null)
-            return uniqueID.persistentAcrossLevels;
-
-        return false;
-    }
-
-    public void Unlock (PlayerController controller)
+    public void Unlock(PlayerController controller)
     {
         if (!locked)
             return;
@@ -77,6 +82,4 @@ abstract public class Interactable : MonoBehaviour
         GameInstance.OnSave -= OnSave;
         GameInstance.OnLoad -= OnLoad;
     }
-
-    protected abstract void OnInteract(PlayerController controller);
 }

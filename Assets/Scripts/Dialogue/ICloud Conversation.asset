@@ -17,7 +17,7 @@ MonoBehaviour:
     dialogue:
       toID: 0
       switchTo: 0
-      text: Hello my dear child...
+      text: Hello my dear child... XJ-32012
   - name: 1
     dialogue:
       toID: 1
@@ -74,7 +74,7 @@ MonoBehaviour:
       itemsToGive: []
       questsToEarn: []
       questsToComplete: []
-      text: I'm I dead?
+      text: Am I dead?
       requisites:
         quests: []
         events: 

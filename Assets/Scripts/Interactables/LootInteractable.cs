@@ -1,46 +1,58 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 sealed public class LootInteractable : Interactable, ISavable
 {
     [System.Serializable]
     public class LootSavable : Savable
     {
-        public bool locked;
-        public List<ItemID> items;
+        private bool Locked { get; }
+        private List<ItemID> Items { get; }
 
-        public LootSavable(string id, List<Item> items, bool locked)
-            : base(id, UnityEngine.SceneManagement.SceneManager.GetActiveScene().name)
+        public LootSavable(LootInteractable interactable)
+            : base(interactable.UniqueID, SceneManager.GetActiveScene().name)
         {
-            this.id = id;
-            this.items = new List<ItemID>();
-            foreach (Item i in items)
-                this.items.Add(new ItemID(i));
-            this.locked = locked;
+            Items = new List<ItemID>();
+            foreach (Item i in interactable.Inventory)
+                Items.Add(new ItemID(i));
+
+            Locked = interactable.Locked;
+        }
+
+        public void Set(LootInteractable interactable)
+        {
+            interactable.Locked = Locked;
+
+            foreach (ItemID i in Items)
+                interactable.Inventory.Add(ItemUtility.GetItem(i.Name));
         }
     }
 
     [SerializeField]
     private Item[] items = new Item[0];
 
-    public Inventory Inventory { get; private set; }
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        Inventory = new Inventory();
-    }
+    public Inventory Inventory { get; } = new Inventory();
+    Savable ISavable.IO { get { return new LootSavable(this); } }
 
     protected override void Start()
     {
         base.Start();
 
-        OnUnlocked += (Interactable sender, PlayerController controller) =>
-        {
-            StartCoroutine(SwitchToLootInventory(controller));
-        };
+        OnUnlocked += OnHasBeenUnlocked;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        OnUnlocked -= OnHasBeenUnlocked;
+    }
+
+    private void OnHasBeenUnlocked(Interactable sender, PlayerController controller)
+    {
+        StartCoroutine(SwitchToLootInventory(controller));
     }
 
     private IEnumerator SwitchToLootInventory(PlayerController controller)
@@ -51,26 +63,24 @@ sealed public class LootInteractable : Interactable, ISavable
         GameInstance.HUD.EnableObjectInventory(this, controller);
     }
 
-    protected override void OnLoad(PlaySaveGameObject io)
+    protected override void OnLoad(SaveGame io)
     {
-        LootSavable savable = io.Get(GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, GetUniqueIDPersistent()) as LootSavable;
-        if (savable != null)
+        if (!(io.Get(UniqueID,
+                     PersistentAcrossLevels) is LootSavable savable))
         {
-            Locked = savable.locked;
-
-            foreach (ItemID i in savable.items)
-                Inventory.Add(ItemUtility.GetItem(i.name));
+            Inventory.Clear();
+            foreach (Item item in items)
+                Inventory.Add(item);
 
             return;
         }
 
-        foreach (Item item in items)
-            Inventory.Add(item);
+        savable.Set(this);
     }
 
-    protected override void OnSave(PlaySaveGameObject io)
+    protected override void OnSave(SaveGame io)
     {
-        io.Feed(this, GetUniqueIDPersistent());
+        io.Override(this, UniqueID, PersistentAcrossLevels);
     }
 
     protected override void OnInteract(PlayerController controller)
@@ -80,11 +90,9 @@ sealed public class LootInteractable : Interactable, ISavable
             if (controller.Inventory.Contains("Bobby Pin"))
                 GameInstance.HUD.EnableLockPick(true, this, controller);
             else
-                controller.PopMessage("Not Enough Bobby Pins");
+                controller.HudSettings.PopMessage("Not Enough Bobby Pins");
         }
         else
             GameInstance.HUD.EnableObjectInventory(this, controller);
     }
-
-    Savable ISavable.IO { get { return new LootSavable(GetUniqueID(), Inventory.Items, Locked); } }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CloudMasterDissolve : MonoBehaviour
@@ -38,13 +37,13 @@ public class CloudMasterDissolve : MonoBehaviour
             return;
 
         transform.localPosition = Vector3.Lerp(transform.localPosition,
-            new Vector3(Mathf.PerlinNoise(Time.unscaledTime * 0.2f, 10) * 0.3f,
-                        Mathf.PerlinNoise(Time.unscaledTime * 0.2f, 2) * 0.3f,
+            new Vector3(((Mathf.PerlinNoise(Time.unscaledTime * 0.2f, 10) * 2) - 1) * 0.3f,
+                        ((Mathf.PerlinNoise(Time.unscaledTime * 0.2f, 2) * 2) - 1) * 0.3f,
                         transform.localPosition.z),
             Time.unscaledDeltaTime * 2f);
     }
 
-    private IEnumerator Dissolve ()
+    private IEnumerator Dissolve()
     {
         GetComponent<Collider>().enabled = false;
 

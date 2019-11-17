@@ -1,34 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class QuestRequesite : object
+public class QuestRequesite
 {
-    #region --- Fields ---
-
-    [SerializeField]
-    private List<Item> itemsNeeded = null;
-    [SerializeField]
-    private List<Event> eventsNeeded = null;
-    [SerializeField]
-    private bool needsMovement = false;
-    [SerializeField]
-    private bool needsLooking = false;
-    [SerializeField]
-    private bool custom = false;
-    [SerializeField]
-    private List<Quest> questsToGive = null;
-
-    #endregion
-
-    #region --- Properties ---
+    [SerializeField] private List<Item> itemsNeeded = null;
+    [SerializeField] private List<Event> eventsNeeded = null;
+    [SerializeField] private bool needsMovement = false;
+    [SerializeField] private bool needsLooking = false;
+    [SerializeField] private bool custom = false;
+    [SerializeField] private List<Quest> questsToGive = null;
 
     public List<Quest> QuestsToGive { get { return questsToGive; } }
 
-    #endregion
-
-    public bool IsValid (PlayerController controller)
+    public bool Fullfills(PlayerController controller)
     {
         bool valid = true;
 

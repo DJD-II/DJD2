@@ -217,7 +217,7 @@ sealed public class LockController : MonoBehaviour
         float distance = Mathf.Abs(Angle - (BobbyPinAngle - 360));
         float maxDistance = Mathf.Max(Mathf.Abs(100 + Angle), Mathf.Abs(100 - Angle));
         //Calculate the influence (The ammount wich the lock will rotate).
-        float influence = Mathf.Abs( 90f * (1 - distance / maxDistance));
+        float influence = Mathf.Abs(90f * (1 - distance / maxDistance));
         angle = Mathf.MoveTowardsAngle(lockPick.transform.localEulerAngles.z, influence, Time.unscaledDeltaTime * pickSpeed);
         lockPick.transform.localRotation = Quaternion.Euler(0f, 0f, angle);
 
@@ -228,7 +228,7 @@ sealed public class LockController : MonoBehaviour
             OnUnlock?.Invoke(this);
         else if (Mathf.Abs(angle - influence) < 2f)
         {
-            lockPick.transform.localRotation = Quaternion.Euler(0f, 0f, angle - pickPullback);
+            lockPick.transform.localRotation = Quaternion.Euler(0f, 0f, Mathf.Clamp(angle - pickPullback, 0, 90));
             Damage += 0.2f;
         }
 

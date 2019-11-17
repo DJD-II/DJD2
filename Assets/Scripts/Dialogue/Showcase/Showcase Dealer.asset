@@ -1,0 +1,593 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29892019e56e33d42bf4de23ca83f18c, type: 3}
+  m_Name: Showcase Dealer
+  m_EditorClassIdentifier: 
+  dialogues:
+  - name: 0
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: What's up? How can I help ya?
+      audio: {fileID: 8300000, guid: e2e2f637f30b31342b9d1ecf08e876d5, type: 3}
+  - name: 1
+    dialogue:
+      toID: 2
+      switchTo: 1
+      text: It's crazy man! Everybody loved androids while they were useful. Now that
+        they're becoming autonomous everybody is going crazy.
+      audio: {fileID: 8300000, guid: 263239ef00cc8c449979c866806b22bf, type: 3}
+  - name: 2
+    dialogue:
+      toID: 1
+      switchTo: 0
+      text: An android wacked a guy across the street. There wouldn't be such a fuzz
+        if the killer was human. But because it was an android everybody wants to
+        shut them all down.
+      audio: {fileID: 8300000, guid: f163e2f4b7dc2af41a49f00660d7d2be, type: 3}
+  - name: 3
+    dialogue:
+      toID: 1
+      switchTo: 0
+      text: Yeah. It's not like they can go to court.
+      audio: {fileID: 8300000, guid: c6b6c142160f1054fb6cbdd9afeae8d5, type: 3}
+  - name: 4
+    dialogue:
+      toID: 3
+      switchTo: 0
+      text: Here.... don't tell anybody. I'm an android too. I'm here to help others
+        escape this area, so they can find the syndicate. If you need anything just
+        say somethin'. I can trade stuff you need.
+      audio: {fileID: 0}
+  - name: 5
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: I'm sorry for askin'.
+      audio: {fileID: 0}
+  - name: 6
+    dialogue:
+      toID: 4
+      switchTo: 0
+      text: The Syndicate is a group of autonomous androids. Refugees! They are gathered
+        with a common goal!
+      audio: {fileID: 0}
+  - name: 7
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: You have to reach there and find it for yourself!
+      audio: {fileID: 0}
+  - name: 8
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Don't bother me with silly questions.
+      audio: {fileID: 8300000, guid: 1a5422609af62274da36f3d778be9c06, type: 3}
+  - name: 9
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Nice doing business with you!
+      audio: {fileID: 8300000, guid: 97bbd265c811ee34e909b226a54d5cd3, type: 3}
+  - name: 10
+    dialogue:
+      toID: 2
+      switchTo: 0
+      text: Yeah? Who told you that?
+      audio: {fileID: 8300000, guid: 5815e028f92029a46b023974dd20dbd2, type: 3}
+  - name: 11
+    dialogue:
+      toID: 3
+      switchTo: 0
+      text: Alright... I can help you. Besides trading I can give you some advice
+        on this district that you don't know of.
+      audio: {fileID: 8300000, guid: e0f398be3b5539b4cb8f40f5373c028b, type: 3}
+  - name: 12
+    dialogue:
+      toID: 11
+      switchTo: 1
+      text: Man.... And I try to keep a low profile....
+      audio: {fileID: 8300000, guid: 7d1ee0e463ce6724a879841aa054d461, type: 3}
+  - name: 13
+    dialogue:
+      toID: 14
+      switchTo: 1
+      text: This district is in curfew it's not going to be easy. If i'm not mistaken
+        someone told me that you can exit through the sewer system.
+      audio: {fileID: 8300000, guid: 2d9fc11617401f743b6900cc13e95bcc, type: 3}
+  - name: 14
+    dialogue:
+      toID: 4
+      switchTo: 0
+      text: But I've tried that already! The passage is locked down by a voice recognition
+        security system.
+      audio: {fileID: 8300000, guid: 01b5112fac260be499a5c004f7558fdc, type: 3}
+  - name: 15
+    dialogue:
+      toID: 16
+      switchTo: 1
+      text: Not that I know of.
+      audio: {fileID: 8300000, guid: 7b2d41e742001b1479eda1086d955a7e, type: 3}
+  - name: 16
+    dialogue:
+      toID: 5
+      switchTo: 0
+      text: You just gotta find a way. From what I've been told the system only accepts
+        the city councilour voice.
+      audio: {fileID: 8300000, guid: a06747fb82ab6564aaaa84dcf9858d77, type: 3}
+  - name: 17
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: As I told you. You still need a way of getting through the lock system.
+        If you do that you can get out of here through the sewers.
+      audio: {fileID: 8300000, guid: c4456e08afdb1fe4b9729a653f958259, type: 3}
+  - name: 18
+    dialogue:
+      toID: 3
+      switchTo: 0
+      text: You're lucky. The city councilour is usually at the Eden strip club. In
+        the VIP zone.
+      audio: {fileID: 8300000, guid: b30efe1ca2bbed542b9fe8c3f5122a9b, type: 3}
+  - name: 19
+    dialogue:
+      toID: 5
+      switchTo: 0
+      text: Not this one, man!
+      audio: {fileID: 8300000, guid: f1082161f158b3a49a82eae2764570d3, type: 3}
+  - name: 20
+    dialogue:
+      toID: 3
+      switchTo: 0
+      text: As I told you. You still need a way of getting through the lock system.
+        If you do that you can get out of here through the sewers.
+      audio: {fileID: 8300000, guid: c4456e08afdb1fe4b9729a653f958259, type: 3}
+  - name: 21
+    dialogue:
+      toID: 3
+      switchTo: 0
+      text: You can't miss it! while exiting this alley go to your left and then at
+        the crossing turn right. You'll see a big sign saying Eden.
+      audio: {fileID: 8300000, guid: 406c39256f2bd0c478b43560aa57eff8, type: 3}
+  answers:
+  - name: 0
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 1
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Do you know what's going on?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      id: 0
+      switchTo: 1
+      toID: 8
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Why are you here in this alley alone?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
+      id: 0
+      switchTo: 1
+      toID: 17
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: How can I get out of this district again?
+      requisites:
+        quests: []
+        events:
+        - obj: 1
+          value:
+            evnt: 13
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 3
+      id: 0
+      switchTo: 1
+      toID: 10
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Someone told you know these streets like the back of your hands. Can you
+        help me escape?
+      requisites:
+        quests: []
+        events:
+        - obj: 1
+          value:
+            evnt: 8
+        - obj: 0
+          value:
+            evnt: 13
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 4
+      id: 0
+      switchTo: 2
+      toID: 9
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Let's trade!
+      requisites:
+        quests: []
+        events:
+        - obj: 1
+          value:
+            evnt: 9
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 5
+      id: 0
+      switchTo: 1
+      toID: -1
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Bye!
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 1
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 3
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: They're shutting all androids down?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      id: 0
+      switchTo: 0
+      toID: 0
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Let's talk about something else!
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 2
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 11
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 0900
+      text: A friend.
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      id: 0
+      switchTo: 1
+      toID: 12
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 0900
+      text: Someone on the street.
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 3
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 13
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn:
+      - {fileID: 11400000, guid: b966cf37b1da5a84091d59c1a73e5453, type: 2}
+      questsToComplete: []
+      eventsToGive: 09000d00
+      text: How do I get out of this district?
+      requisites:
+        quests: []
+        events:
+        - obj: 0
+          value:
+            evnt: 14
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      id: 0
+      switchTo: 1
+      toID: 20
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn:
+      - {fileID: 11400000, guid: b966cf37b1da5a84091d59c1a73e5453, type: 2}
+      questsToComplete: []
+      eventsToGive: 09000d00
+      text: How do I get out of this district again?
+      requisites:
+        quests: []
+        events:
+        - obj: 1
+          value:
+            evnt: 14
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
+      id: 0
+      switchTo: 1
+      toID: 21
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn:
+      - {fileID: 11400000, guid: b966cf37b1da5a84091d59c1a73e5453, type: 2}
+      questsToComplete: []
+      eventsToGive: 09000d00
+      text: Where can I find the strip club.
+      requisites:
+        quests: []
+        events:
+        - obj: 1
+          value:
+            evnt: 14
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 3
+      id: 0
+      switchTo: 0
+      toID: 0
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn:
+      - {fileID: 11400000, guid: b966cf37b1da5a84091d59c1a73e5453, type: 2}
+      questsToComplete: []
+      eventsToGive: 09000d00
+      text: Let's talk about something else.
+      requisites:
+        quests: []
+        events:
+        - obj: 1
+          value:
+            evnt: 14
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 4
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 15
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 0900
+      text: Is there any other way out?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      id: 0
+      switchTo: 1
+      toID: 16
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 0900
+      text: How can I go through the system?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 5
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 18
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn:
+      - {fileID: 11400000, guid: e2e413ae9377fd84e931a74d01342818, type: 2}
+      questsToComplete: []
+      eventsToGive: 0e00
+      text: Where can I find the city councilour?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      id: 0
+      switchTo: 1
+      toID: 19
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Is there a way to hack the security system?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  requisites:
+    quests: []
+    events: []
+    hp:
+      obj: 0
+      operation: 2
+      enabled: 0
+    armour:
+      obj: 0
+      operation: 2
+      enabled: 0

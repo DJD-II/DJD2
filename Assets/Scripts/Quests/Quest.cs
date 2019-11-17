@@ -2,7 +2,7 @@
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "New Quest", menuName = "Quests/New Quest")]
-sealed public class Quest : ScriptableObject, IOperatable<bool>
+sealed public class Quest : ScriptableObject, ILogicOperatable<bool>
 {
     public new string name;
     public string description;
@@ -13,19 +13,12 @@ sealed public class Quest : ScriptableObject, IOperatable<bool>
 
     public QuestRequesite Requesites { get { return requesites; } }
 
-    bool IOperatable<bool>.Get(LogicOperator operation, bool value)
+    bool ILogicOperatable<bool>.Get(bool value)
     {
-        QuestController.QuestID id = GameInstance.GameState.QuestController.Get(name);
+        QuestID id = GameInstance.GameState.QuestController.Get(name);
         if (id == null)
             return false;
 
-        switch (operation)
-        {
-            case LogicOperator.Equal:
-                return value == id.completed;
-
-            default:
-                return false;
-        }
+        return value == id.completed;
     }
 }

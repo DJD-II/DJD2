@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,16 +8,12 @@ sealed public class TalkUIController : MonoBehaviour
 
     public event EventHandler OnAnswered;
 
-    [SerializeField]
-    private float letterSpeed = 0.08f;
-    [SerializeField]
-    private GameObject conversationPanel = null;
-    [SerializeField]
-    private GameObject answersPanel = null;
-    [SerializeField]
-    private Text toTalkPanel = null;
-    [SerializeField]
-    private GameObject answerButton = null;
+    [SerializeField] private float letterSpeed = 0.08f;
+    [SerializeField] private GameObject conversationPanel = null;
+    [SerializeField] private GameObject answersPanel = null;
+    [SerializeField] private Text toTalkPanel = null;
+    [SerializeField] private Text nameLabel = null;
+    [SerializeField] private GameObject answerButton = null;
 
     private Conversation CurrentConversation { get; set; }
     private DialogueManager CurrentManager { get; set; }
@@ -33,6 +28,8 @@ sealed public class TalkUIController : MonoBehaviour
         CurrentConversation = Interactable.Conversation;
         CurrentManager = CurrentConversation.dialogues[0];
 
+        nameLabel.text = Interactable.Name;
+
         SwitchToConversation();
     }
 
@@ -40,6 +37,8 @@ sealed public class TalkUIController : MonoBehaviour
     {
         if (Input.anyKeyDown && toTalkPanel.gameObject.activeInHierarchy)
         {
+            Interactable.StopTalk();
+
             if (slowLettersCoroutine != null)
             {
                 StopCoroutine(slowLettersCoroutine);
@@ -48,7 +47,7 @@ sealed public class TalkUIController : MonoBehaviour
             }
             else
             {
-                switch(CurrentManager.Dialogue.SwitchTo)
+                switch (CurrentManager.Dialogue.SwitchTo)
                 {
                     case SwitchType.Answers:
                         if (CurrentManager.Dialogue.ToID < 0 || CurrentManager.Dialogue.ToID >= CurrentConversation.Answers.Count)
@@ -84,7 +83,7 @@ sealed public class TalkUIController : MonoBehaviour
 
         foreach (PlayerAnswer i in Answers)
         {
-            if (!i.Requesites.Fullfills(PlayerController))
+            if (!i.Fullfills(PlayerController))
                 continue;
 
             GameObject go = Instantiate(answerButton, answersPanel.transform);
@@ -99,21 +98,7 @@ sealed public class TalkUIController : MonoBehaviour
     {
         OnAnswered?.Invoke(this, sender.pAnswer);
 
-        foreach (Quest q in sender.pAnswer.QuestsToComplete)
-        {
-            QuestController.QuestID id = GameInstance.GameState.QuestController.Quests.Find(x => x.quest.name.ToLower().Equals(q.name.ToLower()));
-            if (id != null)
-                id.Complete();
-        }
-
-        foreach (Quest q in sender.pAnswer.QuestsToEarn)
-            GameInstance.GameState.QuestController.Add(q);
-
-        foreach (Item i in sender.pAnswer.ItemsToGive)
-            PlayerController.Inventory.Remove(i.name);
-
-        foreach (Item i in sender.pAnswer.ItemsToEarn)
-            PlayerController.Inventory.Add(i);
+        sender.pAnswer.Process(PlayerController);
 
         switch (sender.pAnswer.SwitchTo)
         {
@@ -143,13 +128,26 @@ sealed public class TalkUIController : MonoBehaviour
                 SwitchToAnswers();
 
                 break;
-        }
 
-       
+            case SwitchType.Trade:
+                GameInstance.HUD.EnableConversation(false);
+                CurrentManager = CurrentConversation.dialogues[sender.pAnswer.ToID];
+                GameInstance.HUD.TradingController.OnClose += OnTradingOver;
+                GameInstance.HUD.EnableTrading(true, Interactable, PlayerController);
+
+                break;
+        }
+    }
+
+    private void OnTradingOver(TradingController sender)
+    {
+        GameInstance.HUD.TradingController.OnClose -= OnTradingOver;
+        gameObject.SetActive(true);
+        SwitchToConversation();
     }
 
     private IEnumerator SlowLetters(string other)
-    { 
+    {
         for (int i = 0; i < other.Length; i++)
         {
             toTalkPanel.text += (other[i]);
@@ -186,6 +184,7 @@ sealed public class TalkUIController : MonoBehaviour
     public void SwitchToConversation()
     {
         Interactable.Listening = false;
+        Interactable.Talk(CurrentManager.Dialogue.Audio);
         toTalkPanel.text = "";
         slowLettersCoroutine = StartCoroutine(SlowLetters(CurrentManager.Dialogue.Text));
 

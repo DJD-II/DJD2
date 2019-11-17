@@ -1,5 +1,10 @@
 ﻿
-public interface IOperatable<S> where S : System.IConvertible
+public interface ICompareOperatable<S>
 {
     bool Get(LogicOperator operation, S value);
+}
+
+public interface ILogicOperatable<S>
+{
+    bool Get(S value);
 }

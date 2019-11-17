@@ -8,10 +8,14 @@ public class Conversation : ScriptableObject
     [SerializeField]
     private List<AnswerHolder> answers = null;
     [SerializeField]
-    private ConversationRequesite requisites = null;
+    private Requesite requisites = null;
 
-    public ConversationRequesite Requesites { get => requisites; }
     public List<AnswerHolder> Answers { get => answers; }
+
+    public bool Fullfills(PlayerController controller)
+    {
+        return requisites.Fullfills(controller);
+    }
 }
 
 [System.Serializable]

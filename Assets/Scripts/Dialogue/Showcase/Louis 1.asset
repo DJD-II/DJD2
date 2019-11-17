@@ -1,0 +1,196 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29892019e56e33d42bf4de23ca83f18c, type: 3}
+  m_Name: Louis 1
+  m_EditorClassIdentifier: 
+  dialogues:
+  - name: 0
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: What do you want?
+      audio: {fileID: 8300000, guid: 2ac2378c24dcb37469674940d7c0c3f3, type: 3}
+  - name: 1
+    dialogue:
+      toID: 1
+      switchTo: 0
+      text: What do you mean going on? Haven't you heard. This district is closed.
+        It's seams these conspiracy guys were right. There are some androids going
+        autonomous and apperantly one of them killed a guy just across the street.
+      audio: {fileID: 8300000, guid: 3fc9008eed05088499d2bdb8a80f0e90, type: 3}
+  - name: 2
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Apperantly some scientist. I personally don't know the guy... You know
+        what I mean.
+      audio: {fileID: 8300000, guid: 58278d0e52394dc4cb9fbf2fa6359cad, type: 3}
+  - name: 3
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Well the district is closed and there's no recharger around here. This
+        might be crazy....just might....but maybe you can find some batteries in the
+        garbage. I don't know!
+      audio: {fileID: 8300000, guid: 9b4fbfe2571c79a4ca301d7bd9d25009, type: 3}
+  - name: 4
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Well there is this guy down the alley that knows this district inside
+        out. Go talk to him.... He might know.
+      audio: {fileID: 8300000, guid: 1042a6f73d7ebcc4cbeaf482b17e2e5c, type: 3}
+  answers:
+  - name: 0
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 1
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Do you know whats going on?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      id: 0
+      switchTo: 1
+      toID: 3
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: I'm low on battery do you know where i can recharge?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0.3
+          operation: 1
+          enabled: 1
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
+      id: 0
+      switchTo: 1
+      toID: 4
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 0800
+      text: How can I get out of this district?
+      requisites:
+        quests: []
+        events:
+        - obj: 1
+          value:
+            evnt: 12
+        hp:
+          obj: 0.3
+          operation: 1
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 3
+      id: 0
+      switchTo: 1
+      toID: -1
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Bye
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 1
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 2
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Who was killed?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      id: 0
+      switchTo: 0
+      toID: 0
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: I don't care!
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  requisites:
+    quests: []
+    events: []
+    hp:
+      obj: 0
+      operation: 2
+      enabled: 0
+    armour:
+      obj: 0
+      operation: 2
+      enabled: 0

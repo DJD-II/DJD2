@@ -1,5 +1,5 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 sealed public class LootButton : MonoBehaviour
 {
@@ -9,8 +9,8 @@ sealed public class LootButton : MonoBehaviour
     public event EventHandler OnHoverEnter,
                               OnHoverExit;
 
-    public TextMeshProUGUI nameLabel;
-    public TextMeshProUGUI quantityLabel;
+    public Text nameLabel;
+    public Text quantityLabel;
 
     public Item Item { get; private set; }
 
@@ -19,7 +19,7 @@ sealed public class LootButton : MonoBehaviour
         Item = item;
 
         if (nameLabel != null)
-            nameLabel.text = item.name;
+            nameLabel.text = item.Name;
 
         if (quantityLabel != null)
             quantityLabel.text = "x" + quantity.ToString();

@@ -3,10 +3,13 @@ using UnityEngine.UI;
 
 sealed public class ItemMenuController : MonoBehaviour
 {
+    public delegate void EventHandler(ItemMenuController sender);
+
+    public event EventHandler OnDiscard;
+
     private PlayerController controller = null;
     private LootButton button = null;
-    [SerializeField]
-    private Text itemNameLabel = null;
+    [SerializeField] private Text itemNameLabel = null;
 
     public void Initialize(PlayerController controller, LootButton button)
     {
@@ -18,6 +21,19 @@ sealed public class ItemMenuController : MonoBehaviour
     public void OnUseButtonClick()
     {
         button.Item.Use(controller);
+        Close();
+    }
+
+    public void OnDiscardButtonClick()
+    {
+        button.Item.Discard(controller);
+        OnDiscard?.Invoke(this);
+        Close();
+    }
+
+    public void OnCheckButtonClick()
+    {
+        button.Item.Check(controller);
         Close();
     }
 

@@ -3,9 +3,11 @@
 
 public abstract class Heal : InstigatedObject
 {
-    public Heal(Actor instigator)
+    private bool trueHeal = false;
+    public Heal(Actor instigator, bool trueHeal)
         : base(instigator)
     {
+        this.trueHeal = trueHeal;
     }
 
     public virtual float Get(Actor actor)
@@ -14,12 +16,13 @@ public abstract class Heal : InstigatedObject
     }
 
     public virtual float BaseHeal { get; set; } = 10;
+    public bool TrueHeal { get => trueHeal; }
 }
 
 public sealed class PointHeal : Heal
 {
-    public PointHeal(Actor instigator, float baseHeal)
-        : base(instigator)
+    public PointHeal(Actor instigator, float baseHeal, bool trueHeal = false)
+        : base(instigator, trueHeal)
     {
         BaseHeal = baseHeal;
     }
@@ -27,8 +30,8 @@ public sealed class PointHeal : Heal
 
 public sealed class RadialHeal : Heal
 {
-    public RadialHeal(Actor instigator, Vector3 origin, float area)
-        : base(instigator)
+    public RadialHeal(Actor instigator, Vector3 origin, float area, bool trueHeal = false)
+        : base(instigator, trueHeal)
     {
         Origin = origin;
         Area = area;

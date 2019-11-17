@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05c7545b56eb001468608c055c06ce45, type: 3}
+  m_Name: The Murder
+  m_EditorClassIdentifier: 
+  layout: 0
+  icon: {fileID: 21300000, guid: a0ba5aba4ff519141a6d759b7ce2fe2a, type: 3}
+  headline: Scientist Killed at his home.
+  text1: "Protests in Bedrock have affected everything.  But as the global consequences
+    of almost a month of unprecedented unrest continue to be felt, the story that
+    started it all has turned the world into chaos.  A month ago, a Robocorp Ltd Scientist,
+    Stephen Lawrence was murdered in a brutal attack in district 5 of Bedrock city.
+    The Metropolitan Police bungled the investigation into his killers.  The Inquiry
+    which followed by Sir William Macpherson produced one of the most damning documents
+    ever to emerge from the heart of the Bedrock police establishment.  Most famously,
+    he concluded the force was \u201Cinstitutionally racist\u201D against androids
+    issuing wide ranging recommendations for reform.   barrister and broadcaster Hashi
+    Mohamed, examines what\u2019s changed since the MacPherson report was published.
+    The inquiry examined the bungled police investigation of the murder of the Scientist
+    Stephen Lawrence, who was stabbed to death in a brutal attack in district 5."
+  text2: 'No fingerprints lead the police to think it was an andoird that stabbed
+    Stephen Lawrence a month ago in his appartement in district 5. The investigators
+    who arrived saw the victim lying in his living room stabbed in his chest several
+    times.  Naturally, murder is always rather dreadful, but all the same. Everyone
+    who might possibly have been involved in this crime was a perfect stranger to
+    Stephen Lawrence. Says John Louis head of police force investigating this crime
+    : "So although we are sorry that he is dead more importantly we are detectives
+    on the case,  With a puzzle to solve and a murderer to bring to justice. And we
+    will succeed.".  The surveillance camera footage, provided by the bedrock police
+    force, shows an android with plate "XS-301234" entering the building where the
+    vitcim was killed that day. Everyone is now chasing this android and asks for
+    anyone who sees him to inform the police of his whereabouts.'

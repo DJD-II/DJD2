@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 sealed public class ObjectiveButton : MonoBehaviour
@@ -15,9 +13,9 @@ sealed public class ObjectiveButton : MonoBehaviour
     private Text objectiveLabel = null;
     [SerializeField]
     private Toggle objectiveCompletedToggle = null;
-    public QuestController.QuestID QuestID { get; private set; }
+    public QuestID QuestID { get; private set; }
 
-    public void Initialize(QuestController.QuestID questId)
+    public void Initialize(QuestID questId)
     {
         QuestID = questId;
         objectiveLabel.text = questId.quest.name;
@@ -34,7 +32,7 @@ sealed public class ObjectiveButton : MonoBehaviour
         OnHoverExit?.Invoke(this);
     }
 
-    public void Click ()
+    public void Click()
     {
         OnClick?.Invoke(this);
     }

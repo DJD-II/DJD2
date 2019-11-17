@@ -9,8 +9,10 @@ public class ICloudLevelInstance : LevelInstance
     private AudioSource ambientMusic = null;
     private float startVolume;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         GameInstance.HUD.TalkUIController.OnAnswered += (TalkUIController sender, PlayerAnswer answer) =>
         {
             if (answer.ID == 101)
@@ -23,7 +25,7 @@ public class ICloudLevelInstance : LevelInstance
         StartCoroutine(StartScene());
     }
 
-    private IEnumerator StartScene ()
+    private IEnumerator StartScene()
     {
         yield return new WaitForSecondsRealtime(2f);
         StartCoroutine(AplifyMusic());
@@ -37,7 +39,7 @@ public class ICloudLevelInstance : LevelInstance
         while (ambientMusic.volume < 1)
         {
             ambientMusic.volume = Mathf.Lerp(ambientMusic.volume, startVolume, Time.unscaledDeltaTime * 0.2f);
-            yield return  null;
+            yield return null;
         }
     }
 }

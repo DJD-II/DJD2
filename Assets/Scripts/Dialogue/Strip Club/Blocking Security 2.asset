@@ -1,0 +1,289 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29892019e56e33d42bf4de23ca83f18c, type: 3}
+  m_Name: Blocking Security 2
+  m_EditorClassIdentifier: 
+  dialogues:
+  - name: 0
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: You cannot come in...
+      audio: {fileID: 0}
+  - name: 1
+    dialogue:
+      toID: 1
+      switchTo: 0
+      text: Why is that?
+      audio: {fileID: 0}
+  - name: 2
+    dialogue:
+      toID: 2
+      switchTo: 0
+      text: uhhh....I mean.... I can't get you in. You're probably lying.
+      audio: {fileID: 0}
+  - name: 3
+    dialogue:
+      toID: 2
+      switchTo: 0
+      text: My boss has the most incredible lawyer team ever. I don't think you can
+        scare him nor me. Go away!
+      audio: {fileID: 0}
+  - name: 4
+    dialogue:
+      toID: 2
+      switchTo: 0
+      text: Everybody knows He's sleeping with Paul's wife. Even him. Now go away!
+      audio: {fileID: 0}
+  - name: 5
+    dialogue:
+      toID: -1
+      switchTo: 0
+      text: Whoa....How did you get that info? I hope you're not wrong about this!
+        Come in.
+      audio: {fileID: 0}
+  - name: 6
+    dialogue:
+      toID: -1
+      switchTo: 1
+      text: You're just wasting my time.
+      audio: {fileID: 0}
+  answers:
+  - name: 0
+    answers:
+    - name: 0
+      text: Well I think I can!
+      id: 0
+      switchTo: 1
+      toID: 1
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      text: Bye
+      id: 0
+      switchTo: 0
+      toID: -1
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 1
+    answers:
+    - name: 0
+      text: Well, I have info that yould turn your boss into a nobody. If it fell
+        into the wrong hands I mean...
+      id: 0
+      switchTo: 1
+      toID: 2
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      text: Sorry I think I'm mistaken.
+      id: 0
+      switchTo: 0
+      toID: -1
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 2
+    answers:
+    - name: 0
+      text: I have proof that your boss is involved in a money lundry sheme.
+      id: 0
+      switchTo: 1
+      toID: 3
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events:
+        - obj: 1
+          value:
+            evnt: 15
+        items: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      text: I have proof that your boss is Laundering money.
+      id: 0
+      switchTo: 1
+      toID: 4
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events:
+        - obj: 1
+          value:
+            evnt: 16
+        items: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
+      text: I have proof that your boss is traficking women!
+      id: 101
+      switchTo: 1
+      toID: 5
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 1200
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events:
+        - obj: 1
+          value:
+            evnt: 17
+        items: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 3
+      text: '[LIE] There is someone trying to kill your boss.'
+      id: 0
+      switchTo: 1
+      toID: 6
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 4
+      text: Never mind!
+      id: 0
+      switchTo: 1
+      toID: 6
+      itemsToEarn: []
+      questsToEarn: []
+      eventsToGive: 
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  requisites:
+    quests: []
+    events:
+    - obj: 1
+      value:
+        evnt: 1
+    items: []
+    hp:
+      obj: 0
+      operation: 2
+      enabled: 0
+    armour:
+      obj: 0
+      operation: 2
+      enabled: 0

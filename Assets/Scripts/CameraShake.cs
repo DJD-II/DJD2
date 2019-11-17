@@ -1,13 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "New Camera Shake", menuName = "Camera Shake")]
 public class CameraShake : ScriptableObject
 {
-    #region --- classes ---
-
     private class Settings
     {
         private Vector3 position = Vector3.zero;
@@ -32,7 +29,7 @@ public class CameraShake : ScriptableObject
             InitialFOV = FOV = fov;
         }
 
-        public void Reset ()
+        public void Reset()
         {
             if (Coroutine != null)
                 Controller.StopCoroutine(Coroutine);
@@ -48,7 +45,7 @@ public class CameraShake : ScriptableObject
             rotation.y = (Mathf.Cos(blendTime * shake.rotationY.frequency * Mathf.Rad2Deg) * shake.rotationY.amplitude) * blendScale;
             rotation.z = (Mathf.Cos(blendTime * shake.rotationZ.frequency * Mathf.Rad2Deg) * shake.rotationZ.amplitude) * blendScale;
 
-            Pivot.localRotation = Quaternion.Euler( initialRotation.x + rotation.x,
+            Pivot.localRotation = Quaternion.Euler(initialRotation.x + rotation.x,
                                                     initialRotation.y + rotation.y,
                                                     initialRotation.z + rotation.z);
 
@@ -70,40 +67,28 @@ public class CameraShake : ScriptableObject
                      frequency = 0.2f;
     }
 
-    #endregion
-
-    #region --- Fields ---
-
     [Header("Position")]
-    [SerializeField]
-    private Element positionX = null;
-    [SerializeField]
-    private Element positionY = null;
-    [SerializeField]
-    private Element positionZ = null;
+    [SerializeField] private Element positionX = null;
+    [SerializeField] private Element positionY = null;
+    [SerializeField] private Element positionZ = null;
     [Header("Rotation")]
-    [SerializeField]
-    private Element rotationX = null;
-    [SerializeField]
-    private Element rotationY = null;
-    [SerializeField]
-    private Element rotationZ = null;
+    [SerializeField] private Element rotationX = null;
+    [SerializeField] private Element rotationY = null;
+    [SerializeField] private Element rotationZ = null;
     [Header("Field Of View")]
-    [SerializeField]
-    private Element fov = null;
-    [SerializeField]
-    public float duration = 1f;
-    [SerializeField]
-    public float blendInTime = 0.1f;
-    [SerializeField]
-    public float blendOutTime = 0.1f;
+    [SerializeField] private Element fov = null;
+    [Header("Time")]
+    [SerializeField] private float duration = 1f;
+    [SerializeField] private float blendInTime = 0.1f;
+    [SerializeField] private float blendOutTime = 0.1f;
     private Settings settings = null;
 
-    #endregion
+    public void Play(MonoBehaviour controller, Camera camera, float scale)
+    {
+        Play(controller, camera, camera.transform, scale);
+    }
 
-    #region --- Methods ---
-
-    public void Play (MonoBehaviour controller, Camera camera, Transform pivot, float scale)
+    public void Play(MonoBehaviour controller, Camera camera, Transform pivot, float scale)
     {
         if (settings != null)
             settings.Reset();
@@ -137,6 +122,4 @@ public class CameraShake : ScriptableObject
         settings.Reset();
         settings = null;
     }
-
-    #endregion
 }

@@ -1,20 +1,29 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 sealed public class DoorInteractable : Interactable, ISavable
 {
     [System.Serializable]
     sealed public class DoorSavable : Savable
     {
-        private bool locked;
-
-        public bool Locked { get => locked; }
+        public bool Locked { get; }
 
         public DoorSavable(DoorInteractable interactable)
-            : base (interactable.GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name)
+            : base(interactable.UniqueID, SceneManager.GetActiveScene().name)
         {
-            locked = interactable.Locked;
+            Locked = interactable.Locked;
+        }
+
+        public void Set(DoorInteractable interactable)
+        {
+            interactable.Locked = Locked;
+
+            if (Locked)
+                return;
+
+            interactable.Animation["ControlRoomDoor1"].normalizedTime = 1f;
+            interactable.Animation.Play();
         }
     }
 
@@ -24,17 +33,26 @@ sealed public class DoorInteractable : Interactable, ISavable
     public Animation Animation { get => anim; }
     Savable ISavable.IO { get => new DoorSavable(this); }
 
-    protected override void Start ()
+    protected override void Start()
     {
         base.Start();
 
-        OnUnlocked += (Interactable sender, PlayerController controller) =>
-        {
-            StartCoroutine(OpenDoor(controller));
-        };
+        OnUnlocked += OnHasBeenUnlocked;
     }
 
-    private IEnumerator OpenDoor (PlayerController controller)
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        OnUnlocked -= OnHasBeenUnlocked;
+    }
+
+    private void OnHasBeenUnlocked(Interactable sender, PlayerController controller)
+    {
+        StartCoroutine(OpenDoor(controller));
+    }
+
+    private IEnumerator OpenDoor(PlayerController controller)
     {
         yield return new WaitForSecondsRealtime(2f);
 
@@ -52,25 +70,23 @@ sealed public class DoorInteractable : Interactable, ISavable
             if (controller.Inventory.Contains("Bobby Pin"))
                 GameInstance.HUD.EnableLockPick(true, this, controller);
             else
-                controller.PopMessage("Not Enough Bobby Pins");
+                controller.HudSettings.PopMessage("Not Enough Bobby Pins");
         }
         else
             anim.Play();
     }
 
-    protected override void OnLoad(PlaySaveGameObject io)
+    protected override void OnLoad(SaveGame io)
     {
-        DoorSavable savable = io.Get(GetUniqueID(), UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, GetUniqueIDPersistent()) as DoorSavable;
-        if (savable != null)
-        {
-            Locked = savable.Locked;
-            anim["ControlRoomDoor1"].normalizedTime = 1f;
-            anim.Play();
-        }
+        if (!(io.Get(UniqueID,
+                    PersistentAcrossLevels) is DoorSavable savable))
+            return;
+
+        savable.Set(this);
     }
 
-    protected override void OnSave(PlaySaveGameObject io)
+    protected override void OnSave(SaveGame io)
     {
-        io.Feed(this, false);
+        io.Override(this, UniqueID, false);
     }
 }

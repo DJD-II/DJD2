@@ -22,10 +22,10 @@ public class UniqueIdentifierDrawer : PropertyDrawer
                 UniqueID[] ids = GameObject.FindObjectsOfType<UniqueID>();
                 foreach (UniqueID id in ids)
                 {
-                    if (id.uniqueId == null)
+                    if (id.Id == null)
                         continue;
 
-                    if (id.uniqueId.Equals(guid.ToString()))
+                    if (id.Id.Equals(guid.ToString()))
                     {
                         repeat = true;
                         break;

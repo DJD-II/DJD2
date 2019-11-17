@@ -22,14 +22,14 @@ MonoBehaviour:
     amplitude: 0
     frequency: 0
   rotationX:
-    amplitude: 0.6
-    frequency: 16
+    amplitude: 2
+    frequency: 25
   rotationY:
-    amplitude: 0.8
-    frequency: 18
+    amplitude: 1.8
+    frequency: 22
   rotationZ:
-    amplitude: 1.5
-    frequency: 20
+    amplitude: 2.3
+    frequency: 30
   fov:
     amplitude: 1
     frequency: 0.2

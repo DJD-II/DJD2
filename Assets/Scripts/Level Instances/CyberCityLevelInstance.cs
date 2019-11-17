@@ -8,8 +8,10 @@ sealed public class CyberCityLevelInstance : LevelInstance
     private bool play = true;
     public PlayableDirector timeline;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         if (!play || GameInstance.GameState.EventController.Contains(Event.Beginings))
             return;
 

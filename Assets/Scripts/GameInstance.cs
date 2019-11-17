@@ -1,64 +1,36 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections;
-using UnityEngine.Audio;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
-/// This object represents the game instance. Only one is permited and holds the main game information.
-/// HUD, GameState and Save/Load is in this class.
+/// This object represents the game instance. Only one is permited and it holds the main game information.
+/// HUD, GameState and I/O are in this class.
 /// </summary>
 sealed public class GameInstance : MonoBehaviour, ISavable
 {
-    #region --- Classes ---
-
-    [System.Serializable]
+    [Serializable]
     public class GameInstanceSaveGameObject : Savable
     {
-        public string SceneName { get; private set; }
-
         public GameInstanceSaveGameObject()
-            : base ("", "")
+            : base("", SceneManager.GetActiveScene().name)
         {
-            SceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         }
     }
 
-    #endregion
-
-    #region --- Events ---
-
-    public delegate void IOEventHandler(PlaySaveGameObject io);
+    public delegate void IOEventHandler(SaveGame io);
 
 
     public static event IOEventHandler  OnSave,
                                         OnLoad;
 
-    #endregion
-
-    #region --- Fields ---
-
-    [SerializeField]
-    private AudioMixer masterMixer = null;
-    private Coroutine fadeInMasterCoroutine = null,
-                      fadeOutMasterCoroutine = null;
-
-    #endregion
-
-    #region --- Properties ---
-
-    public bool FadingInMasterMixer { get => fadeInMasterCoroutine != null; }
-    public bool FadingOutMasterMixer { get => fadeOutMasterCoroutine != null; }
     public static GameInstance Singleton { get; private set; }
     public static HUD HUD { get; private set; }
     public static GameState GameState { get; private set; }
-    public int ToID { get; set; }
-    private bool IsSingleton { get; set; }
+    public static AudioManager Audio { get; private set; }
     Savable ISavable.IO { get { return new GameInstanceSaveGameObject(); } }
-    public bool IsLoadingSavedGame { get; private set; }
-    private static PlaySaveGameObject SaveGameObject { get; set; }
-
-    #endregion
-
-    #region --- Methods ---
+    public static bool IsLoadingSavedGame { get; private set; }
+    private static SaveGame SaveGame { get; set; }
 
     private void Awake()
     {
@@ -70,52 +42,53 @@ sealed public class GameInstance : MonoBehaviour, ISavable
 
         DontDestroyOnLoad(gameObject);
 
-        IsSingleton = true;
+        Singleton   = this;
+        HUD         = GetComponentInChildren<HUD>();
+        GameState   = GetComponentInChildren<GameState>();
+        Audio       = GetComponentInChildren<AudioManager>();
 
-        Singleton = this;
-        HUD = GetComponentInChildren<HUD>();
-        GameState = GetComponentInChildren<GameState>();
-
-        HUD.Initialize();
-
-        GameState.OnPausedChanged += (GameState sender) =>
-        {
-            if (sender.Paused)
-                SetMouseCursorState(true, CursorLockMode.None);
-            else
-                SetMouseCursorState(false, CursorLockMode.Locked);
-        };
-
-        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
-    {
-        SaveGameObject = IO.Load<PlaySaveGameObject>(IO.tempFilename);
-        if (SaveGameObject == null)
-            SaveGameObject = new PlaySaveGameObject();
-
-        OnLoad?.Invoke(SaveGameObject);
-        SaveGameObject = null;
-        IsLoadingSavedGame = false;
-
-        StartCoroutine(HideLoadingScreen());
-    }
-
-    private IEnumerator HideLoadingScreen ()
-    {
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
-
-        HUD.EnableLoadingScreen(false);
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDestroy()
     {
-        if (!IsSingleton)
+        if (Singleton != this)
             return;
 
         IO.Delete(IO.tempFilename);
+    }
+
+    /// <summary>
+    /// This method is called after a scene has been loaded.
+    /// </summary>
+    /// <param name="scene">The scene that was loaded.</param>
+    /// <param name="mode">The Load scene mode.</param>
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SaveGame = IO.Load<SaveGame>(IO.tempFilename);
+        if (SaveGame == null)
+            SaveGame = new SaveGame();
+
+        OnLoad?.Invoke(SaveGame);
+        SaveGame = null;
+        IsLoadingSavedGame = false;
+
+        Audio.FadeIn(AudioManager.Channel.Master, 0.5f);
+
+        StartCoroutine(HideLoadingScreen());
+    }
+
+    /// <summary>
+    /// This method will hide the HUD (UI) loading screen 
+    /// after rendering 10 frames.
+    /// </summary> 
+    /// <returns></returns>
+    private IEnumerator HideLoadingScreen()
+    {
+        for (int i = 0; i < 10; i++)
+            yield return new WaitForEndOfFrame();
+
+        HUD.EnableLoadingScreen(false);
     }
 
     /// <summary>
@@ -124,23 +97,19 @@ sealed public class GameInstance : MonoBehaviour, ISavable
     /// <param name="filename"></param>
     public static void Save(string filename = "")
     {
-        SaveGameObject = IO.Load<PlaySaveGameObject>(IO.tempFilename);
+        SaveGame = IO.Load<SaveGame>(IO.tempFilename);
 
-        if (SaveGameObject == null)
-        {
-            Debug.Log("Temp Save Game does not exist! Creating one...");
-            SaveGameObject = new PlaySaveGameObject();
-        }
+        if (SaveGame == null)
+            SaveGame = new SaveGame();
 
-        OnSave?.Invoke(SaveGameObject);
-            
-        Savable s = SaveGameObject.objects.Find(x => x is GameInstanceSaveGameObject);
-        if (s != null)
-            SaveGameObject.objects.Remove(s);
-        SaveGameObject.objects.Add(((ISavable)Singleton).IO);
+        OnSave?.Invoke(SaveGame);
 
-        IO.Save(string.IsNullOrEmpty(filename) ? IO.tempFilename : filename, SaveGameObject);
-        SaveGameObject = null;
+        SaveGame.Override(Singleton);
+
+        IO.Save(string.IsNullOrEmpty(filename) ? 
+            IO.tempFilename : filename, SaveGame);
+
+        SaveGame = null;
     }
 
     /// <summary>
@@ -149,87 +118,56 @@ sealed public class GameInstance : MonoBehaviour, ISavable
     /// <param name="filename"></param>
     public static void Load(string filename = "")
     {
-        HUD.EnableLoadingScreen(true);
-
-        Singleton.IsLoadingSavedGame = !string.IsNullOrEmpty(filename);
-
-        SaveGameObject = IO.Load<PlaySaveGameObject>(string.IsNullOrEmpty(filename) ? IO.tempFilename : filename);
-
-        if (SaveGameObject == null)
-            SaveGameObject = new PlaySaveGameObject();
-
-        if (Singleton.IsLoadingSavedGame)
-            IO.Save(IO.tempFilename, SaveGameObject);
-
-        if (SaveGameObject.objects.Find(x => x is GameInstanceSaveGameObject) is GameInstanceSaveGameObject s)
-            UnityEngine.SceneManagement.SceneManager.LoadScene(s.SceneName);
+        Singleton.StartCoroutine(LoadSavedGame(filename));
     }
 
     /// <summary>
-    /// Sets the game cursor state.
-    /// its visibility and lock mode.
+    /// This method allows the scene to be loaded async
+    /// and to fade out the music/ambient.
     /// </summary>
-    /// <param name="visible"></param>
-    /// <param name="lockMode"></param>
-    public void SetMouseCursorState(bool visible, CursorLockMode lockMode)
+    /// <param name="filename">The filename to be loaded.</param>
+    /// <returns>IEnumerator</returns>
+    private static IEnumerator LoadSavedGame(string filename)
     {
-        Cursor.visible = visible;
-        Cursor.lockState = lockMode;
-    }
+        HUD.EnableLoadingScreen(true);
 
-    public void FadeOutMasterMixer (float speed = 1f)
-    {
-        if (fadeInMasterCoroutine != null)
-        {
-            StopCoroutine(fadeInMasterCoroutine);
-            fadeInMasterCoroutine = null;
-        }
+        Audio.FadeOut(AudioManager.Channel.Master, 0.8f);
+        IsLoadingSavedGame = !string.IsNullOrEmpty(filename);
 
-        fadeOutMasterCoroutine = StartCoroutine(FadeOutVolume(speed));
-    }
+        SaveGame = IO.Load<SaveGame>(string.IsNullOrEmpty(filename) ? IO.tempFilename : filename);
 
-    public void FadeInMasterMixer(float speed = 1f)
-    {
-        if (fadeOutMasterCoroutine != null)
-        {
-            StopCoroutine(fadeOutMasterCoroutine);
-            fadeOutMasterCoroutine = null;
-        }
+        if (SaveGame == null)
+            SaveGame = new SaveGame();
 
-        fadeInMasterCoroutine = StartCoroutine(FadeInVolume(speed));
-    }
+        if (IsLoadingSavedGame)
+            IO.Save(IO.tempFilename, SaveGame);
 
-    private IEnumerator FadeInVolume(float speed )
-    {
-        float volume;
-        masterMixer.GetFloat("Master Volume", out volume);
-
-        while (volume < 0)
-        {
-            volume += 80f * Time.unscaledDeltaTime * speed;
-            masterMixer.SetFloat("Master Volume", volume);
-
+        // Don't continue while we're fading the master mixer.
+        while (Audio.IsFadingOut(AudioManager.Channel.Master))
             yield return null;
-        }
-        masterMixer.SetFloat("Master Volume", 0f);
-        fadeInMasterCoroutine = null;
-    }
 
-    private IEnumerator FadeOutVolume(float speed)
-    {
-        float volume;
-        masterMixer.GetFloat("Master Volume", out volume);
-
-        while (volume > -80)
+        // Find the Game instance savable object in the saved game
+        // object list.
+        if (SaveGame.Find(x => x is GameInstanceSaveGameObject)
+            is GameInstanceSaveGameObject savedSceneName)
         {
-            volume -= 80f * Time.unscaledDeltaTime * speed;
-            masterMixer.SetFloat("Master Volume", volume);
+            // Start Loading the scene in async mode.
+            AsyncOperation op = SceneManager.LoadSceneAsync(savedSceneName.SceneName);
+            op.allowSceneActivation = false;
 
-            yield return null;
+            // AsyncOperation will not progress above 0.89f. That's why
+            // We're using 0.8f value.
+            // Don't continue if we're still loading.
+            while (op.progress < 0.8f)
+                yield return null;
+
+            // Activate the scene.
+            op.allowSceneActivation = true;
         }
-        masterMixer.SetFloat("Master Volume", -80f);
-        fadeOutMasterCoroutine = null;
+        else
+        {
+            Debug.LogError("No Game Instance Saved state.");
+            Application.Quit();
+        }
     }
-
-    #endregion
 }

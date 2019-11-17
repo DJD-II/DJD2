@@ -19,7 +19,7 @@ public abstract class Damage : InstigatedObject
 
 public sealed class PointDamage : Damage
 {
-    public PointDamage(Actor instigator, bool trueDamage, uint baseDamage)
+    public PointDamage(Actor instigator, bool trueDamage, float baseDamage)
         : base(instigator, trueDamage)
     {
         BaseDamage = baseDamage;
@@ -28,7 +28,7 @@ public sealed class PointDamage : Damage
 
 public sealed class RadialDamage : Damage
 {
-    public RadialDamage(Actor instigator, Vector3 origin, float area, bool trueDamage, uint baseDamage)
+    public RadialDamage(Actor instigator, Vector3 origin, float area, bool trueDamage, float baseDamage)
         : base(instigator, trueDamage)
     {
         Origin = origin;
@@ -44,12 +44,12 @@ public sealed class RadialDamage : Damage
 
         float influence = 1 - (distance / Area);
 
-        if (!TrueDamage && actor is Controller character)
+        if (actor is Controller character)
             return base.Get(actor) * influence * (100 / (100 + character.Armour.Value * 2));
-        else
-            return base.Get(actor) * influence;
+
+        return base.Get(actor);
     }
 
-    public Vector3 Origin { get; }
-    public float Area { get; }
+    public Vector3 Origin { get; set; }
+    public float Area { get; set; }
 }

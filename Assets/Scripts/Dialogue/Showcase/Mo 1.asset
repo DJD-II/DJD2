@@ -1,0 +1,233 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29892019e56e33d42bf4de23ca83f18c, type: 3}
+  m_Name: Mo 1
+  m_EditorClassIdentifier: 
+  dialogues:
+  - name: 0
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Wait a minute... Aren't you that android I saw on the news? It's confusing....
+        I'm not sure. What do you want?
+      audio: {fileID: 8300000, guid: e9f28540d3ccea841ab92ef4ee898dcb, type: 3}
+  - name: 1
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: Well there are a few on the ground.... People sometimes throw them away.
+        You might see some glowy tablets. Just find them.
+      audio: {fileID: 8300000, guid: 92f06f8e6c74db245bdebc7a3e422e8e, type: 3}
+  - name: 2
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: You're out of luck.... There is no recharger around here.
+      audio: {fileID: 8300000, guid: ec808645b2ed5584fb1fad2f7eb35fda, type: 3}
+  - name: 3
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: I've got no clue! (hic)....There's no way out of here!
+      audio: {fileID: 8300000, guid: d416a4ac8e485b44e83f29a27e46b6f4, type: 3}
+  - name: 4
+    dialogue:
+      toID: 0
+      switchTo: 0
+      text: I'm confused.... Forget it. I just had a few more drinks than usual at
+        the Eden.
+      audio: {fileID: 8300000, guid: 6d75713dfb129a3458cea3f2acb0de24, type: 3}
+  - name: 5
+    dialogue:
+      toID: 1
+      switchTo: 0
+      text: An android killed someone nearly a month ago. The government is shutting
+        down all androids.
+      audio: {fileID: 8300000, guid: 99463419bf7bd7e42bb8858f2d46d949, type: 3}
+  - name: 6
+    dialogue:
+      toID: 1
+      switchTo: 0
+      text: 'They are plugged off. '
+      audio: {fileID: 8300000, guid: 1d0d3cd4e243896458e90a7c725de729, type: 3}
+  answers:
+  - name: 0
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 1
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: The news? Where can I read some?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 2
+      id: 0
+      switchTo: 1
+      toID: 4
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 0500
+      text: What? Do you I look like an android to you?
+      requisites:
+        quests: []
+        events:
+        - obj: 0
+          value:
+            evnt: 5
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 3
+      id: 0
+      switchTo: 1
+      toID: 5
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: What news?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 4
+      id: 0
+      switchTo: 1
+      toID: 3
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: How can I get out of this district?
+      requisites:
+        quests: []
+        events:
+        - obj: 1
+          value:
+            evnt: 12
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 5
+      id: 0
+      switchTo: 1
+      toID: -1
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Bye
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  - name: 1
+    answers:
+    - name: 0
+      id: 0
+      switchTo: 1
+      toID: 6
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: What happens to those androids?
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+    - name: 1
+      id: 0
+      switchTo: 0
+      toID: 0
+      itemsToEarn: []
+      itemsToGive: []
+      questsToEarn: []
+      questsToComplete: []
+      eventsToGive: 
+      text: Let's talk about something else.
+      requisites:
+        quests: []
+        events: []
+        hp:
+          obj: 0
+          operation: 0
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 0
+          enabled: 0
+  requisites:
+    quests: []
+    events:
+    - obj: 0
+      value:
+        evnt: 5
+    hp:
+      obj: 0
+      operation: 2
+      enabled: 0
+    armour:
+      obj: 0
+      operation: 2
+      enabled: 0

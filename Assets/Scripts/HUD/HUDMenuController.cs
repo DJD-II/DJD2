@@ -14,44 +14,34 @@ sealed public class HUDMenuController : MonoBehaviour
 
     private PlayerController controller = null;
     [Header("Inventory")]
-    [SerializeField]
-    private GameObject inventoryMenu = null;
-    [SerializeField]
-    private Transform inventoryListContent = null;
-    [SerializeField]
-    private GameObject itemButton = null;
-    [SerializeField]
-    private Image itemIconImage = null;
-    [SerializeField]
-    private Text itemDescriptionLabel = null;
-    [SerializeField]
-    private ItemMenuController itemMenuController = null;
+    [SerializeField] private GameObject inventoryMenu = null;
+    [SerializeField] private Transform inventoryListContent = null;
+    [SerializeField] private GameObject itemButton = null;
+    [SerializeField] private Image itemIconImage = null;
+    [SerializeField] private Text itemDescriptionLabel = null;
+    [SerializeField] private ItemMenuController itemMenuController = null;
+    [SerializeField] private Scrollbar verticalItemListScrollBar = null;
 
     [Header("Objectives")]
-    [SerializeField]
-    private Text objectiveDescriptionLabel = null;
-    [SerializeField]
-    private GameObject objectivesPanel = null;
-    [SerializeField]
-    private Transform objectivesListContent = null;
-    [SerializeField]
-    private GameObject objectiveButton = null;
+    [SerializeField] private Text objectiveDescriptionLabel = null;
+    [SerializeField] private GameObject objectivesPanel = null;
+    [SerializeField] private Transform objectivesListContent = null;
+    [SerializeField] private GameObject objectiveButton = null;
 
     [Header("Save Menu")]
-    [SerializeField]
-    private GameObject savedGamesPanel = null;
-    [SerializeField]
-    private GameObject savedGameButton = null;
-    [SerializeField]
-    private Transform savedGamesContent = null;
-    [SerializeField]
-    private GameObject messagePanel = null;
-    [SerializeField]
-    private Text messagePanelTitle = null;
+    [SerializeField] private GameObject savedGamesPanel = null;
+    [SerializeField] private GameObject savedGameButton = null;
+    [SerializeField] private Transform savedGamesContent = null;
+    [SerializeField] private GameObject messagePanel = null;
+    [SerializeField] private Text messagePanelTitle = null;
     private SaveGameOperation saveOperation = SaveGameOperation.Delete;
     private SaveGameButton currentSaveButton = null;
-    [SerializeField]
-    private InputField saveGameNameField = null;
+    [SerializeField] private InputField saveGameNameField = null;
+
+    private void Awake()
+    {
+        itemMenuController.OnDiscard += OnItemDiscarded;
+    }
 
     private void Update()
     {
@@ -64,7 +54,14 @@ sealed public class HUDMenuController : MonoBehaviour
         this.controller = controller;
     }
 
-    private void Close()
+    private void OnItemDiscarded(ItemMenuController sender)
+    {
+        float value = verticalItemListScrollBar.value;
+        InitializeInventoryList();
+        verticalItemListScrollBar.value = value;
+    }
+
+    public void Close()
     {
         inventoryMenu.SetActive(false);
         objectivesPanel.SetActive(false);
@@ -81,11 +78,11 @@ sealed public class HUDMenuController : MonoBehaviour
         if (itemIconImage != null)
         {
             itemIconImage.gameObject.SetActive(true);
-            itemIconImage.sprite = sender.Item.icon;
+            itemIconImage.sprite = sender.Item.Icon;
         }
 
         if (itemDescriptionLabel != null)
-            itemDescriptionLabel.text = sender.Item.description;
+            itemDescriptionLabel.text = sender.Item.Description;
     }
 
     private void OnItemHoverExit(LootButton sender)
@@ -125,13 +122,15 @@ sealed public class HUDMenuController : MonoBehaviour
         while (inventoryListContent.childCount > 0)
             DestroyImmediate(inventoryListContent.GetChild(0).gameObject);
 
-        List<Item> items = controller.Inventory.Items.Distinct().ToList();
+        List<Item> items = controller.Inventory.Distinct().ToList();
+        items.Sort((x, y) => x.Name.CompareTo(y.Name));
 
         foreach (Item i in items)
         {
             GameObject go = Instantiate(itemButton, inventoryListContent);
             LootButton b = go.GetComponent<LootButton>();
-            b.Initialize(i, controller.Inventory.Items.Where(x => x.tag.Equals(i.tag)).Count());
+            b.Initialize(i, 
+                controller.Inventory.Where(x => x.ItemTag.Equals(i.ItemTag)).Count());
             b.OnHoverEnter += OnItemHoverEnter;
             b.OnHoverExit += OnItemHoverExit;
             b.OnClicked += (LootButton sender) =>
@@ -147,7 +146,7 @@ sealed public class HUDMenuController : MonoBehaviour
         while (objectivesListContent.childCount > 0)
             DestroyImmediate(objectivesListContent.GetChild(0).gameObject);
 
-        foreach (QuestController.QuestID i in GameInstance.GameState.QuestController.Quests)
+        foreach (QuestID i in GameInstance.GameState.QuestController.Quests)
         {
             GameObject go = Instantiate(objectiveButton, objectivesListContent);
             ObjectiveButton b = go.GetComponent<ObjectiveButton>();
@@ -174,7 +173,7 @@ sealed public class HUDMenuController : MonoBehaviour
 
         System.IO.FileInfo[] infos = IO.GetFilenames();
 
-        foreach(System.IO.FileInfo info in infos)
+        foreach (System.IO.FileInfo info in infos)
         {
             GameObject go = Instantiate(savedGameButton, savedGamesContent);
             SaveGameButton button = go.GetComponent<SaveGameButton>();
@@ -185,7 +184,7 @@ sealed public class HUDMenuController : MonoBehaviour
         }
     }
 
-    public void OnSaveGame ()
+    public void OnSaveGame()
     {
         if (string.IsNullOrEmpty(saveGameNameField.text))
             return;
@@ -195,16 +194,15 @@ sealed public class HUDMenuController : MonoBehaviour
         InitializeSavedGames();
     }
 
-    private void OnOverrideSavedGame (SaveGameButton sender)
+    private void OnOverrideSavedGame(SaveGameButton sender)
     {
         messagePanelTitle.text = "Are you sure you want to override?";
         messagePanel.SetActive(true);
         saveOperation = SaveGameOperation.Override;
         currentSaveButton = sender;
-
     }
 
-    private void OnSaveGameDelete (SaveGameButton sender)
+    private void OnSaveGameDelete(SaveGameButton sender)
     {
         messagePanelTitle.text = "Are you sure you want to delete?";
         messagePanel.SetActive(true);
@@ -212,7 +210,7 @@ sealed public class HUDMenuController : MonoBehaviour
         currentSaveButton = sender;
     }
 
-    private void OnLoadSavedGame (SaveGameButton sender)
+    private void OnLoadSavedGame(SaveGameButton sender)
     {
         messagePanelTitle.text = "Are you sure you want to load? Any unsaved progress will be lost!";
         messagePanel.SetActive(true);
@@ -220,7 +218,7 @@ sealed public class HUDMenuController : MonoBehaviour
         currentSaveButton = sender;
     }
 
-    public void OnMessageButtonAccept ()
+    public void OnMessageButtonAccept()
     {
         string name = currentSaveButton.FileInfo.Name;
 
@@ -233,7 +231,7 @@ sealed public class HUDMenuController : MonoBehaviour
 
             case SaveGameOperation.Load:
                 Close();
-                GameInstance.HUD.EnableMenu(false, null);
+                GameInstance.HUD.EnableMenu(false);
                 GameInstance.Load(name);
                 return;
 
@@ -246,7 +244,7 @@ sealed public class HUDMenuController : MonoBehaviour
         messagePanel.SetActive(false);
     }
 
-    public void OnMessagePanelDeclineButton ()
+    public void OnMessagePanelDeclineButton()
     {
         messagePanel.SetActive(false);
     }

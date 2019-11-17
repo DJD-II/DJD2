@@ -2,134 +2,86 @@
 using UnityEngine;
 
 [System.Serializable]
-sealed public class QuestController : object, ISavable
+sealed public class QuestController : ISavable
 {
-    [System.Serializable]
-    public struct QuestInfo
-    {
-        private string name;
-        private bool completed;
-
-        public string Name { get { return name; } }
-        public bool Completed { get { return completed; } }
-
-        public QuestInfo(QuestID id)
-        {
-            name = id.quest.name;
-            completed = id.completed;
-        }
-    }
-
-    [System.Serializable]
-    sealed public class QuestID : object
-    {
-        public delegate void EventHandler(QuestID sender);
-
-        public event EventHandler OnCompleted;
-
-        public Quest quest;
-        public bool completed;
-
-        public QuestID (QuestInfo info)
-        {
-            quest = QuestUtility.Get(info.Name);
-            completed = info.Completed;
-            OnCompleted = null;
-        }
-
-        public QuestID(Quest quest)
-        {
-            this.quest = quest;
-            completed = false;
-            OnCompleted = null;
-        }
-
-        public void Complete()
-        {
-            if (completed)
-                return;
-
-            completed = true;
-
-            OnCompleted?.Invoke(this);
-
-            foreach (Quest q in quest.Requesites.QuestsToGive)
-                GameInstance.GameState.QuestController.Add(q);
-        }
-    }
-
     [System.Serializable]
     sealed public class QuestSavable : Savable
     {
-        private List<QuestInfo> questsInfo;
-
-        public List<QuestInfo> QuestsInfo { get { return questsInfo; } }
+        public List<QuestInfo> QuestsInfo { get; }
 
         public QuestSavable(List<QuestID> quests)
-            : base ("", "")
+            : base("", "")
         {
-            questsInfo = new List<QuestInfo>();
+            QuestsInfo = new List<QuestInfo>();
             foreach (QuestID id in quests)
-                questsInfo.Add(new QuestInfo(id));
+                QuestsInfo.Add(new QuestInfo(id));
+        }
+
+        public void Set(QuestController controller)
+        {
+            foreach (QuestInfo info in QuestsInfo)
+                controller.Add(new QuestID(info));
         }
     }
 
     public delegate void EventHandler(QuestController sender);
     public delegate void QuestEventHandler(QuestController sender, QuestID quest);
 
-    public event QuestEventHandler  OnQuestAdded,
+    public event QuestEventHandler OnQuestAdded,
                                     OnQuestRemoved,
                                     OnQuestCompleted;
 
     [SerializeField]
-    private List<QuestID> quests = new List<QuestID>(); 
+    private List<QuestID> quests = new List<QuestID>();
 
     public List<QuestID> Quests { get { return quests; } }
 
     public PlayerController PlayerController { get; private set; }
 
-    public void Initialize (PlayerController controller)
+    public void Initialize(PlayerController controller)
     {
         PlayerController = controller;
     }
 
-    public void Update ()
+    public void Update()
     {
         if (PlayerController == null)
             return;
 
         foreach (QuestID id in quests.ToArray())
-            if (!id.completed && id.quest.Requesites.IsValid(PlayerController))
+            if (!id.completed && id.quest.Requesites.Fullfills(PlayerController))
                 id.Complete();
     }
 
-    public void Clear ()
+    private void Clear()
     {
         quests.Clear();
     }
 
-    public void Add(QuestID id)
+    private void Add(QuestID id)
     {
         if (Get(id.quest.name) != null)
+        {
+            Debug.LogWarning("Quest already registred");
             return;
+        }
 
         quests.Add(id);
+
+        OnQuestAdded?.Invoke(this, id);
 
         id.OnCompleted += OnQuestHasBeenCompleted;
     }
 
     public void Add(Quest quest)
     {
-        if (Get(quest.name) != null)
-            return;
+        Add(new QuestID(quest));
+    }
 
-        QuestID auxQuest = new QuestID(quest);
-
-        quests.Add(auxQuest);
-
-        auxQuest.OnCompleted += OnQuestHasBeenCompleted;
-
-        OnQuestAdded?.Invoke(this, auxQuest);
+    public void Add (IEnumerable<Quest> questsToEarn)
+    {
+        foreach (Quest q in questsToEarn)
+            Add(q);
     }
 
     private void OnQuestHasBeenCompleted(QuestID sender)
@@ -160,6 +112,25 @@ sealed public class QuestController : object, ISavable
         QuestID id = quests.Find(x => x.quest.name.ToLower().Equals(auxName));
         if (id != null)
             id.Complete();
+    }
+
+    public void CompleteQuests(List<Quest> questsToComplete)
+    {
+        foreach (Quest q in questsToComplete)
+        {
+            QuestID id = quests.Find(
+                x => x.quest.name.ToLower().Equals(q.name.ToLower()));
+
+            if (id != null)
+                id.Complete();
+        }
+    }
+
+    public void Load(SaveGame io)
+    {
+        Clear();
+        if (io.Find(x => x is QuestSavable) is QuestSavable savable)
+            savable.Set(this);
     }
 
     Savable ISavable.IO { get { return new QuestSavable(quests); } }

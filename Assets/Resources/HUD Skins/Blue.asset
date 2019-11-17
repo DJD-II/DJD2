@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a0231ad2309a7645bf63bf1c6458c0e, type: 3}
+  m_Name: Blue
+  m_EditorClassIdentifier: 
+  textColor: {r: 0, g: 0.9534545, b: 1, a: 1}
+  background: {fileID: 21300000, guid: 219c6b3ace35be145801679648046a42, type: 3}
+  battery: {fileID: 21300000, guid: ac43f4b232705934bbf8ff10d28beaa4, type: 3}
+  map:
+    mapTop: {fileID: 21300000, guid: 6c9679b130a69344cb5d6a9398b57097, type: 3}
+    mapShadow: {fileID: 21300000, guid: dc5ddd15af61763408de4126e9659f71, type: 3}
+    mapBackground: {fileID: 21300000, guid: e04fde68c1c76de47a8ddb6f399d254e, type: 3}
+  button:
+    normalButton: {fileID: 21300000, guid: e177d652c1c6dd942839e947d5a05324, type: 3}
+    disabledButton: {fileID: 21300000, guid: e177d652c1c6dd942839e947d5a05324, type: 3}
+    highlightedButton: {fileID: 21300000, guid: 9fe8b83e4068d784f9fe016afc0f1abe,
+      type: 3}
+    selectedButton: {fileID: 21300000, guid: 9fe8b83e4068d784f9fe016afc0f1abe, type: 3}
+  panel: {fileID: 21300000, guid: 2a03e1a4c4d8324409d1b04011cf8ab6, type: 3}
+  slider:
+    background: {fileID: 21300000, guid: 8fedf703f63f3854ca7adaf83aff611b, type: 3}
+    slider: {fileID: 21300000, guid: 9fe8b83e4068d784f9fe016afc0f1abe, type: 3}
+    handle: {fileID: 21300000, guid: e177d652c1c6dd942839e947d5a05324, type: 3}
+  scrollview:
+    background: {fileID: 21300000, guid: b532538e0680bf94283ee787e3afa367, type: 3}
+    handle:
+      background: {fileID: 21300000, guid: b532538e0680bf94283ee787e3afa367, type: 3}
+      slider: {fileID: 21300000, guid: b532538e0680bf94283ee787e3afa367, type: 3}
+      handle: {fileID: 21300000, guid: 3c6bf401033c711458f78f092181d080, type: 3}

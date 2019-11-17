@@ -3,32 +3,38 @@ using UnityEngine;
 
 sealed public class QuestUIController : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject panel = null;
-    [SerializeField]
-    private TextMeshProUGUI titleLabel = null;
-    [SerializeField]
-    private TextMeshProUGUI descriptionLabel = null;
+    [SerializeField] private GameObject panel = null;
+    [SerializeField] private TextMeshProUGUI titleLabel = null;
+    [SerializeField] private TextMeshProUGUI descriptionLabel = null;
     private float timer = 0f;
 
     private void Awake()
     {
-        gameObject.transform.position = new Vector3(-100, gameObject.transform.position.y, 0f);
+        gameObject.transform.position = 
+            new Vector3(-100, gameObject.transform.position.y, 0f);
     }
 
     private void Start()
     {
         GameInstance.GameState.QuestController.OnQuestAdded += OnQuestAdded;
-        GameInstance.GameState.OnPausedChanged += (GameState sender) =>
-        {
-            if (sender.Paused)
-                panel.SetActive(false);
-            else
-                panel.SetActive(true);
-        };
+        GameInstance.GameState.OnPausedChanged += OnPausedChanged;
     }
 
-    private void OnQuestAdded(QuestController sender, QuestController.QuestID quest)
+    private void OnDestroy()
+    {
+        GameInstance.GameState.QuestController.OnQuestAdded -= OnQuestAdded;
+        GameInstance.GameState.OnPausedChanged -= OnPausedChanged;
+    }
+
+    private void OnPausedChanged(GameState sender)
+    {
+        if (sender.Paused)
+            panel.SetActive(false);
+        else
+            panel.SetActive(true);
+    }
+
+    private void OnQuestAdded(QuestController sender, QuestID quest)
     {
         timer = 15f;
         if (titleLabel != null)

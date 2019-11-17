@@ -6,7 +6,7 @@ public static class ItemUtility
     public static Item GetItem(string name)
     {
         foreach (Item item in items)
-            if (name.Equals(item.tag.ToString()))
+            if (name.Equals(item.ItemTag.ToString()))
                 return item;
 
         return null;

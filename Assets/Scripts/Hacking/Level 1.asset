@@ -1,0 +1,454 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce67962a6d02aa4e991f2cea051c3df, type: 3}
+  m_Name: Level 1
+  m_EditorClassIdentifier: 
+  hackPoints:
+  - name: 0
+    text: 'xhack Terminal...<br><br>Choose Command. '
+    commands:
+    - text: Eden Strip Club
+      id: 1
+      toId: 1
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+    - text: Close
+      id: 1
+      toId: -1
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+  - name: 1
+    text: 'Eden Strip Club<br> <br> <br>     Social Capital : 12 000, 00<br>     Year
+      :           before 2177<br>     Social Number :  231-8108-97<br>     Address
+      :        Albeno street 37 2019 District 5, Bedrock<br>     Jurisdiction :   Private
+      Company<br>     INfO :           Night club <br> <br> <br> Listing Commands...'
+    commands:
+    - text: VIP List
+      id: 0
+      toId: 2
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+    - text: Workers
+      id: 0
+      toId: 3
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+    - text: Back
+      id: 0
+      toId: 0
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+  - name: 2
+    text: 'Eden Strip Club VIP List. <br><br>Listing guests...  '
+    commands:
+    - text: City Councilour
+      id: 0
+      toId: 7
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+    - text: City Mayor
+      id: 0
+      toId: 7
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+    - text: Back
+      id: 0
+      toId: 1
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+  - name: 3
+    text: 'Eden Strip Club Workers List. <br><br>Listing people...  '
+    commands:
+    - text: Sylvana
+      id: 0
+      toId: 4
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+    - text: Joyce
+      id: 0
+      toId: 5
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+    - text: Aurea
+      id: 0
+      toId: 6
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+    - text: Back
+      id: 0
+      toId: 1
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+  - name: 4
+    text: 'Sylvana Info<br><br>    Sylvana joined Eden 2 year ago. '
+    commands:
+    - text: Back
+      id: 0
+      toId: 3
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+  - name: 5
+    text: 'Joyce Info<br><br>   Joyce joined Eden 1 year ago. '
+    commands:
+    - text: Back
+      id: 0
+      toId: 3
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+  - name: 6
+    text: 'Aurea Info<br><br>   Aurea joined Eden 1 and a half year ago. '
+    commands:
+    - text: Back
+      id: 0
+      toId: 3
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+  - name: 7
+    text: City Councilour Logs.<br><br>Listing logs...
+    commands:
+    - text: Log 2178 - 1a3d
+      id: 0
+      toId: 8
+      questsToEarn: []
+      eventsToGive: 01001100
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+    - text: Log 2179 - 2bcd
+      id: 0
+      toId: 9
+      questsToEarn: []
+      eventsToGive: 01001000
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+    - text: Back
+      id: 0
+      toId: 2
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+  - name: 8
+    text: 'City Councilour Log 2178 - 1a3d<br><br>   The City coucliour, Ivan, Is
+      an assiduous member.<br>He has a personal taste for real women specially Sylvana,
+      who has been missing.<br>We are still waiting for the women he promessed to
+      work here.<br><br>Log Entry : Andy'
+    commands:
+    - text: Back
+      id: 0
+      toId: 7
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0
+  - name: 9
+    text: 'City Councilour Log 2178 - 2bcd<br><br>   The City coucliour, Ivan, Is
+      an assiduous member.<br>He has a personal taste for real women specially Sylvana,
+      who has been missing.<br>We are still waiting for the women he promessed to
+      work here.<br><br>Log Entry : Andy'
+    commands:
+    - text: Back
+      id: 0
+      toId: 7
+      questsToEarn: []
+      eventsToGive: 
+      itemsToEarn: []
+      itemsToGive: []
+      questsToComplete: []
+      requisites:
+        quests: []
+        events: []
+        items: []
+        hp:
+          obj: 0
+          operation: 2
+          enabled: 0
+        armour:
+          obj: 0
+          operation: 2
+          enabled: 0

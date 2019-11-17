@@ -22,7 +22,7 @@ sealed public class BatteryWarningController : MonoBehaviour
         else
         {
             warningImage.gameObject.SetActive(true);
-            warningLabel.gameObject.SetActive(true); 
+            warningLabel.gameObject.SetActive(true);
             float intensity = alphaIntensity.Evaluate(Time.time);
             warningLabel.color = new Color(warningLabel.color.r, warningLabel.color.g, warningLabel.color.b, intensity);
             warningImage.color = new Color(warningImage.color.r, warningImage.color.g, warningImage.color.b, intensity);
