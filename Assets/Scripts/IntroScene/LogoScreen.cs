@@ -1,91 +1,46 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using UnityEngine.SceneManagement;
 
 public class LogoScreen : MonoBehaviour
 {
-    #region ---Parameters---
-    [Header ("Warning")]
-    [SerializeField] private RawImage backgroundEpilepsi = null;
-    [SerializeField] private RawImage logoEpilepsi = null;
-    [SerializeField] private TMP_Text textEpilepsi = null;
-    [Header("Lusofona")]
-    [SerializeField] private RawImage backgroundLusofona = null;
-    [SerializeField] private RawImage logoLusofona = null;
-    [SerializeField] private TMP_Text textLusofona = null;
-    [Header ("Company")]
-    [SerializeField] private RawImage backgroundCompany = null;
-    [SerializeField] private RawImage logoCompany = null;
-    [SerializeField] private TMP_Text textCompany = null;
-    #endregion
-
-    [SerializeField] private Color bgColor;
-    [SerializeField] private Color logoColor;
-    [SerializeField] private Color textColor;
-    [SerializeField] private float timer = 0f;
-    [SerializeField] private float duration = 3f;
-
-    private float secondsElapsed;
+    [SerializeField] private List<CanvasGroup> logos = new List<CanvasGroup>();
+    private WaitForSecondsRealtime elapsed = new WaitForSecondsRealtime(0.001f);
+    private WaitForSecondsRealtime held = new WaitForSecondsRealtime(5);
     private bool coroutineIsRunning;
+    private int index = 0;
 
     private void Update()
     {
-        timer += Time.deltaTime;
-        secondsElapsed = timer % 60;
-    
-        if (!coroutineIsRunning && secondsElapsed > duration && backgroundEpilepsi.color.a > 0)
-                StartCoroutine(Opacity(backgroundEpilepsi,logoEpilepsi, textEpilepsi));
-
-
-        if (!coroutineIsRunning && secondsElapsed > duration * 2 && backgroundLusofona.color.a > 0)
-                StartCoroutine(Opacity(backgroundLusofona, logoLusofona, textLusofona));
-
-        else if (secondsElapsed > duration && secondsElapsed < duration * 3)
+        if (Input.anyKeyDown)
         {
-            Scaler(logoLusofona.transform);
+            StopCoroutine(Opacity(null));
+            index = Mathf.Max(2, index++);
         }
-
-
-        if (!coroutineIsRunning && secondsElapsed > duration * 3 && backgroundCompany.color.a > 0)
-                StartCoroutine(Opacity(backgroundCompany, logoCompany, textCompany));
-
-        else if (secondsElapsed > duration * 2)
+        if (!coroutineIsRunning)
         {
-            Scaler(logoCompany.transform);
-            Scaler(textCompany.transform);
-        }
-
-        if (!coroutineIsRunning && secondsElapsed > duration * 3.5f)
-        {
-            SceneManager.LoadSceneAsync("MainMenu");
+            StartCoroutine(Opacity(logos[index]));
         }
     }
 
-    private void Scaler(Transform other)
+    private IEnumerator Opacity(CanvasGroup group)
     {
-        //other.localScale *= 1.0005f;
-    }
-    private IEnumerator Opacity(RawImage bg, RawImage logo, TMP_Text text)
-    {
-        bgColor = bg.color;
-        logoColor = logo.color;
-        textColor = text.color;
-
         coroutineIsRunning = true;
-        while (bg.color.a > 0)
+
+        while (group.alpha > 0)
         {
-            bgColor.a -= 0.01f;
-            logoColor.a -= 0.01f;
-            textColor.a -= 0.01f;
-            
-            bg.color = bgColor;
-            logo.color = logoColor;
-            text.color = textColor;
-            yield return new WaitForSecondsRealtime(0.001f);
+            group.alpha -= 0.005f;
+            yield return elapsed;
         }
+
+        if (index < logos.Count - 1)
+        {
+            yield return held;
+            index++;
+        }
+        else
+            SceneManager.LoadSceneAsync("MainMenu");
         coroutineIsRunning = false;
     }
 }

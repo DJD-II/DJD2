@@ -228,6 +228,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 171805167}
+  - component: {fileID: 171805168}
   m_Layer: 5
   m_Name: Company
   m_TagString: Untagged
@@ -257,6 +258,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -0.0012207031}
   m_SizeDelta: {x: 0, y: -1}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &171805168
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 171805166}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &418644274
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,6 +279,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 418644275}
+  - component: {fileID: 418644276}
   m_Layer: 5
   m_Name: Warning
   m_TagString: Untagged
@@ -295,6 +309,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &418644276
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418644274}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &472695898
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,7 +425,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.024963379}
+  m_AnchoredPosition: {x: 0, y: 0.024902344}
   m_SizeDelta: {x: 0, y: -1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &566175677
@@ -514,6 +540,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 844743136}
+  - component: {fileID: 844743137}
   m_Layer: 5
   m_Name: Lusofona
   m_TagString: Untagged
@@ -540,9 +567,21 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.0012817383}
+  m_AnchoredPosition: {x: 0, y: -0.0012207031}
   m_SizeDelta: {x: 0, y: -1.0027}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &844743137
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 844743135}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &925637830
 GameObject:
   m_ObjectHideFlags: 0
@@ -1202,20 +1241,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b185a5e11aa34c849fb761c905705, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backgroundEpilepsi: {fileID: 690140167}
-  logoEpilepsi: {fileID: 472695900}
-  textEpilepsi: {fileID: 1872524424}
-  backgroundLusofona: {fileID: 566175677}
-  logoLusofona: {fileID: 1840427623}
-  textLusofona: {fileID: 925637832}
-  backgroundCompany: {fileID: 1528108767220960940}
-  logoCompany: {fileID: 1528108767797206704}
-  textCompany: {fileID: 1528108766498467884}
-  bgColor: {r: 0, g: 0, b: 0, a: 0}
-  logoColor: {r: 0, g: 0, b: 0, a: 0}
-  textColor: {r: 0, g: 0, b: 0, a: 0}
-  timer: 0
-  duration: 4
+  logos:
+  - {fileID: 418644276}
+  - {fileID: 844743137}
+  - {fileID: 171805168}
+  index: 0
 --- !u!1 &1528108766498467882
 GameObject:
   m_ObjectHideFlags: 0

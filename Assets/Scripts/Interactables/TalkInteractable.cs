@@ -9,7 +9,8 @@ sealed public class TalkInteractable : Interactable
     [SerializeField] private bool rotateTowardsPlayer = true;
     [SerializeField] private bool changeAnimator = true;
     [SerializeField] private bool rotateToInitialRotation = true;
-    [SerializeField] private bool unpauseOnClose = true;
+    [SerializeField] private bool unpauseOnClose = true; 
+
     [Header("On Interact")]
     [Tooltip("The items the player will earn if he has interacted with " + 
         "this object.")]
@@ -78,10 +79,10 @@ sealed public class TalkInteractable : Interactable
         else if (IsTalking && rotateTowardsPlayer)
         {
             Vector3 dir = PlayerController.transform.position - transform.position;
-            dir.y = 0;
+            dir.y = 0; 
             transform.rotation = Quaternion.Lerp(transform.rotation,
                                                  Quaternion.LookRotation(dir),
-                                                 Time.unscaledDeltaTime * 3f);
+                                                 Time.unscaledDeltaTime * 2f); 
         }
     }
 

@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro;
 
 public class StartMenuButtons : MonoBehaviour
 {
@@ -14,8 +13,8 @@ public class StartMenuButtons : MonoBehaviour
     [SerializeField] private TMP_Dropdown resolution = null;
     [SerializeField] private Slider musicSlider = null;
     [SerializeField] private GameObject mainWindow = null;
+    [SerializeField] private TMP_Dropdown qualitySettings = null;
 
-    
     private ConfirmBox confirmBox;
     private bool fullscreen = true;
     private Resolution wantedResolution;
@@ -25,10 +24,23 @@ public class StartMenuButtons : MonoBehaviour
         confirmBox = confirmBoxObject.GetComponent<ConfirmBox>();
 
         wantedResolution = Screen.resolutions[Screen.resolutions.Length - 1];
-        ConfirmAplly();
         AddDropDownOptions();
+        AddDropDownQuality();
         DeleteLoadContinueButtons();
     }
+
+    private void AddDropDownQuality()
+    {
+        qualitySettings.ClearOptions();
+
+        List<string> dropdonws = new List<string>();
+        for (int i = 0; i < 5; i++)
+        {
+            dropdonws.Add(QualitySettings.names[i]);
+        }
+        qualitySettings.AddOptions(dropdonws);
+    }
+
     private void AddDropDownOptions()
     {
         resolution.ClearOptions();
@@ -40,11 +52,13 @@ public class StartMenuButtons : MonoBehaviour
         }
         resolution.AddOptions(dropdowns);
     }
+
     private void OpenConfirmBox(string message, int value)
     {
         confirmBox.SetLabel(message, value);
         Instantiate(confirmBoxObject, gameObject.transform);
     }
+
     public void DeleteLoadContinueButtons()
     {
         if (IO.GetFilenames().Length <= 0)
@@ -53,12 +67,14 @@ public class StartMenuButtons : MonoBehaviour
             continueButton.SetActive(false);
         }
     }
+
     public void OnClickStart()
     {
         GameInstance.HUD.EnableMainMenu(false);
         GameInstance.HUD.EnableLoadingScreen(true);
         SceneManager.LoadScene("Showcase");
     }
+
     // Sets the resolution to the option chosen
     public void ChangeResolution()
     {
@@ -68,16 +84,27 @@ public class StartMenuButtons : MonoBehaviour
         wantedResolution.width = int.Parse(division[0]);
         wantedResolution.height = int.Parse(division[1]);
     }
+
+    public void ChangeQuality()
+    {
+        int index = qualitySettings.value;
+        QualitySettings.SetQualityLevel(index);
+        Debug.Log(index);
+        Debug.Log(QualitySettings.GetQualityLevel());
+    }
+
     // Lowers the general volume
     public void ChangeAudio()
     {
         AudioListener.volume = musicSlider.value;
     }
+
     // Change fullScreen to windowed and vice-versa
     public void ChangeFullscreen()
     {
         fullscreen = !fullscreen;
     }
+
     // Enters function after clicking yes on the confirm box
     public void ConfirmAplly()
     {
@@ -85,15 +112,18 @@ public class StartMenuButtons : MonoBehaviour
         Settings.SetResolution(wantedResolution, fullscreen);
         Settings.SetFullscreen(fullscreen);
     }
+
     public void ShowOptionsMenu(bool active)
     {
         optionsSubMenu.SetActive(active);
         mainWindow.SetActive(!active);
     }
+
     public void ApplySettings()
     {
         OpenConfirmBox("Are you sure you want to keep these settings?", 1);
     }
+
     public void OnClickQuit()
     {
         OpenConfirmBox("Are you sure you want to quit?", 0);

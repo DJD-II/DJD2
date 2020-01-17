@@ -34,7 +34,7 @@ public class PlayerAnswer
     [Tooltip("The requesites needed for this answer to show up as a possible answer.")]
     [SerializeField] private Requesite requisites = null;
 
-    public int ID { get { return id; } }
+    public int ID { get => id;  }
     public SwitchType SwitchTo { get => switchTo; }
     public string Text { get => text; }
     public int ToID { get => toID; }
