@@ -30,6 +30,7 @@ sealed public class TalkInteractable : Interactable
     private bool listening = false;
 
     public bool OverrideRotation { get; set; }
+
     public bool RotateToInitialRotation
     {
         get => rotateToInitialRotation;

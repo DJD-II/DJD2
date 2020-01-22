@@ -1,4 +1,7 @@
-﻿public enum LogicOperator : byte
+﻿/// <summary>
+/// 
+/// </summary>
+public enum LogicOperator : byte
 {
     LessThan = 0,
     LessOrEqual = 1,
